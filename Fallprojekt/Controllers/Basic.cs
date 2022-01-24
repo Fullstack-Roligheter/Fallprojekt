@@ -11,7 +11,7 @@ namespace Fallprojekt.Controllers
     public class BasicController : ControllerBase
     {
         [HttpGet] //Exempel Controller
-        public List<UserDTO> ListStaffManagerStatus()
+        public List<UserDTO> ListAllUsers()
         {
             return ProjectService.Instance.ListAllUsers();
         }
