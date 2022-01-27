@@ -13,5 +13,12 @@ namespace Fallprojekt.Controllers
         {
             return ProjectService.Instance.LogIn(user, password);
         }
+
+        [HttpPost("register")]
+
+        public void UserRegistering(string userName, int age, string email, string password)
+        {
+            ProjectService.Instance.UserRegistering(userName, age, email, password);
+        }
     }
 }
