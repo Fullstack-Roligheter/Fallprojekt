@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Service;
 
 namespace Fallprojekt.Controllers
 {
@@ -7,5 +8,10 @@ namespace Fallprojekt.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        [HttpGet("user")]
+        public bool UserLogin(string user, string password)
+        {
+            return ProjectService.Instance.LogIn(user, password);
+        }
     }
 }
