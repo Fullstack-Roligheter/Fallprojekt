@@ -41,5 +41,13 @@ namespace Service
                     .ToList();
             }
         }
+
+        public bool LogIn(string username, string password)
+        {
+            using (var db = new ProjectContext()) //, StringComparison.OrdinalIgnoreCase
+            {
+                return db.User.Any(u => u.Name.Equals(username) && u.Password == password);
+            }
+        }
     }
 }
