@@ -49,5 +49,29 @@ namespace Service
                 return db.User.Any(u => u.Name.Equals(username) && u.Password == password);
             }
         }
+
+        public void UserRegistering(string userName, int age, string email, string password)
+        {
+            using (var db = new ProjectContext())
+            {
+                var userExist = db.User.FirstOrDefault(e => e.Email == email);
+
+                if (userExist != null)
+                {
+                    Console.WriteLine("The email has been used by other user!");
+                }
+                else
+                {
+                    db.Add(new User()
+                    {
+                        Name = userName,
+                        Age = age,
+                        Email = email,
+                        Password = password
+                    });
+                }
+                db.SaveChanges();
+            }
+        }
     }
 }
