@@ -17,7 +17,7 @@ namespace DAL.Model
         public int Amount { get; set; }
 
         [ForeignKey("Category")]
-        public int CategoryRedId { get; set; }
+        public int CategoryRefId { get; set; }
         public Category Category { get; set; }
 
         [ForeignKey("Recipient")]
