@@ -1,4 +1,5 @@
 ﻿using DAL;
+using DAL.Model;
 using Microsoft.EntityFrameworkCore;
 using Service.DTOs;
 using System.Data.SqlClient;
@@ -44,22 +45,27 @@ namespace Service
 
         //-- CREATE EXPENSE ---------------------------
 
-        public void InsertExpense(ExpenseDTO expenseDTO)
+        public void InsertExpense(Expense expens)
         {
-            using(var context = new ProjectContext())
+            using (var context = new ProjectContext())
             {
-                var result = context.Expense
-                    .Select(x => new ExpenseDTO
-                    {
-
-                        Amount = x.Amount,
-                        //Category = x.Category,
-                        RecipientName = x.Recipient.RecipientName,
-                        Date = x.ExpenseDate,
-                        Comment = x.Comment
-                    })
-                    .ToList();
+                context.Add(expens);
+                context.SaveChanges();
             }
+               
+            //{
+            //    //var result = context.Expense
+            //    //    .Select(x => new ExpenseDTO
+            //    //    {
+
+            //    //        Amount = x.Amount,
+            //    //        //Category = x.Category,
+            //    //        RecipientName = x.Recipient.RecipientName,
+            //    //        Date = x.ExpenseDate,
+            //    //        Comment = x.Comment
+            //    //    })
+               
+            //}
         }
     }
 }
