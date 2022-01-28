@@ -48,7 +48,16 @@ namespace Service
         {
             using(var context = new ProjectContext())
             {
+                var result = context.Expense
+                    .Select(x => new ExpenseDTO
+                    {
 
+                        Amount = x.Amount,
+                        Category = x.Category,
+                        Recipient = x.Recipient,
+                        Date = x.ExpenseDate
+                    })
+                    .ToList();
             }
         }
     }
