@@ -53,9 +53,10 @@ namespace Service
                     {
 
                         Amount = x.Amount,
-                        Category = x.Category,
-                        Recipient = x.Recipient,
-                        Date = x.ExpenseDate
+                        //Category = x.Category,
+                        RecipientName = x.Recipient.RecipientName,
+                        Date = x.ExpenseDate,
+                        Comment = x.Comment
                     })
                     .ToList();
             }
