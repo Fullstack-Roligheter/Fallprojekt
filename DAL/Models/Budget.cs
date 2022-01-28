@@ -14,10 +14,10 @@ namespace DAL
 
         //public string Name { get; set; }
 
-        [DataType(DataType.Date)] // <-- För att ta bort DATETIME där timestamp:en inkluderas kan man använda denna för att få enbart DD-MM-YYYY
+        //[DataType(DataType.Date)] // <-- För att ta bort DATETIME där timestamp:en inkluderas kan man använda denna för att få enbart DD-MM-YYYY
         public DateTime StartDate { get; set; }
 
-        [DataType(DataType.Date)]
+        //[DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
 
         public decimal MaxAmountMoney { get; set; }

@@ -19,7 +19,7 @@ namespace DAL.Extensions
 
             builder.Entity<Budget>().HasData //Budget tabell
                 (
-                    new Budget { BudgetId = 1, StartDate = 01-01-2022, EndDate = 31-01-2022, MaxAmountMoney = 5000 },
+                    new Budget { BudgetId = 1, StartDate = DateTime.ParseExact("2022-01-15", "yyyy-MM-dd", null), EndDate = DateTime.ParseExact("2022-01-15", "yyyy-MM-dd", null), MaxAmountMoney = 5000 }
                 );
         }
     }

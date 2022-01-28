@@ -31,6 +31,11 @@ namespace DAL
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.UserId);
 
+            modelBuilder.Entity<Budget>()
+                .Property(b => b.StartDate).HasColumnType("date");
+            modelBuilder.Entity<Budget>()
+                .Property(b => b.EndDate).HasColumnType("date");
+
             modelBuilder.Seed();
         }
     }
