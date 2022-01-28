@@ -13,6 +13,8 @@ namespace DAL
     {
         public DbSet <User> User { get; set; } //Lägg tabeller här
 
+        public DbSet <Budget> Budgets { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             var serverAddress = "localhost\\SQLEXPRESS";

@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace DAL
 {
-    public class Plans
+    public class Budget
     {
         [Key] // <-- Kör med Data annotations tills vidare bara för att vara tydlig
-        public int PlanId { get; set; }
-        public string PlanName { get; set; }
+        public int BudgetId { get; set; }
+
+        //public string Name { get; set; }
 
         [DataType(DataType.Date)] // <-- För att ta bort DATETIME där timestamp:en inkluderas kan man använda denna för att få enbart DD-MM-YYYY
         public DateTime StartDate { get; set; }
