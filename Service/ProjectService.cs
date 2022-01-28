@@ -41,5 +41,15 @@ namespace Service
                     .ToList();
             }
         }
+
+        //-- CREATE EXPENSE ---------------------------
+
+        public void InsertExpense(ExpenseDTO expenseDTO)
+        {
+            using(var context = new ProjectContext())
+            {
+
+            }
+        }
     }
 }
