@@ -15,6 +15,12 @@ namespace Fallprojekt.Controllers
         {
             return ProjectService.Instance.ListAllUsers();
         }
+
+        [HttpPost("/CalculateBudgetFromCatagories")]
+        public decimal CalculateBudgetFromCatagories([FromBody] CountMaxMoneyDTO input)
+        {
+            return ProjectService.Instance.CalculateBudgetFromCatagories(input);
+        }
     }
+
 }
-// TEST

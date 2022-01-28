@@ -4,6 +4,7 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ProjectContext))]
-    partial class ProjectContextModelSnapshot : ModelSnapshot
+    [Migration("20220128195925_added_moar")]
+    partial class added_moar
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,7 +59,7 @@ namespace DAL.Migrations
                         {
                             BudgetId = 1,
                             EndDate = new DateTime(2022, 1, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            MaxAmountMoney = 0m,
+                            MaxAmountMoney = 5000m,
                             Name = "Default",
                             StartDate = new DateTime(2022, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = 1
@@ -86,22 +88,15 @@ namespace DAL.Migrations
 
                     b.HasIndex("BudgetId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Category");
 
                     b.HasData(
                         new
                         {
                             CategoryId = 1,
                             BudgetId = 1,
-                            CategoryMaxAmount = 1000m,
+                            CategoryMaxAmount = 0m,
                             Name = "Default"
-                        },
-                        new
-                        {
-                            CategoryId = 2,
-                            BudgetId = 1,
-                            CategoryMaxAmount = 1500m,
-                            Name = "Hem & Hushåll"
                         });
                 });
 
@@ -130,7 +125,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Expenses");
+                    b.ToTable("Expense");
 
                     b.HasData(
                         new

@@ -12,8 +12,9 @@ namespace DAL
     public class ProjectContext : DbContext
     {
         public DbSet <User> User { get; set; } //Lägg tabeller här
-
         public DbSet <Budget> Budgets { get; set; }
+        public DbSet <Category> Categories { get; set; }
+        public DbSet <Expense> Expenses { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
@@ -29,12 +30,38 @@ namespace DAL
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
-                .HasIndex(u => u.UserId);
+                .HasIndex(u => u.UserId); //PK är kolumnen "UserId" i tabellen User
 
             modelBuilder.Entity<Budget>()
-                .Property(b => b.StartDate).HasColumnType("date");
+                .Property(b => b.StartDate).HasColumnType("date"); //Vi specifierar att kolumnen "StartDate" har en SQL datatyp av sorten "date"
             modelBuilder.Entity<Budget>()
                 .Property(b => b.EndDate).HasColumnType("date");
+            modelBuilder.Entity<Budget>()
+                .Property(b => b.MaxAmountMoney).HasColumnType("money");
+
+            modelBuilder.Entity<Category>()
+                .Property(c => c.CategoryMaxAmount).HasColumnType("money");
+
+            modelBuilder.Entity<Expense>()
+                .Property(e => e.ExpenseDate).HasColumnType("date");
+            modelBuilder.Entity<Expense>()
+                .Property(e => e.ExpenseAmount).HasColumnType("money");
+
+
+            modelBuilder.Entity<Budget>() //En USER kan ha MÅNGA Budgets. FK är Budgets.UserId på MÅNGA sidan
+                .HasOne<User>(u => u.User)
+                .WithMany(b => b.Budgets)
+                .HasForeignKey(b => b.UserId);
+
+            modelBuilder.Entity<Category>()
+                .HasOne<Budget>(b => b.Budget)
+                .WithMany(c => c.Categories)
+                .HasForeignKey(c => c.BudgetId);
+
+            modelBuilder.Entity<Expense>()
+                .HasOne<Category>(c => c.Category)
+                .WithMany(e => e.Expenses)
+                .HasForeignKey(e => e.CategoryId);
 
             modelBuilder.Seed();
         }

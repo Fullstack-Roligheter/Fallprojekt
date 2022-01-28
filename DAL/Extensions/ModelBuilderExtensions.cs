@@ -19,7 +19,19 @@ namespace DAL.Extensions
 
             builder.Entity<Budget>().HasData //Budget tabell
                 (
-                    new Budget { BudgetId = 1, StartDate = DateTime.ParseExact("2022-01-15", "yyyy-MM-dd", null), EndDate = DateTime.ParseExact("2022-01-15", "yyyy-MM-dd", null), MaxAmountMoney = 5000 }
+                    new Budget { BudgetId = 1, UserId = 1, Name = "Default", StartDate = DateTime.ParseExact("2022-01-01", "yyyy-MM-dd", null), EndDate = DateTime.ParseExact("2022-01-31", "yyyy-MM-dd", null), MaxAmountMoney = 0 }
+                );
+
+            builder.Entity<Category>().HasData //Category tabell
+                (
+                    new Category { CategoryId = 1, Name = "Default", BudgetId = 1, CategoryMaxAmount = 1000 },
+                    new Category { CategoryId = 2, Name = "Hem & Hushåll", BudgetId = 1, CategoryMaxAmount = 1500 }
+                );
+
+            builder.Entity<Expense>().HasData //Expense tabell
+                (
+                    new Expense { ExpenseId = 1, ExpenseRecipient = "ICA",      ExpenseAmount = 500, ExpenseDate = DateTime.ParseExact("2022-01-15", "yyyy-MM-dd", null), CategoryId = 1 },
+                    new Expense { ExpenseId = 2, ExpenseRecipient = "Hemköp",   ExpenseAmount = 250, ExpenseDate = DateTime.ParseExact("2022-01-17", "yyyy-MM-dd", null), CategoryId = 1 }
                 );
         }
     }
