@@ -72,7 +72,7 @@ namespace Service
                 }
                 db.SaveChanges();
 
-                //AddDefaultBudgetAndCategoryToNewUser(string userNewEmail);
+                //AddDefaultBudgetAndCategoryToNewUser(string email);
             }
         }
     }
