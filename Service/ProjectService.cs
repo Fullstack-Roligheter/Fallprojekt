@@ -71,6 +71,8 @@ namespace Service
                     });
                 }
                 db.SaveChanges();
+
+                //AddDefaultBudgetAndCategoryToNewUser(string userNewEmail);
             }
         }
     }
