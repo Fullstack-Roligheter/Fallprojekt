@@ -55,16 +55,16 @@ namespace Service
                 List<SimpleDecimalDTO> categoryMaxAmountList = new List<SimpleDecimalDTO>();
 
                 categoryMaxAmountList = (from u in context.User
-                     join b in context.Budgets on u.UserId equals b.UserId
-                     join c in context.Categories on b.BudgetId equals c.BudgetId
-                     where u.UserId == input.UserId && input.StartDate >= b.StartDate && input.EndDate <= b.EndDate
-                     select new SimpleDecimalDTO
-                     {
-                        Amount = c.CategoryMaxAmount
-                     }).ToList();
+                                         join b in context.Budgets on u.UserId equals b.UserId
+                                         join c in context.Categories on b.BudgetId equals c.BudgetId
+                                         where u.UserId == input.UserId && input.StartDate >= b.StartDate && input.EndDate <= b.EndDate
+                                         select new SimpleDecimalDTO
+                                         {
+                                             Amount = c.CategoryMaxAmount
+                                         }).ToList();
 
                 decimal newBudget = 0;
-                foreach(var amount in categoryMaxAmountList)
+                foreach (var amount in categoryMaxAmountList)
                 {
                     decimal newAmount = amount.Amount;
                     newBudget += newAmount;
@@ -75,8 +75,66 @@ namespace Service
                 context.SaveChanges();
 
                 return newBudget; //Man kan använda den här för att returnera värdet till Swagger / Postman
+            }
+        }
+        public void AddDefaultBudgetAndCategoryToNewUser(string inputEmail)
+        {
+            //När metoden körs, tar den emot en EMail och tar fram UserId med hjälp av den,
+            //sen använder den upphittade UserId för att skapa upp en tuple i Budget tabellen
+            //kopplat till den UserId.
+            //Sedan tar den fram BudgetId för den nyss skapade tuple i Budget tabellen för nya
+            //användaren, och använder den för att skapa en till tuple i Categories tabellen,
+            //som är då kopplat till den nyss skapade Budget tuple. Alla nya tuples har Default
+            //värden inlagt.
+            //Eftersom mer än en SaveContext behövdes, var jag tvungen att dela upp de i seperata
+            //metoder. Har behållit den här som utgångsmetod bara.
+            
+            AddDefaultBudgetToNewUser(inputEmail);
+        }
+        public void AddDefaultBudgetToNewUser(string inputEmail)
+        {
+            using (var context = new ProjectContext())
+            {
+                var tempNewUserId = (from u in context.User
+                             where u.Email == inputEmail
+                             select u.UserId).FirstOrDefault();
 
+                var newUserId = Convert.ToInt32(tempNewUserId);
 
+                var newUserDefaultBudget = context.Set<Budget>();
+                newUserDefaultBudget.Add(new Budget
+                {
+                    UserId = newUserId,
+                    Name = "Default",
+                    StartDate = DateTime.Today,
+                    EndDate = DateTime.Today,
+
+                });
+                context.SaveChanges();
+
+                AddDefaultCategoryToNewUser(newUserId);
+            }
+        }
+        public void AddDefaultCategoryToNewUser(int inputUserId)
+        {
+            using (var context = new ProjectContext())
+            {
+                var tempNewUserBudgetId = (from u in context.User
+                                           join b in context.Budgets
+                                           on u.UserId equals b.UserId
+                                           where u.UserId == inputUserId
+                                           select b.BudgetId).FirstOrDefault();
+
+                var newUserBudgetId = Convert.ToInt32(tempNewUserBudgetId);
+
+                var newUserDefaultCategory = context.Set<Category>();
+                newUserDefaultCategory.Add(new Category
+                {
+                    Name = "Default",
+                    BudgetId = newUserBudgetId,
+                    CategoryMaxAmount = 0
+                });
+                context.SaveChanges();
             }
         }
     }

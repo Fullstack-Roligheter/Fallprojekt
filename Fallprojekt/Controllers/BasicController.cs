@@ -21,6 +21,12 @@ namespace Fallprojekt.Controllers
         {
             return ProjectService.Instance.CalculateBudgetFromCatagories(input);
         }
+
+        [HttpPost("/AddDefaultBudgetAndCategoryToNewUser")]
+        public void AddDefaultBudgetAndCategoryToNewUser([FromBody] string input)
+        {
+            ProjectService.Instance.AddDefaultBudgetAndCategoryToNewUser(input);
+        }
     }
 
 }
