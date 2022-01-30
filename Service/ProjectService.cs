@@ -137,5 +137,19 @@ namespace Service
                 context.SaveChanges();
             }
         }
+        public double AddAllExpensesInSelectedBudget()
+        {
+            //Måste fråga gruppen om allting ska sitta i samma metod, eller om det
+            //ska uppdelas i flera metoder. t.ex
+            //en metod som räknar alla expenses under en budget
+            //en metod som räknar alla expenses under en category under en budget
+            //osv
+            //ELLER
+            //göra allting i en metod och skicka en DTO med allting tillbaka till användaren.
+
+
+
+            return 0.0;
+        }
     }
 }
