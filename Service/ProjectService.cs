@@ -42,14 +42,25 @@ namespace Service
             }
         }
 
+        //use userId when you want to build expense and category based on user id 
+        int userId = 0;
+        //================
         public bool LogIn(string username, string password)
         {
+            userId = FetchingUserId(username);
             using (var db = new ProjectContext()) //, StringComparison.OrdinalIgnoreCase
             {
-                return db.User.Any(u => u.Name.Equals(username) && u.Password == password);
+                return db.User.Any(u => u.Name.Equals(username.ToLower()) && u.Password == password);
             }
         }
-
+        public int FetchingUserId(string username)
+        {
+            using (var db = new ProjectContext())
+            {
+                return db.User.Where(u => u.Name == username).Select(i => i.UserId).FirstOrDefault();
+            }
+        }
+  
         public void UserRegistering(string userName, int age, string email, string password)
         {
             using (var db = new ProjectContext())
@@ -64,7 +75,7 @@ namespace Service
                 {
                     db.Add(new User()
                     {
-                        Name = userName,
+                        Name = userName.ToLower(),
                         Age = age,
                         Email = email,
                         Password = password
