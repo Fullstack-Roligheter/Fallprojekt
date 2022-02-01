@@ -41,7 +41,6 @@ namespace Service
                     .ToList();
             }
         }
-
         public decimal CalculateBudgetFromCatagories(CountMaxMoneyDTO input)
         {
             //Den tar fram alla MaxAmount från alla Categories som tillhör en *input.UserId* där
@@ -88,7 +87,7 @@ namespace Service
             //värden inlagt.
             //Eftersom mer än en SaveContext behövdes, var jag tvungen att dela upp de i seperata
             //metoder. Har behållit den här som utgångsmetod bara.
-            
+
             AddDefaultBudgetToNewUser(inputEmail);
         }
         public void AddDefaultBudgetToNewUser(string inputEmail)
@@ -96,8 +95,8 @@ namespace Service
             using (var context = new ProjectContext())
             {
                 var tempNewUserId = (from u in context.User
-                             where u.Email == inputEmail
-                             select u.UserId).FirstOrDefault();
+                                     where u.Email == inputEmail
+                                     select u.UserId).FirstOrDefault();
 
                 var newUserId = Convert.ToInt32(tempNewUserId);
 
@@ -137,19 +136,26 @@ namespace Service
                 context.SaveChanges();
             }
         }
-        public double AddAllExpensesInSelectedBudget()
+        public List<string> ListUserBudgets(int inputUserId)
         {
-            //Måste fråga gruppen om allting ska sitta i samma metod, eller om det
-            //ska uppdelas i flera metoder. t.ex
-            //en metod som räknar alla expenses under en budget
-            //en metod som räknar alla expenses under en category under en budget
-            //osv
-            //ELLER
-            //göra allting i en metod och skicka en DTO med allting tillbaka till användaren.
+            var budgetList = new List<string>();
 
-
-
-            return 0.0;
+            using (var context = new ProjectContext())
+            {
+                var tempBudgetList = (from u in context.User
+                              join b in context.Budgets on u.UserId equals b.UserId
+                              where u.UserId == inputUserId
+                              select new
+                              {
+                                  b.Name
+                              }).ToList();
+                
+                foreach (var item in tempBudgetList)
+                {
+                    budgetList.Add(item.Name);
+                }
+            }
+            return budgetList;
         }
     }
 }

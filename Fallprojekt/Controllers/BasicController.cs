@@ -27,6 +27,12 @@ namespace Fallprojekt.Controllers
         {
             ProjectService.Instance.AddDefaultBudgetAndCategoryToNewUser(input);
         }
+
+        [HttpPost("/ListUserBudgets")]
+        public List<string> ListUserBudgets(int inputUserId)
+        {
+            return ProjectService.Instance.ListUserBudgets(inputUserId);
+        }
     }
 
 }
