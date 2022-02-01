@@ -53,19 +53,7 @@ namespace Service
                 context.SaveChanges();
             }
                
-            //{
-            //    //var result = context.Expense
-            //    //    .Select(x => new ExpenseDTO
-            //    //    {
-
-            //    //        Amount = x.Amount,
-            //    //        //Category = x.Category,
-            //    //        RecipientName = x.Recipient.RecipientName,
-            //    //        Date = x.ExpenseDate,
-            //    //        Comment = x.Comment
-            //    //    })
-               
-            //}
+           
         }
     }
 }
