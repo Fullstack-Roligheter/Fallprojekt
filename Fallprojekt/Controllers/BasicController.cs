@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service;
 using Service.DTOs;
@@ -34,5 +34,4 @@ namespace Fallprojekt.Controllers
             return ProjectService.Instance.ListUserBudgets(inputUserId);
         }
     }
-
 }

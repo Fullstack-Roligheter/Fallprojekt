@@ -1,4 +1,5 @@
-﻿using DAL;
+using DAL;
+using DAL.Model;
 using Microsoft.EntityFrameworkCore;
 using Service.DTOs;
 using System.Data.SqlClient;
@@ -23,6 +24,8 @@ namespace Service
         private ProjectService() { }
         //SINGLETON--------------------------------------------------------------------------------------------------
 
+        int userId = 0; //use userId when you want to build expense and category based on user id 
+      
         public List<UserDTO> ListAllUsers()
         {
             using (var context = new ProjectContext())
@@ -39,6 +42,7 @@ namespace Service
                     .ToList();
             }
         }
+
         public decimal CalculateBudgetFromCatagories(CountMaxMoneyDTO input)
         {
             //Den tar fram alla MaxAmount från alla Categories som tillhör en *input.UserId* där
@@ -74,6 +78,7 @@ namespace Service
                 return newBudget; //Man kan använda den här för att returnera värdet till Swagger / Postman
             }
         }
+      
         public void AddDefaultBudgetAndCategoryToNewUser(string inputEmail)
         {
             //När metoden körs, tar den emot en EMail och tar fram UserId med hjälp av den,
@@ -154,6 +159,66 @@ namespace Service
                 }
             }
             return budgetList;
+        }
+
+
+        public bool LogIn(string username, string password)
+        {
+            userId = FetchingUserId(username);
+            using (var db = new ProjectContext()) //, StringComparison.OrdinalIgnoreCase
+            {
+                return db.User.Any(u => u.Name.Equals(username.ToLower()) && u.Password == password);
+            }
+        }
+      
+        public int FetchingUserId(string username)
+        {
+            using (var db = new ProjectContext())
+            {
+                return db.User.Where(u => u.Name == username).Select(i => i.UserId).FirstOrDefault();
+            }
+        }
+  
+        public void UserRegistering(string userName, int age, string email, string password)
+        {
+            using (var db = new ProjectContext())
+            {
+                var userExist = db.User.FirstOrDefault(e => e.Email == email);
+
+                if (userExist != null)
+                {
+                    Console.WriteLine("The email has been used by other user!");
+                }
+                else
+                {
+                    db.Add(new User()
+                    {
+                        Name = userName.ToLower(),
+                        Age = age,
+                        Email = email,
+                        Password = password
+                    });
+                }
+                db.SaveChanges();
+
+                AddDefaultBudgetAndCategoryToNewUser(string email);
+            }
+        }
+      
+        public void InsertExpense(ExpenseDTO expenseDTO)
+        {
+            using (var context = new ProjectContext())
+            {
+                context.Add(
+                    new Expense
+                    {
+                        Amount = expenseDTO.Amount,
+                        Recipient = expenseDTO.Recipient,
+                        ExpenseDate = expenseDTO.Date,
+                        Comment = expenseDTO.Comment
+                    });
+                context.SaveChanges();
+            }
         }
     }
 }
