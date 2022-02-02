@@ -8,9 +8,9 @@ namespace DAL.Model
 {
     public class Recipient
     {
-        public int RecipientId { get; set; }
-        public string RecipientName { get; set; }
-        public ICollection<Expense> Expense { get; set; }
+        //public int RecipientId { get; set; }
+        //public string RecipientName { get; set; }
+        //public ICollection<Expense> Expense { get; set; }
 
     }
 }

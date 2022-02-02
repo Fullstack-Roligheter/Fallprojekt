@@ -45,15 +45,20 @@ namespace Service
 
         //-- CREATE EXPENSE ---------------------------
 
-        public void InsertExpense(Expense expens)
+        public void InsertExpense(ExpenseDTO expenseDTO)
         {
             using (var context = new ProjectContext())
             {
-                context.Add(expens);
+                context.Add(
+                    new Expense
+                    {
+                        Amount = expenseDTO.Amount,
+                        Recipient = expenseDTO.Recipient,
+                        ExpenseDate = expenseDTO.Date,
+                        Comment = expenseDTO.Comment
+                    });
                 context.SaveChanges();
-            }
-               
-           
+            }              
         }
     }
 }

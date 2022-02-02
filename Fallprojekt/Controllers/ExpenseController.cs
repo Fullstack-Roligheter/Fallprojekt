@@ -13,13 +13,7 @@ namespace Fallprojekt.Controllers
         [HttpPost("addExpense")]
         public void PostExpense(ExpenseDTO expenseDTO)
         {
-            ProjectService.Instance.InsertExpense(new Expense
-            {
-                Amount= expenseDTO.Amount,
-                Recipient=expenseDTO.Recipient,
-                ExpenseDate=expenseDTO.Date,
-                Comment=expenseDTO.Comment
-            });
+            ProjectService.Instance.InsertExpense(expenseDTO);
         }
     }
 }

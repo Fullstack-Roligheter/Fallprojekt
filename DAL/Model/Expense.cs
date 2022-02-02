@@ -20,9 +20,7 @@ namespace DAL.Model
         public int CategoryRefId { get; set; }
         public Category Category { get; set; }
 
-        [ForeignKey("Recipient")]
-        public int RecipientRefId { get; set; }
-        public Recipient Recipient { get; set; }
+        public string Recipient { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime ExpenseDate { get; set; }
