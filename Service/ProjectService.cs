@@ -58,7 +58,7 @@ namespace Service
                         Comment = expenseDTO.Comment
                     });
                 context.SaveChanges();
-            }              
+            }
         }
     }
 }

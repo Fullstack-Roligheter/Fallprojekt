@@ -12,13 +12,14 @@ namespace DAL.Model
     {
         public int ExpenseId { get; set; }
         [ForeignKey("User")]
-        public int UserRefId { get; set; }
+        public int UserRefId { get; set; } 
         public User User { get; set; }
+        
         public int Amount { get; set; }
 
-        //[ForeignKey("Category")]
-        //public int CategoryRefId { get; set; }
-        //public Category Category { get; set; }
+        [ForeignKey("Category")]
+        public int CategoryRefId { get; set; }
+        public Category Category { get; set; }
 
         public string Recipient { get; set; }
 
