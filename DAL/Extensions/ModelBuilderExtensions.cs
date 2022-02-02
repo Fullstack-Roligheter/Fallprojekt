@@ -13,8 +13,8 @@ namespace DAL.Extensions
         {
             builder.Entity<User>().HasData //User tabell
                 (
-                    new User { UserId = 1, Name = "Adam Adamsson", Age = 20, Email = "adam_01@hotmail.com", Password = "password123" },
-                    new User { UserId = 2, Name = "Berit Beritsson", Age = 30, Email = "berit_02@msn.com", Password = "password123" }
+                    new User { UserId = 1, Name = "adam", Age = 20, Email = "adam_01@hotmail.com", Password = "123" },
+                    new User { UserId = 2, Name = "berit", Age = 30, Email = "berit_02@msn.com", Password = "123" }
                 );
 
             builder.Entity<Budget>().HasData //Budget tabell
