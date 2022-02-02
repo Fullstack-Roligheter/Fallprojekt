@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ProjectContext))]
-    [Migration("20220202181907_init")]
+    [Migration("20220202184935_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -188,16 +188,16 @@ namespace DAL.Migrations
                             UserId = 1,
                             Age = 20,
                             Email = "adam_01@hotmail.com",
-                            Name = "Adam Adamsson",
-                            Password = "password123"
+                            Name = "adam",
+                            Password = "123"
                         },
                         new
                         {
                             UserId = 2,
                             Age = 30,
                             Email = "berit_02@msn.com",
-                            Name = "Berit Beritsson",
-                            Password = "password123"
+                            Name = "berit",
+                            Password = "123"
                         });
                 });
 

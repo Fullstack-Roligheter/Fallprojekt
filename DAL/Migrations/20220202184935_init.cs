@@ -95,12 +95,12 @@ namespace DAL.Migrations
             migrationBuilder.InsertData(
                 table: "User",
                 columns: new[] { "UserId", "Age", "Email", "Name", "Password" },
-                values: new object[] { 1, 20, "adam_01@hotmail.com", "Adam Adamsson", "password123" });
+                values: new object[] { 1, 20, "adam_01@hotmail.com", "adam", "123" });
 
             migrationBuilder.InsertData(
                 table: "User",
                 columns: new[] { "UserId", "Age", "Email", "Name", "Password" },
-                values: new object[] { 2, 30, "berit_02@msn.com", "Berit Beritsson", "password123" });
+                values: new object[] { 2, 30, "berit_02@msn.com", "berit", "123" });
 
             migrationBuilder.InsertData(
                 table: "Budgets",
