@@ -16,9 +16,9 @@ namespace DAL.Model
         public User User { get; set; }
         public int Amount { get; set; }
 
-        [ForeignKey("Category")]
-        public int CategoryRefId { get; set; }
-        public Category Category { get; set; }
+        //[ForeignKey("Category")]
+        //public int CategoryRefId { get; set; }
+        //public Category Category { get; set; }
 
         public string Recipient { get; set; }
 

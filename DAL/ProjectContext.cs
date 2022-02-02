@@ -14,8 +14,6 @@ namespace DAL
     {
         public DbSet <User> User { get; set; } //Lägg tabeller här
         public DbSet<Expense> Expense { get; set; }
-        public DbSet<Recipient> Recipient { get; set; }
-        public DbSet<Category> Category { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
