@@ -14,7 +14,7 @@ namespace DAL
         public string? ExpenseRecipient { get; set; }
         public decimal ExpenseAmount { get; set; }
         public DateTime ExpenseDate { get; set; }
-        public string? Comment { get; set; }
+        public string? ExpenseComment { get; set; }
 
 
 

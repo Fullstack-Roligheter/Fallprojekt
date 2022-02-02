@@ -1,5 +1,4 @@
 using DAL;
-using DAL.Model;
 using Microsoft.EntityFrameworkCore;
 using Service.DTOs;
 using System.Data.SqlClient;
@@ -201,7 +200,7 @@ namespace Service
                 }
                 db.SaveChanges();
 
-                AddDefaultBudgetAndCategoryToNewUser(string email);
+                AddDefaultBudgetAndCategoryToNewUser(email);
             }
         }
       
@@ -212,10 +211,10 @@ namespace Service
                 context.Add(
                     new Expense
                     {
-                        Amount = expenseDTO.Amount,
-                        Recipient = expenseDTO.Recipient,
+                        ExpenseAmount = expenseDTO.Amount,
+                        ExpenseRecipient = expenseDTO.Recipient,
                         ExpenseDate = expenseDTO.Date,
-                        Comment = expenseDTO.Comment
+                        ExpenseComment = expenseDTO.Comment
                     });
                 context.SaveChanges();
             }

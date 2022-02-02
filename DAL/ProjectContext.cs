@@ -1,5 +1,4 @@
 using DAL.Extensions;
-using DAL.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -30,8 +29,8 @@ namespace DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-                .HasIndex(u => u.UserId); //PK är kolumnen "UserId" i tabellen User
+            //modelBuilder.Entity<User>()
+            //    .HasIndex(u => u.UserId); //PK är kolumnen "UserId" i tabellen User
 
             modelBuilder.Entity<Budget>()
                 .Property(b => b.StartDate).HasColumnType("date"); //Vi specifierar att kolumnen "StartDate" har en SQL datatyp av sorten "date"

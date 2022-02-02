@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ProjectContext))]
-    [Migration("20220128195925_added_moar")]
-    partial class added_moar
+    [Migration("20220202181907_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,7 +35,7 @@ namespace DAL.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("date");
 
-                    b.Property<decimal>("MaxAmountMoney")
+                    b.Property<decimal?>("MaxAmountMoney")
                         .HasColumnType("money");
 
                     b.Property<string>("Name")
@@ -59,7 +59,7 @@ namespace DAL.Migrations
                         {
                             BudgetId = 1,
                             EndDate = new DateTime(2022, 1, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            MaxAmountMoney = 5000m,
+                            MaxAmountMoney = 0m,
                             Name = "Default",
                             StartDate = new DateTime(2022, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = 1
@@ -88,15 +88,22 @@ namespace DAL.Migrations
 
                     b.HasIndex("BudgetId");
 
-                    b.ToTable("Category");
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
                         {
                             CategoryId = 1,
                             BudgetId = 1,
-                            CategoryMaxAmount = 0m,
+                            CategoryMaxAmount = 1000m,
                             Name = "Default"
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            BudgetId = 1,
+                            CategoryMaxAmount = 1500m,
+                            Name = "Hem & Hushåll"
                         });
                 });
 
@@ -114,11 +121,13 @@ namespace DAL.Migrations
                     b.Property<decimal>("ExpenseAmount")
                         .HasColumnType("money");
 
+                    b.Property<string>("ExpenseComment")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("ExpenseDate")
                         .HasColumnType("date");
 
                     b.Property<string>("ExpenseRecipient")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ExpenseId");
@@ -170,8 +179,6 @@ namespace DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("User");
 
