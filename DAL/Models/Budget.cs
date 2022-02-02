@@ -20,7 +20,7 @@ namespace DAL
         //[DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
 
-        public decimal MaxAmountMoney { get; set; }
+        public decimal? MaxAmountMoney { get; set; }
 
 
 

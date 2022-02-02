@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Fallprojekt.Controllers
 {
-    [Route("/basic")]
+    [Route("api/basic")]
     [ApiController]
     public class BasicController : ControllerBase
     {
