@@ -214,7 +214,8 @@ namespace Service
                         ExpenseAmount = expenseDTO.Amount,
                         ExpenseRecipient = expenseDTO.Recipient,
                         ExpenseDate = expenseDTO.Date,
-                        ExpenseComment = expenseDTO.Comment
+                        ExpenseComment = expenseDTO.Comment,
+                        CategoryId = expenseDTO.CategoryId
                     });
                 context.SaveChanges();
             }

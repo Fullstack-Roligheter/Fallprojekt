@@ -9,6 +9,7 @@ namespace Service.DTOs
 {
     public class ExpenseDTO
     {
+        public int CategoryId { get; set; }
         public int Amount { get; set; }
         public string Recipient { get; set; }
         public DateTime Date { get; set; }
