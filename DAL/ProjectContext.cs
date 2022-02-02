@@ -1,4 +1,5 @@
 ﻿using DAL.Extensions;
+using DAL.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,6 +13,7 @@ namespace DAL
     public class ProjectContext : DbContext
     {
         public DbSet <User> User { get; set; } //Lägg tabeller här
+        public DbSet<Expense> Expense { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {

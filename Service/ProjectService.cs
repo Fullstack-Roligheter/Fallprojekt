@@ -1,4 +1,5 @@
 ﻿using DAL;
+using DAL.Model;
 using Microsoft.EntityFrameworkCore;
 using Service.DTOs;
 using System.Data.SqlClient;
@@ -84,6 +85,23 @@ namespace Service
                 db.SaveChanges();
 
                 //AddDefaultBudgetAndCategoryToNewUser(string email);
+            }
+        }
+        //-- CREATE EXPENSE ---------------------------
+
+        public void InsertExpense(ExpenseDTO expenseDTO)
+        {
+            using (var context = new ProjectContext())
+            {
+                context.Add(
+                    new Expense
+                    {
+                        Amount = expenseDTO.Amount,
+                        Recipient = expenseDTO.Recipient,
+                        ExpenseDate = expenseDTO.Date,
+                        Comment = expenseDTO.Comment
+                    });
+                context.SaveChanges();
             }
         }
     }

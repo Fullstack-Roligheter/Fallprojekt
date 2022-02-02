@@ -4,6 +4,7 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ProjectContext))]
-    partial class ProjectContextModelSnapshot : ModelSnapshot
+    [Migration("20220202171730_Expense")]
+    partial class Expense
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,26 +23,6 @@ namespace DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("DAL.Model.Category", b =>
-                {
-                    b.Property<int>("CategoryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"), 1L, 1);
-
-                    b.Property<string>("CategoryName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("categoryMax")
-                        .HasColumnType("int");
-
-                    b.HasKey("CategoryId");
-
-                    b.ToTable("Category");
-                });
 
             modelBuilder.Entity("DAL.Model.Expense", b =>
                 {
@@ -67,14 +49,15 @@ namespace DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserRefId")
                         .HasColumnType("int");
 
                     b.HasKey("ExpenseId");
 
-                    b.HasIndex("CategoryRefId");
-
-                    b.HasIndex("UserRefId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Expense");
                 });
@@ -129,26 +112,9 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Model.Expense", b =>
                 {
-                    b.HasOne("DAL.Model.Category", "Category")
+                    b.HasOne("DAL.User", null)
                         .WithMany("Expense")
-                        .HasForeignKey("CategoryRefId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DAL.User", "User")
-                        .WithMany("Expense")
-                        .HasForeignKey("UserRefId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("DAL.Model.Category", b =>
-                {
-                    b.Navigation("Expense");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("DAL.User", b =>
