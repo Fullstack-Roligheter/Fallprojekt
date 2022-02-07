@@ -19,7 +19,7 @@ namespace DAL
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             var serverAddress = "localhost\\SQLEXPRESS";
-            var databaseName = "Fallprojekt_DB";
+            var databaseName = "Fallprojekt_DB_test_lac";
             var connectionString = @"Server =" + serverAddress + "; Database =" + databaseName + "; Integrated Security = true;";
             builder
                 .UseSqlServer(connectionString)
@@ -62,6 +62,10 @@ namespace DAL
                 .HasOne<Category>(c => c.Category)
                 .WithMany(e => e.Expenses)
                 .HasForeignKey(e => e.CategoryId);
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.Age)
+                .HasDefaultValue(0);
 
             modelBuilder.Seed();
         }

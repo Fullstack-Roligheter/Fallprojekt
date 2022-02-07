@@ -1,24 +1,35 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service;
+using Service.DTOs;
 
 namespace Fallprojekt.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/user")]
     [ApiController]
     public class UserController : ControllerBase
     {
-        [HttpGet("user")]
-        public bool UserLogin(string user, string password)
+        [HttpPost("login")]
+        public IActionResult UserLogin([FromBody]LoginDTO loginInfo)
         {
-            return ProjectService.Instance.LogIn(user, password);
+            var validation = UserService.Instance.LogIn(loginInfo);
+            if (validation == true)
+            {
+                return Ok("User Logged In!");
+            }
+            return BadRequest("Username / Password Incorrect");
         }
 
         [HttpPost("register")]
-
-        public void UserRegistering(string userName, int age, string email, string password)
+        public IActionResult CreateNewUser(CreateNewUserDTO newUserInfo)
         {
-            ProjectService.Instance.UserRegistering(userName, age, email, password);
+            var validation = UserService.Instance.CreateNewUser(newUserInfo);
+
+            if (validation == "Success")
+            {
+                return Ok(validation);
+            }
+            return BadRequest(validation);
         }
     }
 }
