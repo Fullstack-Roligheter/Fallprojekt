@@ -9,16 +9,32 @@ namespace Fallprojekt.Controllers
     public class UserController : ControllerBase
     {
         [HttpGet("/login")]
-        public bool UserLogin(string user, string password)
+        public IActionResult UserLogin(string user, string password)
         {
-            return UserService.Instance.LogIn(user, password);
+            try
+            {
+                UserService.Instance.LogIn(user, password);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
         [HttpPost("/register")]
 
-        public void UserRegistering(string userName, int age, string email, string password)
+        public IActionResult UserRegistering(string userName, int age, string email, string password)
         {
-            UserService.Instance.UserRegistering(userName, age, email, password);
+            try
+            {
+                UserService.Instance.UserRegistering(userName, age, email, password);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
     }
 }
