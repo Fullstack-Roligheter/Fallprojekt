@@ -10,9 +10,17 @@ namespace Fallprojekt.Controllers
     public class ExpenseController : ControllerBase
     {
         [HttpPost("/AddExpense")]
-        public void PostExpense(ExpenseDTO expenseDTO)
+        public IActionResult PostExpense(ExpenseDTO expenseDTO)
         {
-            ExpenseService.Instance.InsertExpense(expenseDTO);
+            try 
+            {
+                ExpenseService.Instance.InsertExpense(expenseDTO);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
     }
 }
