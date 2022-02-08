@@ -5,11 +5,11 @@ using Service.DTOs;
 
 namespace Fallprojekt.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/expense")]
     [ApiController]
     public class ExpenseController : ControllerBase
     {
-        [HttpPost("addExpense")]
+        [HttpPost("/AddExpense")]
         public void PostExpense(ExpenseDTO expenseDTO)
         {
             ExpenseService.Instance.InsertExpense(expenseDTO);

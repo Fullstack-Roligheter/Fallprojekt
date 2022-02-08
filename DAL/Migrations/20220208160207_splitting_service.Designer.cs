@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ProjectContext))]
-    [Migration("20220207175107_Splitting_1")]
-    partial class Splitting_1
+    [Migration("20220208160207_splitting_service")]
+    partial class splitting_service
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -172,19 +172,11 @@ namespace DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -198,20 +190,16 @@ namespace DAL.Migrations
                             UserId = 1,
                             Age = 20,
                             Email = "adam_01@hotmail.com",
-                            FirstName = "adam",
-                            LastName = "adamsson",
-                            Password = "123",
-                            UserName = "adam"
+                            Name = "adam",
+                            Password = "123"
                         },
                         new
                         {
                             UserId = 2,
                             Age = 30,
                             Email = "berit_02@msn.com",
-                            FirstName = "berit",
-                            LastName = "beritsson",
-                            Password = "123",
-                            UserName = "berit"
+                            Name = "berit",
+                            Password = "123"
                         });
                 });
 

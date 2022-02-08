@@ -25,6 +25,12 @@ namespace Service
 
         public decimal CalculateBudgetFromCatagories(CountMaxMoneyDTO input)
         {
+            //Den tar fram alla MaxAmount från alla Categories som tillhör en *input.UserId* där
+            //Budget.StartDate >= *input.StartDate* && Budget.EndDate <= *input.EndDate*
+            //Den sparar alla resultat som en Lista. Sen räknar ihop alla resultat.
+            //Den sedan lägger i den summerade resultat i Category.CategoryMaxAmount och sparar
+            //Denna bör köras efter varje ny Category skapas.
+
             using (var context = new ProjectContext())
             {
                 List<SimpleDecimalDTO> categoryMaxAmountList = new List<SimpleDecimalDTO>();
@@ -52,7 +58,7 @@ namespace Service
                 return newBudget; //Man kan använda den här för att returnera värdet till Swagger / Postman
             }
         }
-      
+
         public void AddDefaultBudgetToNewUser(string inputEmail)
         {
             using (var context = new ProjectContext())
@@ -85,13 +91,13 @@ namespace Service
             using (var context = new ProjectContext())
             {
                 var tempBudgetList = (from u in context.User
-                              join b in context.Budgets on u.UserId equals b.UserId
-                              where u.UserId == inputUserId
-                              select new
-                              {
-                                  b.Name
-                              }).ToList();
-                
+                                      join b in context.Budgets on u.UserId equals b.UserId
+                                      where u.UserId == inputUserId
+                                      select new
+                                      {
+                                          b.Name
+                                      }).ToList();
+
                 foreach (var item in tempBudgetList)
                 {
                     budgetList.Add(item.Name);

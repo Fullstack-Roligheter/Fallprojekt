@@ -58,7 +58,7 @@ namespace Service
                 return newBudget; //Man kan använda den här för att returnera värdet till Swagger / Postman
             }
         }
-      
+
         public void AddDefaultCategoryToNewUser(int inputUserId)
         {
             using (var context = new ProjectContext())

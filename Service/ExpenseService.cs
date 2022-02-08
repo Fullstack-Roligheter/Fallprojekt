@@ -22,8 +22,8 @@ namespace Service
         private ExpenseService() { }
         //SINGLETON--------------------------------------------------------------------------------------------------
 
-        
-        public void InsertExpense(ExpenseDTO expenseDTO) //Skapar en ny Expense till en viss Category
+
+        public void InsertExpense(ExpenseDTO expenseDTO)
         {
             using (var context = new ProjectContext())
             {

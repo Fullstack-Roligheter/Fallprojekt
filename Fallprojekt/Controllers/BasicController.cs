@@ -1,37 +1,37 @@
-//using Microsoft.AspNetCore.Http;
-//using Microsoft.AspNetCore.Mvc;
-//using Service;
-//using Service.DTOs;
-//using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Service;
+using Service.DTOs;
+using System.Collections.Generic;
 
-//namespace Fallprojekt.Controllers
-//{
-//    [Route("api/basic")]
-//    [ApiController]
-//    public class BasicController : ControllerBase
-//    {
-//        [HttpGet] //Exempel Controller
-//        public List<UserDTO> ListAllUsers()
-//        {
-//            return CategoryService.Instance.ListAllUsers();
-//        }
+namespace Fallprojekt.Controllers
+{
+    [Route("api/basic")]
+    [ApiController]
+    public class BasicController : ControllerBase
+    {
+        [HttpGet("/ListAllUsers")] //Exempel Controller
+        public List<UserDTO> ListAllUsers()
+        {
+            return UserService.Instance.ListAllUsers();
+        }
 
-//        [HttpPost("/CalculateBudgetFromCatagories")]
-//        public decimal CalculateBudgetFromCatagories([FromBody] CountMaxMoneyDTO input)
-//        {
-//            return CategoryService.Instance.CalculateBudgetFromCatagories(input);
-//        }
+        [HttpPost("/CalculateBudgetFromCatagories")]
+        public decimal CalculateBudgetFromCatagories([FromBody] CountMaxMoneyDTO input)
+        {
+            return BudgetService.Instance.CalculateBudgetFromCatagories(input);
+        }
 
-//        [HttpPost("/AddDefaultBudgetAndCategoryToNewUser")]
-//        public void AddDefaultBudgetAndCategoryToNewUser([FromBody] string input)
-//        {
-//            CategoryService.Instance.AddDefaultBudgetAndCategoryToNewUser(input);
-//        }
+        [HttpPost("/AddDefaultBudgetAndCategoryToNewUser")]
+        public void AddDefaultBudgetAndCategoryToNewUser([FromBody] string input)
+        {
+            BudgetService.Instance.AddDefaultBudgetToNewUser(input);
+        }
 
-//        [HttpPost("/ListUserBudgets")]
-//        public List<string> ListUserBudgets(int inputUserId)
-//        {
-//            return CategoryService.Instance.ListUserBudgets(inputUserId);
-//        }
-//    }
-//}
+        [HttpPost("/ListUserBudgets")]
+        public List<string> ListUserBudgets(int inputUserId)
+        {
+            return BudgetService.Instance.ListUserBudgets(inputUserId);
+        }
+    }
+}

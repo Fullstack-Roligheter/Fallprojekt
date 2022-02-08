@@ -24,7 +24,7 @@ namespace Service
         //SINGLETON--------------------------------------------------------------------------------------------------
 
 
-        public List<UserDTO> ListAllUsers() //Listar alla Users i User tabellen
+        public List<UserDTO> ListAllUsers()
         {
             using (var context = new ProjectContext())
             {
@@ -32,9 +32,7 @@ namespace Service
                     .Select(u => new UserDTO
                     {
                         UserId = u.UserId,
-                        UserName = u.UserName,
-                        FirstName = u.FirstName,
-                        LastName = u.LastName,
+                        Name = u.Name,
                         Age = u.Age,
                         Email = u.Email,
                         Password = u.Password
@@ -43,18 +41,11 @@ namespace Service
             }
         }
 
-        public bool LogIn(LoginDTO loginInfo) //Kontrollerar om en viss UserId och Password stämmer överens med databasen
+        public bool LogIn(string username, string password)
         {
-            try
+            using (var db = new ProjectContext()) //, StringComparison.OrdinalIgnoreCase
             {
-                using (var db = new ProjectContext()) //, StringComparison.OrdinalIgnoreCase
-                {
-                    return db.User.Any(u => u.UserName.Equals(loginInfo.UserName.ToLower()) && u.Password == loginInfo.Password);
-                }
-            }
-            catch
-            {
-                return false;
+                return db.User.Any(u => u.Name.Equals(username.ToLower()) && u.Password == password);
             }
         }
 
@@ -62,42 +53,33 @@ namespace Service
         {
             using (var db = new ProjectContext())
             {
-                return db.User.Where(u => u.UserName == username).Select(i => i.UserId).FirstOrDefault();
+                return db.User.Where(u => u.Name == username).Select(i => i.UserId).FirstOrDefault();
             }
         }
 
-        public string CreateNewUser(CreateNewUserDTO newUserInfo)
+        public void UserRegistering(string userName, int age, string email, string password)
         {
-            try
+            using (var db = new ProjectContext())
             {
-                using (var db = new ProjectContext())
-                {
-                    var userExist = db.User.FirstOrDefault(e => e.Email == newUserInfo.Email);
+                var userExist = db.User.FirstOrDefault(e => e.Email == email);
 
-                    if (userExist != null)
-                    {
-                        return $"Email is currently in use...";
-                    }
-                    else
-                    {
-                        db.Add(new User()
-                        {
-                            UserName = newUserInfo.UserName.ToLower(),
-                            FirstName = newUserInfo.FirstName.ToLower(),
-                            LastName = newUserInfo.LastName.ToLower(),
-                            Email = newUserInfo.Email.ToLower(),
-                            Password = newUserInfo.Password,
-                            Age = 0,
-                        });
-                        db.SaveChanges();
-                        BudgetService.Instance.AddDefaultBudgetToNewUser(newUserInfo.Email.ToLower()); //Skapar en Default Budget till en ny User
-                        return $"Success";
-                    }
+                if (userExist != null)
+                {
+                    Console.WriteLine("The email has been used by other user!");
                 }
-            }
-            catch
-            {
-                return $"Error in Service...";
+                else
+                {
+                    db.Add(new User()
+                    {
+                        Name = userName.ToLower(),
+                        Age = age,
+                        Email = email,
+                        Password = password
+                    });
+                }
+                db.SaveChanges();
+
+                BudgetService.Instance.AddDefaultBudgetToNewUser(email);
             }
         }
     }

@@ -170,19 +170,11 @@ namespace DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -196,20 +188,16 @@ namespace DAL.Migrations
                             UserId = 1,
                             Age = 20,
                             Email = "adam_01@hotmail.com",
-                            FirstName = "adam",
-                            LastName = "adamsson",
-                            Password = "123",
-                            UserName = "adam"
+                            Name = "adam",
+                            Password = "123"
                         },
                         new
                         {
                             UserId = 2,
                             Age = 30,
                             Email = "berit_02@msn.com",
-                            FirstName = "berit",
-                            LastName = "beritsson",
-                            Password = "123",
-                            UserName = "berit"
+                            Name = "berit",
+                            Password = "123"
                         });
                 });
 
