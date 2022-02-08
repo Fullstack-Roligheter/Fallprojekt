@@ -13,8 +13,16 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                UserService.Instance.LogIn(user, password);
-                return Ok();
+                bool loginSuccessful = UserService.Instance.LogIn(user, password);
+
+                if (loginSuccessful)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest("Wrong Username/Password");
+                }
             }
             catch (Exception ex)
             {
