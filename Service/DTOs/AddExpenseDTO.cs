@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace Service.DTOs
 {
-    public class ExpenseDTO
+    public class AddExpenseDTO
     {
         public int CategoryId { get; set; }
-        public string CategoryName { get; set; }
         public decimal Amount { get; set; }
         public string? Recipient { get; set; }
         public DateTime Date { get; set; }

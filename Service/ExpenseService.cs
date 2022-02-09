@@ -22,8 +22,7 @@ namespace Service
         private ExpenseService() { }
         //SINGLETON--------------------------------------------------------------------------------------------------
 
-
-        public void InsertExpense(ExpenseDTO expenseDTO)
+        public void InsertExpense(AddExpenseDTO expenseDTO)
         {
             using (var context = new ProjectContext())
             {
@@ -52,7 +51,10 @@ namespace Service
                                  BudgetName = b.BudgetName,
                                  Expenses = (from e in context.Expense
                                              join c in context.Categories on e.CategoryId equals c.CategoryId
-                                             select new ExpenseDTO
+                                             join b in context.Budgets on c.BudgetId equals b.BudgetId
+                                             join u in context.User on u.UserId equals b.UserId
+                                             where b.BudgetId == input.BudgetId && u.UserId == input.UserId
+                                             select new GEFSBOExpenseDTO
                                              {
                                                  CategoryName = c.CategoryName,
                                                  Date = e.ExpenseDate,

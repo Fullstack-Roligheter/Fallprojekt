@@ -10,7 +10,7 @@ namespace Fallprojekt.Controllers
     public class ExpenseController : ControllerBase
     {
         [HttpPost("/AddExpense")]
-        public IActionResult PostExpense(ExpenseDTO expenseDTO)
+        public IActionResult PostExpense(AddExpenseDTO expenseDTO)
         {
             try 
             {
