@@ -32,10 +32,10 @@ namespace Service
                     .Select(u => new UserDTO
                     {
                         UserId = u.UserId,
-                        Name = u.Name,
-                        Age = u.Age,
-                        Email = u.Email,
-                        Password = u.Password
+                        Name = u.UserName,
+                        Age = u.UserAge,
+                        Email = u.UserEmail,
+                        Password = u.UserPassword
                     })
                     .ToList();
             }
@@ -45,7 +45,7 @@ namespace Service
         {
             using (var db = new ProjectContext()) //, StringComparison.OrdinalIgnoreCase
             {
-                return db.User.Any(u => u.Name.Equals(username.ToLower()) && u.Password == password);
+                return db.User.Any(u => u.UserName.Equals(username.ToLower()) && u.UserPassword == password);
             }
         }
 
@@ -53,7 +53,7 @@ namespace Service
         {
             using (var db = new ProjectContext())
             {
-                return db.User.Where(u => u.Name == username).Select(i => i.UserId).FirstOrDefault();
+                return db.User.Where(u => u.UserName == username).Select(i => i.UserId).FirstOrDefault();
             }
         }
 
@@ -61,7 +61,7 @@ namespace Service
         {
             using (var db = new ProjectContext())
             {
-                var userExist = db.User.FirstOrDefault(e => e.Email == email);
+                var userExist = db.User.FirstOrDefault(e => e.UserEmail == email);
 
                 if (userExist != null)
                 {
@@ -71,10 +71,10 @@ namespace Service
                 {
                     db.Add(new User()
                     {
-                        Name = userName.ToLower(),
-                        Age = age,
-                        Email = email,
-                        Password = password
+                        UserName = userName.ToLower(),
+                        UserAge = age,
+                        UserEmail = email,
+                        UserPassword = password
                     });
                 }
                 db.SaveChanges();

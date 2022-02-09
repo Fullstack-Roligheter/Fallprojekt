@@ -15,10 +15,10 @@ namespace DAL.Migrations
                 {
                     UserId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Age = table.Column<int>(type: "int", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserAge = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    UserEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserPassword = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -31,10 +31,10 @@ namespace DAL.Migrations
                 {
                     BudgetId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "date", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "date", nullable: false),
-                    MaxAmountMoney = table.Column<decimal>(type: "money", nullable: true),
+                    BudgetName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BudgetStartDate = table.Column<DateTime>(type: "date", nullable: false),
+                    BudgetEndDate = table.Column<DateTime>(type: "date", nullable: false),
+                    BudgetMaxAmountMoney = table.Column<decimal>(type: "money", nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -54,7 +54,7 @@ namespace DAL.Migrations
                 {
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CategoryMaxAmount = table.Column<decimal>(type: "money", nullable: false),
                     BudgetId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -94,27 +94,27 @@ namespace DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "User",
-                columns: new[] { "UserId", "Age", "Email", "Name", "Password" },
+                columns: new[] { "UserId", "UserAge", "UserEmail", "UserName", "UserPassword" },
                 values: new object[] { 1, 20, "adam_01@hotmail.com", "adam", "123" });
 
             migrationBuilder.InsertData(
                 table: "User",
-                columns: new[] { "UserId", "Age", "Email", "Name", "Password" },
+                columns: new[] { "UserId", "UserAge", "UserEmail", "UserName", "UserPassword" },
                 values: new object[] { 2, 30, "berit_02@msn.com", "berit", "123" });
 
             migrationBuilder.InsertData(
                 table: "Budgets",
-                columns: new[] { "BudgetId", "EndDate", "MaxAmountMoney", "Name", "StartDate", "UserId" },
+                columns: new[] { "BudgetId", "BudgetEndDate", "BudgetMaxAmountMoney", "BudgetName", "BudgetStartDate", "UserId" },
                 values: new object[] { 1, new DateTime(2022, 1, 31, 0, 0, 0, 0, DateTimeKind.Unspecified), 0m, "Default", new DateTime(2022, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 });
 
             migrationBuilder.InsertData(
                 table: "Categories",
-                columns: new[] { "CategoryId", "BudgetId", "CategoryMaxAmount", "Name" },
+                columns: new[] { "CategoryId", "BudgetId", "CategoryMaxAmount", "CategoryName" },
                 values: new object[] { 1, 1, 1000m, "Default" });
 
             migrationBuilder.InsertData(
                 table: "Categories",
-                columns: new[] { "CategoryId", "BudgetId", "CategoryMaxAmount", "Name" },
+                columns: new[] { "CategoryId", "BudgetId", "CategoryMaxAmount", "CategoryName" },
                 values: new object[] { 2, 1, 1500m, "Hem & Hushåll" });
 
             migrationBuilder.InsertData(

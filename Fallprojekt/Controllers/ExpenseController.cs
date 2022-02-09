@@ -22,5 +22,18 @@ namespace Fallprojekt.Controllers
                 return BadRequest(ex);
             }
         }
+        [HttpPost("/GetExpenseForSpecificBudget")]
+        public IActionResult GetExpenseForSpecificBudget(GetExpenseForSpecificBudgetInputDTO input)
+        {
+            try
+            {
+                return Ok(ExpenseService.Instance.GetExpensesForSpecificBudget(input));
+                
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
     }
 }

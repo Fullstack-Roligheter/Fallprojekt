@@ -17,9 +17,6 @@ namespace DAL
         public string? ExpenseComment { get; set; }
 
 
-
-
-
         public int CategoryId { get; set; }
         public Category Category { get; set; } // En Category kan ha många Expense ("MÅNGA" SIDAN HÄR)
 

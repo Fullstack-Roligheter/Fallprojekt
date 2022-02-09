@@ -39,5 +39,31 @@ namespace Service
                 context.SaveChanges();
             }
         }
+
+        public ICollection<GetExpenseForSpecificBudgetOutputDTO> GetExpensesForSpecificBudget(GetExpenseForSpecificBudgetInputDTO input)
+        {
+            using (var context = new ProjectContext())
+            {
+                var result = from b in context.Budgets
+                             join u in context.User on b.UserId equals u.UserId
+                             where b.BudgetId == input.BudgetId && u.UserId == input.UserId
+                             select new GetExpenseForSpecificBudgetOutputDTO
+                             {
+                                 BudgetName = b.BudgetName,
+                                 Expenses = (from e in context.Expense
+                                             join c in context.Categories on e.CategoryId equals c.CategoryId
+                                             select new ExpenseDTO
+                                             {
+                                                 CategoryName = c.CategoryName,
+                                                 Date = e.ExpenseDate,
+                                                 Recipient = e.ExpenseRecipient,
+                                                 Amount = e.ExpenseAmount,
+                                                 Comment = e.ExpenseComment
+                                             }).ToList()
+                             };
+
+                return result.ToList();
+            }
+        }
     }
 }

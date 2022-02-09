@@ -13,19 +13,19 @@ namespace DAL.Extensions
         {
             builder.Entity<User>().HasData //User tabell
                 (
-                    new User { UserId = 1, Name = "adam", Age = 20, Email = "adam_01@hotmail.com", Password = "123" },
-                    new User { UserId = 2, Name = "berit", Age = 30, Email = "berit_02@msn.com", Password = "123" }
+                    new User { UserId = 1, UserName = "adam", UserAge = 20, UserEmail = "adam_01@hotmail.com", UserPassword = "123" },
+                    new User { UserId = 2, UserName = "berit", UserAge = 30, UserEmail = "berit_02@msn.com", UserPassword = "123" }
                 );
 
             builder.Entity<Budget>().HasData //Budget tabell
                 (
-                    new Budget { BudgetId = 1, UserId = 1, Name = "Default", StartDate = DateTime.ParseExact("2022-01-01", "yyyy-MM-dd", null), EndDate = DateTime.ParseExact("2022-01-31", "yyyy-MM-dd", null), MaxAmountMoney = 0 }
+                    new Budget { BudgetId = 1, UserId = 1, BudgetName = "Default", BudgetStartDate = DateTime.ParseExact("2022-01-01", "yyyy-MM-dd", null), BudgetEndDate = DateTime.ParseExact("2022-01-31", "yyyy-MM-dd", null), BudgetMaxAmountMoney = 0 }
                 );
 
             builder.Entity<Category>().HasData //Category tabell
                 (
-                    new Category { CategoryId = 1, Name = "Default", BudgetId = 1, CategoryMaxAmount = 1000 },
-                    new Category { CategoryId = 2, Name = "Hem & Hushåll", BudgetId = 1, CategoryMaxAmount = 1500 }
+                    new Category { CategoryId = 1, CategoryName = "Default", BudgetId = 1, CategoryMaxAmount = 1000 },
+                    new Category { CategoryId = 2, CategoryName = "Hem & Hushåll", BudgetId = 1, CategoryMaxAmount = 1500 }
                 );
 
             builder.Entity<Expense>().HasData //Expense tabell

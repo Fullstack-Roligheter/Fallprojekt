@@ -38,7 +38,7 @@ namespace Service
                 categoryMaxAmountList = (from u in context.User
                                          join b in context.Budgets on u.UserId equals b.UserId
                                          join c in context.Categories on b.BudgetId equals c.BudgetId
-                                         where u.UserId == input.UserId && input.StartDate >= b.StartDate && input.EndDate <= b.EndDate
+                                         where u.UserId == input.UserId && input.StartDate >= b.BudgetStartDate && input.EndDate <= b.BudgetEndDate
                                          select new SimpleDecimalDTO
                                          {
                                              Amount = c.CategoryMaxAmount
@@ -52,7 +52,7 @@ namespace Service
                 }
 
                 var updateMaxAmount = context.Budgets.First(b => b.UserId == input.UserId);
-                updateMaxAmount.MaxAmountMoney = newBudget;
+                updateMaxAmount.BudgetMaxAmountMoney = newBudget;
                 context.SaveChanges();
 
                 return newBudget; //Man kan använda den här för att returnera värdet till Swagger / Postman
@@ -64,7 +64,7 @@ namespace Service
             using (var context = new ProjectContext())
             {
                 var tempNewUserId = (from u in context.User
-                                     where u.Email == inputEmail
+                                     where u.UserEmail == inputEmail
                                      select u.UserId).FirstOrDefault();
 
                 var newUserId = Convert.ToInt32(tempNewUserId);
@@ -73,9 +73,9 @@ namespace Service
                 newUserDefaultBudget.Add(new Budget
                 {
                     UserId = newUserId,
-                    Name = "Default",
-                    StartDate = DateTime.Today,
-                    EndDate = DateTime.Today,
+                    BudgetName = "Default",
+                    BudgetStartDate = DateTime.Today,
+                    BudgetEndDate = DateTime.Today,
 
                 });
                 context.SaveChanges();
@@ -95,12 +95,12 @@ namespace Service
                                       where u.UserId == inputUserId
                                       select new
                                       {
-                                          b.Name
+                                          b.BudgetName
                                       }).ToList();
 
                 foreach (var item in tempBudgetList)
                 {
-                    budgetList.Add(item.Name);
+                    budgetList.Add(item.BudgetName);
                 }
             }
             return budgetList;
