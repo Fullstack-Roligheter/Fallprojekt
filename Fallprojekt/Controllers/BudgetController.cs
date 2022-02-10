@@ -11,9 +11,16 @@ namespace Fallprojekt.Controllers
     public class BudgetController : ControllerBase
     {
         [HttpPost("/ListAllBudgetForSpecificUser")]
-        public List<BudgetNameDTO> ListAllListUserBudgets(UserIdDTO input)
+        public IActionResult ListAllListUserBudgets(UserIdDTO input)
         {
-            return BudgetService.Instance.ListUserBudgets(input);
+            try
+            {
+                return Ok(BudgetService.Instance.ListUserBudgets(input));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
