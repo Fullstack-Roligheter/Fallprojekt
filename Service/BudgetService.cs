@@ -84,26 +84,20 @@ namespace Service
             }
         }
 
-        public List<string> ListUserBudgets(int inputUserId)
+        public List<BudgetNameDTO> ListUserBudgets(UserIdDTO input)
         {
-            var budgetList = new List<string>();
-
             using (var context = new ProjectContext())
             {
-                var tempBudgetList = (from u in context.User
+                var budgetList = (from u in context.User
                                       join b in context.Budgets on u.UserId equals b.UserId
-                                      where u.UserId == inputUserId
-                                      select new
+                                      where u.UserId == input.UserId
+                                      select new BudgetNameDTO
                                       {
-                                          b.BudgetName
+                                         BudgetName = b.BudgetName
                                       }).ToList();
 
-                foreach (var item in tempBudgetList)
-                {
-                    budgetList.Add(item.BudgetName);
-                }
-            }
-            return budgetList;
+                return budgetList;
+            }          
         }
     }
 }
