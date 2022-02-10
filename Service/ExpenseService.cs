@@ -57,7 +57,7 @@ namespace Service
                                              select new GEFSBOExpenseDTO
                                              {
                                                  CategoryName = c.CategoryName,
-                                                 Date = e.ExpenseDate,
+                                                 Date = e.ExpenseDate.ToString("yyyy-MM-dd"),
                                                  Recipient = e.ExpenseRecipient,
                                                  Amount = e.ExpenseAmount,
                                                  Comment = e.ExpenseComment
