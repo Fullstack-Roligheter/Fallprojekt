@@ -44,5 +44,18 @@ namespace Service
                 context.SaveChanges();
             }
         }
+
+        public List<CategoryDTO> ListAllCategory()
+        {
+            using (var context = new ProjectContext())
+            {
+                return context.Categories
+                    .Select(n => new CategoryDTO
+                    {
+                        CategoryName = n.CategoryName,
+                    })
+                    .ToList();
+            }
+        }
     }
 }
