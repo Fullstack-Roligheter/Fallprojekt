@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DAL.Migrations
 {
-    public partial class init : Migration
+    public partial class v1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -49,7 +49,7 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Categories",
+                name: "Category",
                 columns: table => new
                 {
                     CategoryId = table.Column<int>(type: "int", nullable: false)
@@ -60,9 +60,9 @@ namespace DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.CategoryId);
+                    table.PrimaryKey("PK_Category", x => x.CategoryId);
                     table.ForeignKey(
-                        name: "FK_Categories_Budgets_BudgetId",
+                        name: "FK_Category_Budgets_BudgetId",
                         column: x => x.BudgetId,
                         principalTable: "Budgets",
                         principalColumn: "BudgetId",
@@ -85,9 +85,9 @@ namespace DAL.Migrations
                 {
                     table.PrimaryKey("PK_Expense", x => x.ExpenseId);
                     table.ForeignKey(
-                        name: "FK_Expense_Categories_CategoryId",
+                        name: "FK_Expense_Category_CategoryId",
                         column: x => x.CategoryId,
-                        principalTable: "Categories",
+                        principalTable: "Category",
                         principalColumn: "CategoryId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -108,12 +108,12 @@ namespace DAL.Migrations
                 values: new object[] { 1, new DateTime(2022, 1, 31, 0, 0, 0, 0, DateTimeKind.Unspecified), 0m, "Default", new DateTime(2022, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 });
 
             migrationBuilder.InsertData(
-                table: "Categories",
+                table: "Category",
                 columns: new[] { "CategoryId", "BudgetId", "CategoryMaxAmount", "CategoryName" },
                 values: new object[] { 1, 1, 1000m, "Default" });
 
             migrationBuilder.InsertData(
-                table: "Categories",
+                table: "Category",
                 columns: new[] { "CategoryId", "BudgetId", "CategoryMaxAmount", "CategoryName" },
                 values: new object[] { 2, 1, 1500m, "Hem & Hushåll" });
 
@@ -133,8 +133,8 @@ namespace DAL.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categories_BudgetId",
-                table: "Categories",
+                name: "IX_Category_BudgetId",
+                table: "Category",
                 column: "BudgetId");
 
             migrationBuilder.CreateIndex(
@@ -149,7 +149,7 @@ namespace DAL.Migrations
                 name: "Expense");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "Category");
 
             migrationBuilder.DropTable(
                 name: "Budgets");
