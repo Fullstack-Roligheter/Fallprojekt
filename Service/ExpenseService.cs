@@ -24,8 +24,13 @@ namespace Service
 
         public void InsertExpense(AddExpenseDTO expenseDTO)
         {
+            
             using (var context = new ProjectContext())
-            {
+            {                
+                var categoryID = context.Categories
+                    .Where(n => n.CategoryName == expenseDTO.CategoryName)
+                    .Select(id => id.CategoryId)
+                    .FirstOrDefault();
                 context.Add(
                     new Expense
                     {
@@ -33,7 +38,7 @@ namespace Service
                         ExpenseRecipient = expenseDTO.Recipient,
                         ExpenseDate = expenseDTO.Date,
                         ExpenseComment = expenseDTO.Comment,
-                        CategoryId = expenseDTO.CategoryId
+                        CategoryId = categoryID 
                     });
                 context.SaveChanges();
             }
