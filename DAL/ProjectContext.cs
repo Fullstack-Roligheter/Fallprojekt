@@ -19,7 +19,7 @@ namespace DAL
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             var serverAddress = "localhost\\SQLEXPRESS";
-            var databaseName = "Fallprojekt_DB_test_lac";
+            var databaseName = "Fallprojekt_DB";
             var connectionString = @"Server =" + serverAddress + "; Database =" + databaseName + "; Integrated Security = true;";
             builder
                 .UseSqlServer(connectionString)
