@@ -21,16 +21,17 @@ namespace Fallprojekt.Controllers
                 {
                     return StatusCode(401);
                 }
-                else {
-                    return Ok(result);
-                    
+                else 
+                {
+                    return Ok(result);    
                 }
 
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                return StatusCode(500);     //Om du försöker returnera en bad request tillbaka i en json fil kommer du istället få en 500 kod
+                return StatusCode(500);     //Om du försöker returnera en bad request tillbaka i en
+                                            //json fil kommer du istället få en 500 kod
                                             //När den inte kan göra om det till en ordentlig json fil
             }
         }
