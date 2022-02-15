@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service;
+using Service.DTOs;
 
 namespace Fallprojekt.Controllers
 {
@@ -8,25 +9,29 @@ namespace Fallprojekt.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        [HttpGet("/login")]
-        public IActionResult UserLogin(string user, string password)
+        [HttpPost("login")]
+        public IActionResult UserLogin(LoginDTO loginDTO)
         {
             try
             {
-                bool loginSuccessful = UserService.Instance.LogIn(user, password);
 
-                if (loginSuccessful)
+                var result = UserService.Instance.LogIn(loginDTO);
+                
+                if(result == null)
                 {
-                    return Ok();
+                    return StatusCode(401);
                 }
-                else
-                {
-                    return BadRequest("Wrong Username/Password");
+                else {
+                    return Ok(result);
+                    
                 }
+
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                Console.WriteLine(ex);
+                return StatusCode(500);     //Om du försöker returnera en bad request tillbaka i en json fil kommer du istället få en 500 kod
+                                            //När den inte kan göra om det till en ordentlig json fil
             }
         }
 
