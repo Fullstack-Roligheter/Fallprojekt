@@ -93,7 +93,8 @@ namespace Service
                                       where u.UserId == input.UserId
                                       select new BudgetNameDTO
                                       {
-                                         BudgetName = b.BudgetName
+                                         BudgetName = b.BudgetName,
+                                         BudgetId = b.BudgetId
                                       }).ToList();
 
                 return budgetList;
