@@ -69,24 +69,24 @@ namespace Service
         {
             using (var context = new ProjectContext())
             {
-                return context.User.Any(x => x.Email == reg.Email);
+                return context.User.Any(x => x.UserEmail == reg.Email);
             }
         }
         public void UserRegistering(RegisterDTO reg)
         {
             using (var db = new ProjectContext())
             {
-                var userExist = db.User.FirstOrDefault(e => e.Email == reg.Email);
+                var userExist = db.User.FirstOrDefault(e => e.UserEmail == reg.Email);
                 db.Add(new User()
                 {
-                    Name = reg.Name.ToLower(),
-                    Age = reg.Age,
-                    Email = reg.Email,
-                    Password = reg.Password
+                    UserName = reg.Name.ToLower(),
+                    UserAge = reg.Age,
+                    UserEmail = reg.Email,
+                    UserPassword = reg.Password
                 });
                 db.SaveChanges();
 
-                AddDefaultBudgetAndCategoryToNewUser(reg.Email);
+                BudgetService.Instance.AddDefaultBudgetToNewUser(reg.Email);
             }
         }
 
