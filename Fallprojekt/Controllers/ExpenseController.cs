@@ -27,8 +27,7 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                return Ok(ExpenseService.Instance.GetExpensesForSpecificBudget(input));
-                
+                return Ok(ExpenseService.Instance.GetExpensesForSpecificBudget(input));  
             }
             catch (Exception ex)
             {

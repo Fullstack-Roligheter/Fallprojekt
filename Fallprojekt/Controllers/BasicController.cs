@@ -29,9 +29,9 @@ namespace Fallprojekt.Controllers
         }
 
         [HttpPost("/ListUserBudgets")]
-        public List<string> ListUserBudgets(int inputUserId)
+        public List<BudgetNameDTO> ListUserBudgets(UserIdDTO input)
         {
-            return BudgetService.Instance.ListUserBudgets(inputUserId);
+            return BudgetService.Instance.ListUserBudgets(input);
         }
     }
 }
