@@ -65,30 +65,30 @@ namespace Service
             }
         }
 
-        public void UserRegistering(string userName, int age, string email, string password)
+        public bool CheckEmailExist(RegisterDTO reg)
+        {
+            using (var context = new ProjectContext())
+            {
+                return context.User.Any(x => x.UserEmail == reg.Email);
+            }
+        }
+        public void UserRegistering(RegisterDTO reg)
         {
             using (var db = new ProjectContext())
             {
-                var userExist = db.User.FirstOrDefault(e => e.UserEmail == email);
-
-                if (userExist != null)
+                var userExist = db.User.FirstOrDefault(e => e.UserEmail == reg.Email);
+                db.Add(new User()
                 {
-                    Console.WriteLine("The email has been used by other user!");
-                }
-                else
-                {
-                    db.Add(new User()
-                    {
-                        UserName = userName.ToLower(),
-                        UserAge = age,
-                        UserEmail = email,
-                        UserPassword = password
-                    });
-                }
+                    UserName = reg.Name.ToLower(),
+                    UserAge = reg.Age,
+                    UserEmail = reg.Email,
+                    UserPassword = reg.Password
+                });
                 db.SaveChanges();
 
-                BudgetService.Instance.AddDefaultBudgetToNewUser(email);
+                BudgetService.Instance.AddDefaultBudgetToNewUser(reg.Email);
             }
         }
+
     }
 }
