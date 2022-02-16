@@ -36,19 +36,20 @@ namespace Fallprojekt.Controllers
             }
         }
 
-        [HttpPost("/register")]
+        [HttpPost("register")]
 
-        public IActionResult UserRegistering(string userName, int age, string email, string password)
+        public IActionResult UserRegistering(RegisterDTO reg)
         {
-            try
+            if (UserService.Instance.CheckEmailExist(reg))
             {
-                UserService.Instance.UserRegistering(userName, age, email, password);
+                return StatusCode(401);
+            }
+            else
+            {
+                UserService.Instance.UserRegistering(reg);
                 return Ok();
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
+
         }
     }
 }
