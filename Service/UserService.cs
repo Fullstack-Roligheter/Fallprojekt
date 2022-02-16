@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Service.DTOs;
 using System.Data.SqlClient;
+
 namespace Service
 {
     public class UserService
@@ -41,11 +42,18 @@ namespace Service
             }
         }
 
-        public bool LogIn(string username, string password)
+        public SuccesLoginDTO? LogIn(LoginDTO loginDTO)
         {
             using (var db = new ProjectContext()) //, StringComparison.OrdinalIgnoreCase
             {
-                return db.User.Any(u => u.UserName.Equals(username.ToLower()) && u.UserPassword == password);
+                    var tempUserId = (from u in db.User
+                                               where u.UserName == loginDTO.UserName
+                                               && u.UserPassword == loginDTO.Password
+                                               select new SuccesLoginDTO
+                                               {
+                                                   UserID = u.UserId
+                                               }).FirstOrDefault();
+                    return tempUserId;
             }
         }
 
