@@ -15,9 +15,11 @@ namespace DAL
         public DbSet <Budget> Budgets { get; set; }
         public DbSet <Category> Categories { get; set; }
         public DbSet <Expense> Expense { get; set; }
+        public DbSet <Category> Category { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
+
             var serverAddress = "localhost\\SQLEXPRESS";
             var databaseName = "Fallprojekt_DB";
             var connectionString = @"Server =" + serverAddress + "; Database =" + databaseName + "; Integrated Security = true;";

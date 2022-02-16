@@ -86,7 +86,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("BudgetId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Category");
 
                     b.HasData(
                         new
