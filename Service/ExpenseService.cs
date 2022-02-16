@@ -55,7 +55,7 @@ namespace Service
                              {
                                  BudgetName = b.BudgetName,
                                  Expenses = (from e in context.Expense
-                                             join c in context.Categories on e.CategoryId equals c.CategoryId
+                                             join c in context.Category on e.CategoryId equals c.CategoryId
                                              join b in context.Budgets on c.BudgetId equals b.BudgetId
                                              join u in context.User on u.UserId equals b.UserId
                                              where b.BudgetId == input.BudgetId && u.UserId == input.UserId

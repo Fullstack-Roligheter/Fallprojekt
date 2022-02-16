@@ -31,7 +31,8 @@ namespace Fallprojekt.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                Console.WriteLine(ex);
+                return StatusCode(500); 
             }
         }
     }
