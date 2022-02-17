@@ -13,13 +13,22 @@ namespace Fallprojekt.Controllers
         [HttpPost("/ListAllBudgetForSpecificUser")]
         public IActionResult ListAllListUserBudgets(UserIdDTO input)
         {
+            //try
+            //{
+            //    return Ok(BudgetService.Instance.ListUserBudgets(input));
+            //}
+            //catch (Exception ex)
+            //{
+            //    return BadRequest(ex.Message);
+            //}
             try
             {
                 return Ok(BudgetService.Instance.ListUserBudgets(input));
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                Console.WriteLine(ex);
+                return StatusCode(500);
             }
         }
     }
