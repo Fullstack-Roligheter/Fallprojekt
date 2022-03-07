@@ -46,7 +46,7 @@ namespace Fallprojekt.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                return StatusCode(500);
+                return StatusCode(418);
             }
         }
     }

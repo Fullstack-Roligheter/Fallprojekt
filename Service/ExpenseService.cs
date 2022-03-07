@@ -83,19 +83,22 @@ namespace Service
                               select new GetExpenseForSpecificBudgetSortedIntoCategoriesOutputDTO
                               {
                                   BudgetName = b.BudgetName,
-                                  Categories = (from e in context.Expense
-                                                join c in context.Category on e.CategoryId equals c.CategoryId
-                                                join b in context.Budgets on c.BudgetId equals b.BudgetId
+                                  Categories = (
+                                                from ca in context.Category
+                                                join b in context.Budgets on ca.BudgetId equals b.BudgetId
                                                 join u in context.User on u.UserId equals b.UserId
                                                 where b.BudgetId == input.BudgetId && u.UserId == input.UserId
                                                 select new GEFSBOCategoryDTO
                                                 {
-                                                    CategoryName = c.CategoryName,
+                                                    CategoryName = ca.CategoryName,
                                                     Expenses = (from e in context.Expense
                                                                 join c in context.Category on e.CategoryId equals c.CategoryId
                                                                 join b in context.Budgets on c.BudgetId equals b.BudgetId
                                                                 join u in context.User on u.UserId equals b.UserId
-                                                                where b.BudgetId == input.BudgetId && u.UserId == input.UserId
+                                                                where 
+                                                                    b.BudgetId == input.BudgetId && 
+                                                                    u.UserId == input.UserId &&
+                                                                    e.CategoryId == ca.CategoryId
                                                                 select new GEFSBOCExpensesDTO
                                                                 {
                                                                     Date = e.ExpenseDate.ToString("yyyy-MM-dd"),
