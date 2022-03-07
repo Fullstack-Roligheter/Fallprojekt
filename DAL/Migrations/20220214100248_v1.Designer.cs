@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ProjectContext))]
-    [Migration("20220202184935_init")]
-    partial class init
+    [Migration("20220214100248_v1")]
+    partial class v1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,17 +32,17 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BudgetId"), 1L, 1);
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<DateTime>("BudgetEndDate")
                         .HasColumnType("date");
 
-                    b.Property<decimal?>("MaxAmountMoney")
+                    b.Property<decimal?>("BudgetMaxAmountMoney")
                         .HasColumnType("money");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("BudgetName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("StartDate")
+                    b.Property<DateTime>("BudgetStartDate")
                         .HasColumnType("date");
 
                     b.Property<int>("UserId")
@@ -58,10 +58,10 @@ namespace DAL.Migrations
                         new
                         {
                             BudgetId = 1,
-                            EndDate = new DateTime(2022, 1, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            MaxAmountMoney = 0m,
-                            Name = "Default",
-                            StartDate = new DateTime(2022, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            BudgetEndDate = new DateTime(2022, 1, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            BudgetMaxAmountMoney = 0m,
+                            BudgetName = "Default",
+                            BudgetStartDate = new DateTime(2022, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = 1
                         });
                 });
@@ -80,7 +80,7 @@ namespace DAL.Migrations
                     b.Property<decimal>("CategoryMaxAmount")
                         .HasColumnType("money");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("CategoryName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -88,7 +88,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("BudgetId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Category");
 
                     b.HasData(
                         new
@@ -96,14 +96,14 @@ namespace DAL.Migrations
                             CategoryId = 1,
                             BudgetId = 1,
                             CategoryMaxAmount = 1000m,
-                            Name = "Default"
+                            CategoryName = "Default"
                         },
                         new
                         {
                             CategoryId = 2,
                             BudgetId = 1,
                             CategoryMaxAmount = 1500m,
-                            Name = "Hem & Hushåll"
+                            CategoryName = "Hem & Hushåll"
                         });
                 });
 
@@ -163,18 +163,20 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"), 1L, 1);
 
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
+                    b.Property<int>("UserAge")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
-                    b.Property<string>("Email")
+                    b.Property<string>("UserEmail")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("UserPassword")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -186,18 +188,18 @@ namespace DAL.Migrations
                         new
                         {
                             UserId = 1,
-                            Age = 20,
-                            Email = "adam_01@hotmail.com",
-                            Name = "adam",
-                            Password = "123"
+                            UserAge = 20,
+                            UserEmail = "adam_01@hotmail.com",
+                            UserName = "adam",
+                            UserPassword = "123"
                         },
                         new
                         {
                             UserId = 2,
-                            Age = 30,
-                            Email = "berit_02@msn.com",
-                            Name = "berit",
-                            Password = "123"
+                            UserAge = 30,
+                            UserEmail = "berit_02@msn.com",
+                            UserName = "berit",
+                            UserPassword = "123"
                         });
                 });
 

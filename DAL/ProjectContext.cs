@@ -15,9 +15,11 @@ namespace DAL
         public DbSet <Budget> Budgets { get; set; }
         public DbSet <Category> Categories { get; set; }
         public DbSet <Expense> Expense { get; set; }
+        public DbSet <Category> Category { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
+
             var serverAddress = "localhost\\SQLEXPRESS";
             var databaseName = "Fallprojekt_DB";
             var connectionString = @"Server =" + serverAddress + "; Database =" + databaseName + "; Integrated Security = true;";
@@ -29,15 +31,13 @@ namespace DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<User>()
-            //    .HasIndex(u => u.UserId); //PK är kolumnen "UserId" i tabellen User
 
             modelBuilder.Entity<Budget>()
-                .Property(b => b.StartDate).HasColumnType("date"); //Vi specifierar att kolumnen "StartDate" har en SQL datatyp av sorten "date"
+                .Property(b => b.BudgetStartDate).HasColumnType("date"); //Vi specifierar att kolumnen "StartDate" har en SQL datatyp av sorten "date"
             modelBuilder.Entity<Budget>()
-                .Property(b => b.EndDate).HasColumnType("date");
+                .Property(b => b.BudgetEndDate).HasColumnType("date");
             modelBuilder.Entity<Budget>()
-                .Property(b => b.MaxAmountMoney).HasColumnType("money");
+                .Property(b => b.BudgetMaxAmountMoney).HasColumnType("money");
 
             modelBuilder.Entity<Category>()
                 .Property(c => c.CategoryMaxAmount).HasColumnType("money");
@@ -62,6 +62,10 @@ namespace DAL
                 .HasOne<Category>(c => c.Category)
                 .WithMany(e => e.Expenses)
                 .HasForeignKey(e => e.CategoryId);
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.UserAge)
+                .HasDefaultValue(0);
 
             modelBuilder.Seed();
         }

@@ -11,7 +11,7 @@ namespace DAL
     {
         [Key] // <-- Kör med Data annotations tills vidare bara för att vara tydlig
         public int CategoryId { get; set; }
-        public string Name { get; set; }
+        public string CategoryName { get; set; }
         public decimal CategoryMaxAmount { get; set; }
 
 

@@ -1,24 +1,55 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service;
+using Service.DTOs;
 
 namespace Fallprojekt.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/user")]
     [ApiController]
     public class UserController : ControllerBase
     {
-        [HttpGet("user")]
-        public bool UserLogin(string user, string password)
+        [HttpPost("login")]
+        public IActionResult UserLogin(LoginDTO loginDTO)
         {
-            return ProjectService.Instance.LogIn(user, password);
+            try
+            {
+
+                var result = UserService.Instance.LogIn(loginDTO);
+                
+                if(result == null)
+                {
+                    return StatusCode(401);
+                }
+                else 
+                {
+                    return Ok(result);    
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500);     //Om du försöker returnera en bad request tillbaka i en
+                                            //json fil kommer du istället få en 500 kod
+                                            //När den inte kan göra om det till en ordentlig json fil
+            }
         }
 
         [HttpPost("register")]
 
-        public void UserRegistering(string userName, int age, string email, string password)
+        public IActionResult UserRegistering(RegisterDTO reg)
         {
-            ProjectService.Instance.UserRegistering(userName, age, email, password);
+            if (UserService.Instance.CheckEmailExist(reg))
+            {
+                return StatusCode(401);
+            }
+            else
+            {
+                UserService.Instance.UserRegistering(reg);
+                return Ok();
+            }
+
         }
     }
 }

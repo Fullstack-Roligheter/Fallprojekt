@@ -10,28 +10,28 @@ namespace Fallprojekt.Controllers
     [ApiController]
     public class BasicController : ControllerBase
     {
-        [HttpGet] //Exempel Controller
+        [HttpGet("/ListAllUsers")] //Exempel Controller
         public List<UserDTO> ListAllUsers()
         {
-            return ProjectService.Instance.ListAllUsers();
+            return UserService.Instance.ListAllUsers();
         }
 
         [HttpPost("/CalculateBudgetFromCatagories")]
         public decimal CalculateBudgetFromCatagories([FromBody] CountMaxMoneyDTO input)
         {
-            return ProjectService.Instance.CalculateBudgetFromCatagories(input);
+            return BudgetService.Instance.CalculateBudgetFromCatagories(input);
         }
 
         [HttpPost("/AddDefaultBudgetAndCategoryToNewUser")]
         public void AddDefaultBudgetAndCategoryToNewUser([FromBody] string input)
         {
-            ProjectService.Instance.AddDefaultBudgetAndCategoryToNewUser(input);
+            BudgetService.Instance.AddDefaultBudgetToNewUser(input);
         }
 
         [HttpPost("/ListUserBudgets")]
-        public List<string> ListUserBudgets(int inputUserId)
+        public List<BudgetNameDTO> ListUserBudgets(UserIdDTO input)
         {
-            return ProjectService.Instance.ListUserBudgets(inputUserId);
+            return BudgetService.Instance.ListUserBudgets(input);
         }
     }
 }

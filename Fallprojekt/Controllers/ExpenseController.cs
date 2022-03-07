@@ -5,14 +5,35 @@ using Service.DTOs;
 
 namespace Fallprojekt.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/expense")]
     [ApiController]
     public class ExpenseController : ControllerBase
     {
-        [HttpPost("addExpense")]
-        public void PostExpense(ExpenseDTO expenseDTO)
+        [HttpPost("/AddExpense")]
+        public IActionResult PostExpense(AddExpenseDTO expenseDTO)
         {
-            ProjectService.Instance.InsertExpense(expenseDTO);
+            try 
+            {
+                ExpenseService.Instance.InsertExpense(expenseDTO);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+        [HttpPost("/GetExpenseForSpecificBudget")]
+        public IActionResult GetExpenseForSpecificBudget(GetExpenseForSpecificBudgetInputDTO input)
+        {
+            try
+            {
+                return Ok(ExpenseService.Instance.GetExpensesForSpecificBudget(input));  
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500); 
+            }
         }
     }
 }
