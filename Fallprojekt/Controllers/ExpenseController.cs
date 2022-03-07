@@ -35,5 +35,19 @@ namespace Fallprojekt.Controllers
                 return StatusCode(500); 
             }
         }
+
+        [HttpGet("expensefilter")]
+        public IActionResult FilterByBudgetCategory([FromQuery] BudgetCategoryExpenseFilterDTO input)
+        {
+            try
+            {
+                return Ok(ExpenseService.Instance.GetExpenseListFilteredByBudgetAndCategory(input));
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
