@@ -35,5 +35,19 @@ namespace Fallprojekt.Controllers
                 return StatusCode(500); 
             }
         }
+
+        [HttpPost("/GetExpenseForSpecificBudgetSortedIntoCategories")]
+        public IActionResult GetExpenseForSpecificBudgetSortedIntoCategories(GetExpenseForSpecificBudgetSortedIntoCategoriesInputDTO input)
+        {
+            try
+            {
+                return Ok(ExpenseService.Instance.GetExpensesForSpecificBudgetSortedIntoCategories(input));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500);
+            }
+        }
     }
 }
