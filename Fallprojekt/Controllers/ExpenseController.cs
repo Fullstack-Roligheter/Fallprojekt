@@ -41,7 +41,19 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                return Ok(ExpenseService.Instance.GetExpensesForSpecificBudgetSortedIntoCategories(input));
+                var userIdValidation = UserService.Instance.UserIdValidation(input.UserId);
+                var budgetIdValidation = BudgetService.Instance.
+                if (!userIdValidation)
+                {
+                    return StatusCode(401); // Statuscode 401 = UserId does not exist
+                }
+                else
+                {
+                    
+                }
+
+
+                return Ok();
             }
             catch (Exception ex)
             {
