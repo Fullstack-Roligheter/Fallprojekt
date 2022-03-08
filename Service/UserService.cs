@@ -94,7 +94,7 @@ namespace Service
         {
             using (var context = new ProjectContext())
             {
-                return context.User.Any(x => x.UserEmail == reg.Email);
+                return context.User.Any(x => x.UserId == userId);
             }
         }
 

@@ -100,5 +100,13 @@ namespace Service
                 return budgetList;
             }          
         }
+
+        public bool BudgetIdValidation(int budgetId)
+        {
+            using (var context = new ProjectContext())
+            {
+                return context.Budgets.Any(x => x.BudgetId == budgetId);
+            }
+        }
     }
 }

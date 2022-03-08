@@ -12,7 +12,7 @@ namespace Fallprojekt.Controllers
         [HttpPost("/AddExpense")]
         public IActionResult PostExpense(AddExpenseDTO expenseDTO)
         {
-            try 
+            try
             {
                 ExpenseService.Instance.InsertExpense(expenseDTO);
                 return Ok();
@@ -27,12 +27,12 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                return Ok(ExpenseService.Instance.GetExpensesForSpecificBudget(input));  
+                return Ok(ExpenseService.Instance.GetExpensesForSpecificBudget(input));
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                return StatusCode(500); 
+                return StatusCode(500);
             }
         }
 
@@ -42,18 +42,20 @@ namespace Fallprojekt.Controllers
             try
             {
                 var userIdValidation = UserService.Instance.UserIdValidation(input.UserId);
-                var budgetIdValidation = BudgetService.Instance.
+                var budgetIdValidation = BudgetService.Instance.BudgetIdValidation(input.BudgetId);
+
                 if (!userIdValidation)
                 {
                     return StatusCode(401); // Statuscode 401 = UserId does not exist
                 }
-                else
+                if (!budgetIdValidation)
                 {
-                    
+                    return StatusCode(402); // Statuscode 402 = BudgetId does not exist
                 }
 
+                var result = ExpenseService.Instance.GetExpensesForSpecificBudgetSortedIntoCategories(input);
 
-                return Ok();
+                return Ok(result);
             }
             catch (Exception ex)
             {
