@@ -73,6 +73,42 @@ namespace Service
             }
         }
 
+
+        public List<FilterByBudgetAndCategoryDTO> GetExpenseListFilteredByBudgetAndCategory(BudgetCategoryExpenseFilterDTO input)
+        {
+
+            using (var context = new ProjectContext())
+            {
+                var budgetID = context.Budgets
+                    .Where(n => n.BudgetName == input.BudgetName)
+                    .Select(id => id.BudgetId)
+                    .FirstOrDefault();
+
+                //var CategoryBudget = context.Categories.Where(x => x.CategoryId == budgetID);
+
+                var list = context.Expense
+                    .Where(x => x.Category.CategoryId == x.CategoryId)
+                    .Where(x => x.Category.CategoryName == input.CategoryName)
+                    .ToList();
+
+                List<FilterByBudgetAndCategoryDTO> expenseList = new List<FilterByBudgetAndCategoryDTO>();
+                foreach (var category1 in list)
+                {
+
+                    expenseList.Add(new FilterByBudgetAndCategoryDTO
+                    {
+                        ExpenseId = category1.ExpenseId,
+                        ExpenseRecipient = category1.ExpenseRecipient,
+                        ExpenseAmount = category1.ExpenseAmount,
+                        ExpenseComment = category1.ExpenseComment,
+                        ExpenseDate = category1.ExpenseDate.ToString("yyyy-mm-dd")
+
+                    });
+                }
+                return expenseList;
+            }
+
+
         public ICollection<GetExpenseForSpecificBudgetSortedIntoCategoriesOutputDTO> GetExpensesForSpecificBudgetSortedIntoCategories(GetExpenseForSpecificBudgetSortedIntoCategoriesInputDTO input)
         {
             using (var context = new ProjectContext())
@@ -110,6 +146,7 @@ namespace Service
                               }).ToList();
                 return result;
             }
+
         }
     }
 }
