@@ -6,22 +6,22 @@ using System.Data.SqlClient;
 
 namespace Service
 {
-    public class UserService
+    public class ValidationService
     {
         //SINGLETON--------------------------------------------------------------------------------------------------
-        private static UserService _instance;
-        public static UserService Instance
+        private static ValidationService _instance;
+        public static ValidationService Instance
         {
             get
             {
                 if (_instance == null)
                 {
-                    _instance = new UserService();
+                    _instance = new ValidationService();
                 }
                 return _instance;
             }
         }
-        private UserService() { }
+        private ValidationService() { }
         //SINGLETON--------------------------------------------------------------------------------------------------
 
 
@@ -87,14 +87,6 @@ namespace Service
                 db.SaveChanges();
 
                 BudgetService.Instance.AddDefaultBudgetToNewUser(reg.Email);
-            }
-        }
-
-        public bool UserIdValidation(int userId)
-        {
-            using (var context = new ProjectContext())
-            {
-                return context.User.Any(x => x.UserId == userId);
             }
         }
 
