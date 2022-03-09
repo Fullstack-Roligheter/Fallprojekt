@@ -83,9 +83,11 @@ namespace Service
                     .Select(id => id.BudgetId)
                     .FirstOrDefault();
 
+                //var CategoryBudget = context.Categories.Where(x => x.CategoryId == budgetID);
+
                 var list = context.Expense
                     .Where(x => x.Category.CategoryId == x.CategoryId)
-                    .Where(x => x.Category.CategoryName == input.CategoryName)//"Hem & Hushåll"
+                    .Where(x => x.Category.CategoryName == input.CategoryName)
                     .ToList();
 
                 List<FilterByBudgetAndCategoryDTO> expenseList = new List<FilterByBudgetAndCategoryDTO>();
