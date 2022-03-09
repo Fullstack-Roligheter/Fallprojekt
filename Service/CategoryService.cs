@@ -57,5 +57,26 @@ namespace Service
                     .ToList();
             }
         }
+
+        //List Category to match budget
+        public List<CategoryDTO> ListAllCategoryMatchBudget(BudgetNameDTO budget)
+        {
+            using (var context = new ProjectContext())
+            {
+                var budgetID = context.Budgets
+                    .Where(n => n.BudgetName == budget.BudgetName)
+                    .Select(id => id.BudgetId)
+                    .FirstOrDefault();
+
+                //var CategoryBudget = context.Categories.Where(x => x.CategoryId == budgetID);
+
+                return context.Categories.Where(x => x.BudgetId == budgetID)
+                    .Select(n => new CategoryDTO
+                    {
+                        CategoryName = n.CategoryName,
+                    })
+                    .ToList();
+            }
+        }
     }
 }
