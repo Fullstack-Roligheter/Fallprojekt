@@ -107,46 +107,45 @@ namespace Service
                 }
                 return expenseList;
             }
-
-
-        public ICollection<GetExpenseForSpecificBudgetSortedIntoCategoriesOutputDTO> GetExpensesForSpecificBudgetSortedIntoCategories(GetExpenseForSpecificBudgetSortedIntoCategoriesInputDTO input)
-        {
-            using (var context = new ProjectContext())
+        }
+            public ICollection<GetExpenseForSpecificBudgetSortedIntoCategoriesOutputDTO> GetExpensesForSpecificBudgetSortedIntoCategories(GetExpenseForSpecificBudgetSortedIntoCategoriesInputDTO input)
             {
-                var result = (from b in context.Budgets
-                              join u in context.User on b.UserId equals u.UserId
-                              where b.BudgetId == input.BudgetId && u.UserId == input.UserId
-                              select new GetExpenseForSpecificBudgetSortedIntoCategoriesOutputDTO
-                              {
-                                  BudgetName = b.BudgetName,
-                                  Categories = (
-                                                from ca in context.Category
-                                                join b in context.Budgets on ca.BudgetId equals b.BudgetId
-                                                join u in context.User on u.UserId equals b.UserId
-                                                where b.BudgetId == input.BudgetId && u.UserId == input.UserId
-                                                select new GEFSBOCategoryDTO
-                                                {
-                                                    CategoryName = ca.CategoryName,
-                                                    Expenses = (from e in context.Expense
-                                                                join c in context.Category on e.CategoryId equals c.CategoryId
-                                                                join b in context.Budgets on c.BudgetId equals b.BudgetId
-                                                                join u in context.User on u.UserId equals b.UserId
-                                                                where 
-                                                                    b.BudgetId == input.BudgetId && 
-                                                                    u.UserId == input.UserId &&
-                                                                    e.CategoryId == ca.CategoryId
-                                                                select new GEFSBOCExpensesDTO
-                                                                {
-                                                                    Date = e.ExpenseDate.ToString("yyyy-MM-dd"),
-                                                                    Recipient = e.ExpenseRecipient,
-                                                                    Amount = e.ExpenseAmount,
-                                                                    Comment = e.ExpenseComment
-                                                                }).ToList()
-                                                }).ToList()
-                              }).ToList();
-                return result;
-            }
+                using (var context = new ProjectContext())
+                {
+                    var result = (from b in context.Budgets
+                                  join u in context.User on b.UserId equals u.UserId
+                                  where b.BudgetId == input.BudgetId && u.UserId == input.UserId
+                                  select new GetExpenseForSpecificBudgetSortedIntoCategoriesOutputDTO
+                                  {
+                                      BudgetName = b.BudgetName,
+                                      Categories = (
+                                                    from ca in context.Category
+                                                    join b in context.Budgets on ca.BudgetId equals b.BudgetId
+                                                    join u in context.User on u.UserId equals b.UserId
+                                                    where b.BudgetId == input.BudgetId && u.UserId == input.UserId
+                                                    select new GEFSBOCategoryDTO
+                                                    {
+                                                        CategoryName = ca.CategoryName,
+                                                        Expenses = (from e in context.Expense
+                                                                    join c in context.Category on e.CategoryId equals c.CategoryId
+                                                                    join b in context.Budgets on c.BudgetId equals b.BudgetId
+                                                                    join u in context.User on u.UserId equals b.UserId
+                                                                    where
+                                                                        b.BudgetId == input.BudgetId &&
+                                                                        u.UserId == input.UserId &&
+                                                                        e.CategoryId == ca.CategoryId
+                                                                    select new GEFSBOCExpensesDTO
+                                                                    {
+                                                                        Date = e.ExpenseDate.ToString("yyyy-MM-dd"),
+                                                                        Recipient = e.ExpenseRecipient,
+                                                                        Amount = e.ExpenseAmount,
+                                                                        Comment = e.ExpenseComment
+                                                                    }).ToList()
+                                                    }).ToList()
+                                  }).ToList();
+                    return result;
+                }
 
+            }
         }
     }
-}
