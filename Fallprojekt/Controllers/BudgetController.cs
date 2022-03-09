@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service;
 using Service.DTOs;
-using System.Collections.Generic;
 
 namespace Fallprojekt.Controllers
 {
@@ -31,5 +29,19 @@ namespace Fallprojekt.Controllers
                 return StatusCode(500);
             }
         }
+
+        [HttpGet("/ListAllBudgetForSpecificUser")]
+        public IActionResult GetUserIdFromQuery([FromQuery]UserIdDTO input)
+        {
+            try
+            {
+                return Ok(BudgetService.Instance.ListUserBudgets(input));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }
