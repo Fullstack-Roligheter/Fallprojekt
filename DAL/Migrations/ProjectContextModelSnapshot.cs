@@ -279,6 +279,34 @@ namespace DAL.Migrations
                         });
                 });
 
+            modelBuilder.Entity("DAL.Models.SavingPlan", b =>
+                {
+                    b.Property<int>("SavingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SavingId"), 1L, 1);
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PlanEndDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PlanStartDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("SavingId");
+
+                    b.ToTable("Savingplan");
+                });
+
             modelBuilder.Entity("DAL.User", b =>
                 {
                     b.Property<int>("UserId")
