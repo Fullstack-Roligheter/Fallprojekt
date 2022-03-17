@@ -1,4 +1,5 @@
 using DAL.Extensions;
+using DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,7 +17,7 @@ namespace DAL
         public DbSet <Category> Categories { get; set; }
         public DbSet <Expense> Expense { get; set; }
         public DbSet <Category> Category { get; set; }
-
+        public DbSet<SavingPlan> Savingplan { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
 
