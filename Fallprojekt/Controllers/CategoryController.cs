@@ -23,7 +23,7 @@ namespace Fallprojekt.Controllers
         }
 
         [HttpGet("categoryBudget")]
-        public IActionResult ListAllCategoryMatchBudget([FromQuery]BudgetNameDTO input)
+        public IActionResult ListAllCategoryMatchBudget([FromQuery] BudgetNameDTO input)
         {
             try
             {
@@ -36,29 +36,17 @@ namespace Fallprojekt.Controllers
         }
 
         [HttpPost("AddNewCategory")]
-        public IActionResult AddNewCatogory(NewCategoryDTO input)
+        public IActionResult AddNewCategory(NewCategoryDTO input)
         {
-            var inputCheckForCategoryDuplicates = new CheckForCategoryDuplicatesDTO {
-
-                UserId = input.UserId,
-                CategoryName = input.CategoryName
-            };
-
             try
             {
                 if (!ValidationService.Instance.ValidateUser(input.UserId))
                 {
-                    return StatusCode(418, "UserValidation failed...");
+                    return StatusCode(418, "ValidateUser failed...");
                 }
-
                 if (!ValidationService.Instance.ValidateBudget(input.UserId, input.BudgetId))
                 {
-                    return StatusCode(418, "BudgetValidation failed...");
-                }
-
-                if (!ValidationService.Instance.CheckForCategoryDuplicates(inputCheckForCategoryDuplicates))
-                {
-                    return StatusCode(418, "CheckForCategoryDuplicates failed...");
+                    return StatusCode(418, "ValidateBudget failed...");
                 }
 
                 CategoryService.Instance.AddNewCategory(input);
@@ -66,10 +54,8 @@ namespace Fallprojekt.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(418, ex.Message);
+                return StatusCode(418, ex);
             }
         }
-
-
     }
 }

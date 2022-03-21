@@ -29,7 +29,13 @@ namespace Service
         {
             using (var context = new ProjectContext())
             {
-                return context.User.Any(x => x.UserId == inputUserId);
+                bool userCheck = context.User.Any(x => x.UserId == inputUserId);
+
+                if (!userCheck)
+                {
+                    return false;
+                }
+                return true;
             }
         }
 
@@ -37,12 +43,12 @@ namespace Service
         {
             using (var context = new ProjectContext())
             {
-
                 var result = (from u in context.User
                               join b in context.Budgets on u.UserId equals b.UserId
-                              where b.BudgetId == inputBudgetId && u.UserId == inputUserId
-                              select u);
-                if (result.Any())
+                              where u.UserId == inputUserId && b.BudgetId == inputBudgetId
+                              select b.BudgetName).FirstOrDefault();
+                
+                if (result == null)
                 {
                     return false;
                 }
@@ -55,11 +61,11 @@ namespace Service
             using (var context = new ProjectContext())
             {
 
-                    var result = (from u in context.User
-                                  join b in context.Budgets on u.UserId equals b.UserId
-                                  join c in context.Category on b.BudgetId equals c.BudgetId
-                                  where c.CategoryName == input.CategoryName && u.UserId == input.UserId
-                                  select u);
+                var result = (from u in context.User
+                              join b in context.Budgets on u.UserId equals b.UserId
+                              join c in context.Category on b.BudgetId equals c.BudgetId
+                              where c.CategoryName == input.CategoryName && u.UserId == input.UserId
+                              select u);
                 if (result.Any())
                 {
                     return false;
