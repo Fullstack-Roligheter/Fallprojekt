@@ -78,5 +78,28 @@ namespace Service
                     .ToList();
             }
         }
+
+        public void AddNewCategory(int inputUserId, int inputBudgetId)
+        {
+            using (var context = new ProjectContext())
+            {
+                var tempNewUserBudgetId = (from u in context.User
+                                           join b in context.Budgets
+                                           on u.UserId equals b.UserId
+                                           where u.UserId == inputUserId
+                                           select b.BudgetId).FirstOrDefault();
+
+                var newUserBudgetId = Convert.ToInt32(tempNewUserBudgetId);
+
+                var newUserDefaultCategory = context.Set<Category>();
+                newUserDefaultCategory.Add(new Category
+                {
+                    CategoryName = "Default",
+                    BudgetId = newUserBudgetId,
+                    CategoryMaxAmount = 0
+                });
+                context.SaveChanges();
+            }
+        }
     }
 }
