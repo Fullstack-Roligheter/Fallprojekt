@@ -25,43 +25,11 @@ namespace Service
         //SINGLETON--------------------------------------------------------------------------------------------------
 
 
-        public List<UserDTO> ListAllUsers()
+        public bool ValidateUser(int inputUserId)
         {
             using (var context = new ProjectContext())
             {
-                return context.User
-                    .Select(u => new UserDTO
-                    {
-                        UserId = u.UserId,
-                        Name = u.UserName,
-                        Age = u.UserAge,
-                        Email = u.UserEmail,
-                        Password = u.UserPassword
-                    })
-                    .ToList();
-            }
-        }
-
-        public SuccesLoginDTO? LogIn(LoginDTO loginDTO)
-        {
-            using (var db = new ProjectContext()) //, StringComparison.OrdinalIgnoreCase
-            {
-                    var tempUserId = (from u in db.User
-                                               where u.UserName == loginDTO.UserName
-                                               && u.UserPassword == loginDTO.Password
-                                               select new SuccesLoginDTO
-                                               {
-                                                   UserID = u.UserId
-                                               }).FirstOrDefault();
-                    return tempUserId;
-            }
-        }
-
-        public int FetchingUserId(string username)
-        {
-            using (var db = new ProjectContext())
-            {
-                return db.User.Where(u => u.UserName == username).Select(i => i.UserId).FirstOrDefault();
+                return context.User.Any(x => x.UserId == inputUserId);
             }
         }
 
@@ -72,23 +40,5 @@ namespace Service
                 return context.User.Any(x => x.UserEmail == reg.Email);
             }
         }
-        public void UserRegistering(RegisterDTO reg)
-        {
-            using (var db = new ProjectContext())
-            {
-                var userExist = db.User.FirstOrDefault(e => e.UserEmail == reg.Email);
-                db.Add(new User()
-                {
-                    UserName = reg.Name.ToLower(),
-                    UserAge = reg.Age,
-                    UserEmail = reg.Email,
-                    UserPassword = reg.Password
-                });
-                db.SaveChanges();
-
-                BudgetService.Instance.AddDefaultBudgetToNewUser(reg.Email);
-            }
-        }
-
     }
 }

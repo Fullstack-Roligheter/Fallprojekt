@@ -35,6 +35,24 @@ namespace Fallprojekt.Controllers
             }
         }
 
+        [HttpPost("AddNewCategory")]
+        public IActionResult AddNewCatogory(NewCategoryDTO input)
+        {
+            try
+            {
+                if (!ValidationService.Instance.ValidateUser(input.UserId))
+                {
+                    return StatusCode(418, "UserValidation failed...");
+                }
+                CategoryService.Instance.AddNewCategory(input);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(418, ex.Message);
+            }
+        }
+
 
     }
 }

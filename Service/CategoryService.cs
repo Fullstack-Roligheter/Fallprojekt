@@ -79,24 +79,16 @@ namespace Service
             }
         }
 
-        public void AddNewCategory(int inputUserId, int inputBudgetId)
+        public void AddNewCategory(NewCategoryDTO input)
         {
             using (var context = new ProjectContext())
             {
-                var tempNewUserBudgetId = (from u in context.User
-                                           join b in context.Budgets
-                                           on u.UserId equals b.UserId
-                                           where u.UserId == inputUserId
-                                           select b.BudgetId).FirstOrDefault();
-
-                var newUserBudgetId = Convert.ToInt32(tempNewUserBudgetId);
-
-                var newUserDefaultCategory = context.Set<Category>();
-                newUserDefaultCategory.Add(new Category
+                var newCategory = context.Set<Category>();
+                newCategory.Add(new Category
                 {
-                    CategoryName = "Default",
-                    BudgetId = newUserBudgetId,
-                    CategoryMaxAmount = 0
+                    CategoryName = input.CategoryName,
+                    BudgetId = input.BudgetId,
+                    CategoryMaxAmount = input.CategoryMaxAmount
                 });
                 context.SaveChanges();
             }
