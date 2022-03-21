@@ -38,12 +38,29 @@ namespace Fallprojekt.Controllers
         [HttpPost("AddNewCategory")]
         public IActionResult AddNewCatogory(NewCategoryDTO input)
         {
+            var inputCheckForCategoryDuplicates = new CheckForCategoryDuplicatesDTO {
+
+                UserId = input.UserId,
+                CategoryName = input.CategoryName
+            };
+
             try
             {
                 if (!ValidationService.Instance.ValidateUser(input.UserId))
                 {
                     return StatusCode(418, "UserValidation failed...");
                 }
+
+                if (!ValidationService.Instance.ValidateBudget(input.UserId, input.BudgetId))
+                {
+                    return StatusCode(418, "BudgetValidation failed...");
+                }
+
+                if (!ValidationService.Instance.CheckForCategoryDuplicates(inputCheckForCategoryDuplicates))
+                {
+                    return StatusCode(418, "CheckForCategoryDuplicates failed...");
+                }
+
                 CategoryService.Instance.AddNewCategory(input);
                 return Ok();
             }

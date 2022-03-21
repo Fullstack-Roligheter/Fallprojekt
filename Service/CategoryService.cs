@@ -45,12 +45,12 @@ namespace Service
             }
         }
 
-        public List<CategoryDTO> ListAllCategory()
+        public List<CheckForCategoryDuplicatesDTO> ListAllCategory()
         {
             using (var context = new ProjectContext())
             {
                 return context.Categories
-                    .Select(n => new CategoryDTO
+                    .Select(n => new CheckForCategoryDuplicatesDTO
                     {
                         CategoryName = n.CategoryName,
                     })
@@ -59,7 +59,7 @@ namespace Service
         }
 
         //List Category to match budget
-        public List<CategoryDTO> ListAllCategoryMatchBudget(BudgetNameDTO budget)
+        public List<CheckForCategoryDuplicatesDTO> ListAllCategoryMatchBudget(BudgetNameDTO budget)
         {
             using (var context = new ProjectContext())
             {
@@ -71,7 +71,7 @@ namespace Service
                 //var CategoryBudget = context.Categories.Where(x => x.CategoryId == budgetID);
 
                 return context.Categories.Where(x => x.BudgetId == budgetID)
-                    .Select(n => new CategoryDTO
+                    .Select(n => new CheckForCategoryDuplicatesDTO
                     {
                         CategoryName = n.CategoryName,
                     })

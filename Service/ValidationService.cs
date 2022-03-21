@@ -33,6 +33,41 @@ namespace Service
             }
         }
 
+        public bool ValidateBudget(int inputUserId, int inputBudgetId)
+        {
+            using (var context = new ProjectContext())
+            {
+
+                var result = (from u in context.User
+                              join b in context.Budgets on u.UserId equals b.UserId
+                              where b.BudgetId == inputBudgetId && u.UserId == inputUserId
+                              select u);
+                if (result.Any())
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        public bool CheckForCategoryDuplicates(CheckForCategoryDuplicatesDTO input)
+        {
+            using (var context = new ProjectContext())
+            {
+
+                    var result = (from u in context.User
+                                  join b in context.Budgets on u.UserId equals b.UserId
+                                  join c in context.Category on b.BudgetId equals c.BudgetId
+                                  where c.CategoryName == input.CategoryName && u.UserId == input.UserId
+                                  select u);
+                if (result.Any())
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+
         public bool CheckEmailExist(RegisterDTO reg)
         {
             using (var context = new ProjectContext())
