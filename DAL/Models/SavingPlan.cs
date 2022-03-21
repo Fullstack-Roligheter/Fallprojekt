@@ -13,8 +13,10 @@ namespace DAL.Models
         public int SavingId { get; set; }
         public string Name { get; set; }
         public int Amount { get; set; }
-        public string PlanStartDate { get; set; }
-        public string PlanEndDate { get; set; }
+        public DateTime PlanStartDate { get; set; }
+        public DateTime PlanEndDate { get; set; }
+        public int UserId { get; set; }
+        public User User { get; set; }
 
     }
 }

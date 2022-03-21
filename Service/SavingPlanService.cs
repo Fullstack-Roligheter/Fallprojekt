@@ -27,9 +27,16 @@ namespace Service
         {
             using (var context = new ProjectContext())
             {
+                var data=context.User.Where(x => x.UserId == saving.UserId)
+                    .FirstOrDefault();
+                if(data== null)
+                {
+                    throw new Exception("user not found!");
+                }
                 context.Add(
                     new SavingPlan
                     {
+                        UserId = saving.UserId,
                         Name = saving.Name,
                         Amount = saving.Amount,
                         PlanStartDate = saving.PlanStartDate,
@@ -38,24 +45,26 @@ namespace Service
                 context.SaveChanges();
             }
         }
-        public List<GetSavingPlanDTO> ListAllPlan()
+        public List<GetSavingPlanDTO> ListAllPlan(UserIdDTO user)
         {
             using (var context = new ProjectContext())
             {
-                return context.Savingplan
+                //var data = context.User.Where(x => x.UserId == user.UserId)
+                //    .FirstOrDefault();  //vill testa 
+                return context.Savingplan.Where(x=>x.UserId==user.UserId)
                     .Select(s => new GetSavingPlanDTO
                     {
                         Name = s.Name,
-                        PlanStartDate = s.PlanStartDate,
-                        PlanEndDate = s.PlanEndDate,
-                        CountDown = DateDiff(s.PlanStartDate, s.PlanEndDate)
+                        Amount = s.Amount,
+                        PlanStartDate = s.PlanStartDate.ToString("yyyy-MM-dd"),
+                        PlanEndDate = s.PlanEndDate.ToString("yyyy-MM-dd"),
+                        CountDown = DateDiff(s.PlanStartDate.ToString("yyyy-MM-dd"), s.PlanEndDate.ToString("yyyy-MM-dd"))
                     })
                     .ToList();
             }
         }
         //method som räknar days
-        public int DateDiff(string dateStart, string dateEnd)
-
+        public static int DateDiff(string dateStart, string dateEnd)
         {
             DateTime start = Convert.ToDateTime(dateStart);
             DateTime end = Convert.ToDateTime(dateEnd);

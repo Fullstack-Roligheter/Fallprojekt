@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,7 @@ namespace DAL
         public string UserEmail { get; set; }
         public string UserPassword { get; set; }
 
-
+        public ICollection<SavingPlan>? SavingPlans { get; set; }
         public ICollection<Budget>? Budgets { get; set; } //En User kan ha många Budgets ("EN" SIDAN HÄR)
 
     }

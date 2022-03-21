@@ -23,9 +23,9 @@ namespace Fallprojekt.Controllers
             }
         }
         [HttpGet]
-        public List<GetSavingPlanDTO>ListAllPlan()
+        public List<GetSavingPlanDTO> ListAllPlan([FromQuery] UserIdDTO user)
         {
-            return SavingPlanService.Instance.ListAllPlan();
+            return SavingPlanService.Instance.ListAllPlan(user);
         }
 
 

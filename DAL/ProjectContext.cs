@@ -48,6 +48,11 @@ namespace DAL
             modelBuilder.Entity<Expense>()
                 .Property(e => e.ExpenseAmount).HasColumnType("money");
 
+            modelBuilder.Entity<SavingPlan>()
+                .Property(e => e.PlanStartDate).HasColumnType("date");
+            modelBuilder.Entity<SavingPlan>()
+               .Property(e => e.PlanEndDate).HasColumnType("date");
+
 
             modelBuilder.Entity<Budget>() //En USER kan ha MÅNGA Budgets. FK är Budgets.UserId på MÅNGA sidan
                 .HasOne<User>(u => u.User)
