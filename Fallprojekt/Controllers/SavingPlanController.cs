@@ -23,16 +23,16 @@ namespace Fallprojekt.Controllers
             }
         }
         [HttpGet]
-        public List<GetSavingPlanDTO> ListAllPlan([FromQuery] UserIdDTO user)
+        public IActionResult ListAllPlan([FromQuery] UserIdDTO user)
         {
-            return SavingPlanService.Instance.ListAllPlan(user);
+            try
+            {
+                return Ok(SavingPlanService.Instance.ListAllPlan(user));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
-
-
-        //[HttpPost]
-        //public int GetDays(DateTime dateStart, DateTime dateEnd)
-        //{
-        //    return SavingPlanService.Instance.DateDiff(dateStart, dateEnd);
-        //}
     }
 }
