@@ -25,43 +25,52 @@ namespace Service
         //SINGLETON--------------------------------------------------------------------------------------------------
 
 
-        public List<UserDTO> ListAllUsers()
+        public bool ValidateUser(int inputUserId)
         {
             using (var context = new ProjectContext())
             {
-                return context.User
-                    .Select(u => new UserDTO
-                    {
-                        UserId = u.UserId,
-                        Name = u.UserName,
-                        Age = u.UserAge,
-                        Email = u.UserEmail,
-                        Password = u.UserPassword
-                    })
-                    .ToList();
+                bool userCheck = context.User.Any(x => x.UserId == inputUserId);
+
+                if (!userCheck)
+                {
+                    return false;
+                }
+                return true;
             }
         }
 
-        public SuccesLoginDTO? LogIn(LoginDTO loginDTO)
+        public bool ValidateBudget(int inputUserId, int inputBudgetId)
         {
-            using (var db = new ProjectContext()) //, StringComparison.OrdinalIgnoreCase
+            using (var context = new ProjectContext())
             {
-                    var tempUserId = (from u in db.User
-                                               where u.UserName == loginDTO.UserName
-                                               && u.UserPassword == loginDTO.Password
-                                               select new SuccesLoginDTO
-                                               {
-                                                   UserID = u.UserId
-                                               }).FirstOrDefault();
-                    return tempUserId;
+                var result = (from u in context.User
+                              join b in context.Budgets on u.UserId equals b.UserId
+                              where u.UserId == inputUserId && b.BudgetId == inputBudgetId
+                              select b.BudgetName).FirstOrDefault();
+                
+                if (result == null)
+                {
+                    return false;
+                }
+                return true;
             }
         }
 
-        public int FetchingUserId(string username)
+        public bool CheckForCategoryDuplicates(CheckForCategoryDuplicatesDTO input)
         {
-            using (var db = new ProjectContext())
+            using (var context = new ProjectContext())
             {
-                return db.User.Where(u => u.UserName == username).Select(i => i.UserId).FirstOrDefault();
+
+                var result = (from u in context.User
+                              join b in context.Budgets on u.UserId equals b.UserId
+                              join c in context.Category on b.BudgetId equals c.BudgetId
+                              where c.CategoryName == input.CategoryName && u.UserId == input.UserId
+                              select u);
+                if (result.Any())
+                {
+                    return false;
+                }
+                return true;
             }
         }
 
@@ -72,23 +81,5 @@ namespace Service
                 return context.User.Any(x => x.UserEmail == reg.Email);
             }
         }
-        public void UserRegistering(RegisterDTO reg)
-        {
-            using (var db = new ProjectContext())
-            {
-                var userExist = db.User.FirstOrDefault(e => e.UserEmail == reg.Email);
-                db.Add(new User()
-                {
-                    UserName = reg.Name.ToLower(),
-                    UserAge = reg.Age,
-                    UserEmail = reg.Email,
-                    UserPassword = reg.Password
-                });
-                db.SaveChanges();
-
-                BudgetService.Instance.AddDefaultBudgetToNewUser(reg.Email);
-            }
-        }
-
     }
 }
