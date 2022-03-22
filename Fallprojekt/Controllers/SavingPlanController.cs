@@ -9,7 +9,7 @@ namespace Fallprojekt.Controllers
     [ApiController]
     public class SavingPlanController : ControllerBase
     {
-        [HttpPost]
+        [HttpPost("addplan")]
         public IActionResult CreateSavingPlan(SavingPlanDTO saving)
         {
             try
@@ -22,7 +22,7 @@ namespace Fallprojekt.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet]
+        [HttpGet("getplans")]
         public IActionResult ListAllPlan([FromQuery] UserIdDTO user)
         {
             try

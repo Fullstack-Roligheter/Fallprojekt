@@ -27,9 +27,9 @@ namespace Service
         {
             using (var context = new ProjectContext())
             {
-                var data=context.User.Where(x => x.UserId == saving.UserId)
+                var data = context.User.Where(x => x.UserId == saving.UserId)
                     .FirstOrDefault();
-                if(data== null)
+                if (data == null)
                 {
                     throw new Exception("user not found!");
                 }
@@ -49,9 +49,13 @@ namespace Service
         {
             using (var context = new ProjectContext())
             {
-                //var data = context.User.Where(x => x.UserId == user.UserId)
-                //    .FirstOrDefault();  //vill testa 
-                return context.Savingplan.Where(x=>x.UserId==user.UserId)
+                var data = context.User.Any(x => x.UserId == user.UserId);
+                if (!data)
+                {
+                    throw new Exception("User not found!");
+                }
+                             
+                return context.Savingplan.Where(x => x.UserId == user.UserId)
                     .Select(s => new GetSavingPlanDTO
                     {
                         Name = s.Name,
