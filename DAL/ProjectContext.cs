@@ -1,4 +1,5 @@
 using DAL.Extensions;
+using DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,7 +17,7 @@ namespace DAL
         public DbSet <Category> Categories { get; set; }
         public DbSet <Expense> Expense { get; set; }
         public DbSet <Category> Category { get; set; }
-
+        public DbSet<SavingPlan> Savingplan { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
 
@@ -46,6 +47,11 @@ namespace DAL
                 .Property(e => e.ExpenseDate).HasColumnType("date");
             modelBuilder.Entity<Expense>()
                 .Property(e => e.ExpenseAmount).HasColumnType("money");
+
+            modelBuilder.Entity<SavingPlan>()
+                .Property(e => e.PlanStartDate).HasColumnType("date");
+            modelBuilder.Entity<SavingPlan>()
+               .Property(e => e.PlanEndDate).HasColumnType("date");
 
 
             modelBuilder.Entity<Budget>() //En USER kan ha MÅNGA Budgets. FK är Budgets.UserId på MÅNGA sidan
