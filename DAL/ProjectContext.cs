@@ -23,7 +23,7 @@ namespace DAL
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
 
-            var serverAddress = ".";
+            var serverAddress = "localhost\\SQLEXPRESS";
             var databaseName = "Fallprojekt_DB-s4";
             var connectionString = @"Server =" + serverAddress + "; Database =" + databaseName + "; Integrated Security = true;";
             builder
