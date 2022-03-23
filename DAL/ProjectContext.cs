@@ -17,12 +17,14 @@ namespace DAL
         public DbSet <Category> Categories { get; set; }
         public DbSet <Expense> Expense { get; set; }
         public DbSet <Category> Category { get; set; }
+        public DbSet <Income> Incomes { get; set; }
+        public DbSet <DefaultIncomeCategory> DefaultIncomeCategories { get; set; }
         public DbSet<SavingPlan> Savingplan { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
 
-            var serverAddress = "localhost\\SQLEXPRESS";
-            var databaseName = "Fallprojekt_DB";
+            var serverAddress = ".";
+            var databaseName = "Fallprojekt_DB-s4";
             var connectionString = @"Server =" + serverAddress + "; Database =" + databaseName + "; Integrated Security = true;";
             builder
                 .UseSqlServer(connectionString)
