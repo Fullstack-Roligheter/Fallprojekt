@@ -67,7 +67,6 @@ namespace Service
                     .ToList();
             }
         }
-        //method som räknar days
         public static int DateDiff(string dateStart, string dateEnd)
         {
             DateTime start = Convert.ToDateTime(dateStart);
