@@ -23,7 +23,7 @@ namespace Fallprojekt.Controllers
         }
 
         [HttpGet("categoryBudget")]
-        public IActionResult ListAllCategoryMatchBudget([FromQuery]BudgetNameDTO input)
+        public IActionResult ListAllCategoryMatchBudget([FromQuery] BudgetNameDTO input)
         {
             try
             {
@@ -35,6 +35,27 @@ namespace Fallprojekt.Controllers
             }
         }
 
+        [HttpPost("AddNewCategory")]
+        public IActionResult AddNewCategory(NewCategoryDTO input)
+        {
+            try
+            {
+                if (!ValidationService.Instance.ValidateUser(input.UserId))
+                {
+                    return StatusCode(418, "ValidateUser failed...");
+                }
+                if (!ValidationService.Instance.ValidateBudget(input.UserId, input.BudgetId))
+                {
+                    return StatusCode(418, "ValidateBudget failed...");
+                }
 
+                CategoryService.Instance.AddNewCategory(input);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(418, ex);
+            }
+        }
     }
 }
