@@ -18,6 +18,8 @@ namespace DAL
 
         public ICollection<SavingPlan>? SavingPlans { get; set; }
         public ICollection<Budget>? Budgets { get; set; } //En User kan ha många Budgets ("EN" SIDAN HÄR)
+        public ICollection<Income>? Incomes { get; set; }
+        //public ICollection<IncomeCategory>? IncomeCategory { get; set; }
 
     }
 }

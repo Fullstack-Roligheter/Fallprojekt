@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,6 +51,28 @@ namespace DAL.Extensions
                     new Expense { ExpenseId = 8, ExpenseRecipient = "Sommar HOME IKEA 2022", ExpenseAmount = 250, ExpenseDate = DateTime.ParseExact("2022-03-08", "yyyy-MM-dd", null), CategoryId = 5 },
                     new Expense { ExpenseId = 9, ExpenseRecipient = "Sommar OTHER Hemköp 2022", ExpenseAmount = 250, ExpenseDate = DateTime.ParseExact("2022-03-09", "yyyy-MM-dd", null), CategoryId = 6 },
                     new Expense { ExpenseId = 10, ExpenseRecipient = "Sommar OTHER ICA 2022", ExpenseAmount = 250, ExpenseDate = DateTime.ParseExact("2022-03-10", "yyyy-MM-dd", null), CategoryId = 6 }
+                );
+
+            builder.Entity<DefaultIncomeCategory>().HasData
+                (
+                    new DefaultIncomeCategory
+                    {
+                        Id = 1,
+                        Name = "Salary"
+                    },
+
+                    new DefaultIncomeCategory
+                    {
+                        Id = 2,
+                        Name = "Business"
+                    },
+
+                    new DefaultIncomeCategory
+                    {
+                        Id = 3,
+                        Name = "Other"
+                    }
+
                 );
         }
     }

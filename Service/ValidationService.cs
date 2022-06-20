@@ -56,7 +56,7 @@ namespace Service
             }
         }
 
-        public bool CheckForCategoryDuplicates(CheckForCategoryDuplicatesDTO input)
+        public bool CheckForCategoryDuplicates(int userId, string categoryName)
         {
             using (var context = new ProjectContext())
             {
@@ -64,9 +64,9 @@ namespace Service
                 var result = (from u in context.User
                               join b in context.Budgets on u.UserId equals b.UserId
                               join c in context.Category on b.BudgetId equals c.BudgetId
-                              where c.CategoryName == input.CategoryName && u.UserId == input.UserId
-                              select u);
-                if (result.Any())
+                              where c.CategoryName == categoryName && u.UserId == userId
+                              select c.CategoryName).FirstOrDefault();
+                if (result != null)
                 {
                     return false;
                 }

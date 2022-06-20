@@ -17,6 +17,8 @@ namespace DAL
         public DbSet <Category> Categories { get; set; }
         public DbSet <Expense> Expense { get; set; }
         public DbSet <Category> Category { get; set; }
+        public DbSet <Income> Incomes { get; set; }
+        public DbSet <DefaultIncomeCategory> DefaultIncomeCategories { get; set; }
         public DbSet<SavingPlan> Savingplan { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {

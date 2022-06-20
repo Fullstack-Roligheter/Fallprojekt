@@ -48,13 +48,18 @@ namespace Fallprojekt.Controllers
                 {
                     return StatusCode(418, "ValidateBudget failed...");
                 }
+                if (!ValidationService.Instance.CheckForCategoryDuplicates(input.UserId, input.CategoryName))
+                {
+                    return StatusCode(418, "CheckForCategoryDuplicates failed...");
+                }
 
                 CategoryService.Instance.AddNewCategory(input);
                 return Ok();
             }
             catch (Exception ex)
             {
-                return StatusCode(418, ex);
+                Console.WriteLine(ex);
+                return StatusCode(500);
             }
         }
     }
