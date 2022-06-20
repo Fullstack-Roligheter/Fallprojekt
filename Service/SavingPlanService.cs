@@ -54,10 +54,11 @@ namespace Service
                 {
                     throw new Exception("User not found!");
                 }
-                             
+
                 return context.Savingplan.Where(x => x.UserId == user.UserId)
                     .Select(s => new GetSavingPlanDTO
                     {
+                        SavingId = s.SavingId,
                         Name = s.Name,
                         Amount = s.Amount,
                         PlanStartDate = s.PlanStartDate.ToString("yyyy-MM-dd"),
@@ -65,6 +66,35 @@ namespace Service
                         CountDown = DateDiff(s.PlanStartDate.ToString("yyyy-MM-dd"), s.PlanEndDate.ToString("yyyy-MM-dd"))
                     })
                     .ToList();
+            }
+        }
+        public void UpdatePlan(EditSavingPlanDTO editPlan)
+        {
+            using (var context = new ProjectContext())
+            {
+                var plan = context.Savingplan.FirstOrDefault(x => x.SavingId == editPlan.SavingId);
+                if(plan == null)
+                {
+                    throw new NullReferenceException($"No Plan!");
+                }
+                plan.Name = editPlan.Name;
+                plan.Amount = editPlan.Amount;
+                plan.PlanStartDate = editPlan.PlanStartDate;
+                plan.PlanEndDate = editPlan.PlanEndDate;
+                context.SaveChanges();
+            }
+        }
+        public void DeletePlan(int id)
+        {
+            using (var context = new ProjectContext())
+            {
+                var plan = context.Savingplan.FirstOrDefault(x => x.SavingId == id);
+                if (plan == null)
+                {
+                    throw new NullReferenceException($"No Plan!");
+                }                  
+                context.Remove(plan);
+                context.SaveChanges();
             }
         }
         public static int DateDiff(string dateStart, string dateEnd)
