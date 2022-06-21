@@ -34,5 +34,31 @@ namespace Fallprojekt.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPut("updateplan/{id}")]
+        public IActionResult UpdateSavingPlan(EditSavingPlanDTO editPlan)
+        {
+            try
+            {
+                SavingPlanService.Instance.UpdatePlan(editPlan);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok();
+        }
+        [HttpDelete("deteleplan/{id}")]
+        public IActionResult DeleteSavingPlan(int id)
+        {
+            try
+            {
+                SavingPlanService.Instance.DeletePlan(id);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok();
+        }
     }
 }
