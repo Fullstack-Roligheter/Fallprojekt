@@ -19,11 +19,11 @@ namespace Fallprojekt.Controllers
                 
                 if(result == null)
                 {
-                    return StatusCode(401);
+                    return new StatusCodeResult(401);
                 }
                 else 
                 {
-                    return Ok(result);    
+                    return new OkObjectResult(result);    
                 }
 
             }
