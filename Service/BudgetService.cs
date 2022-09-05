@@ -108,5 +108,42 @@ namespace Service
                 return context.Budgets.Any(x => x.BudgetId == budgetId);
             }
         }
+
+        public List<UserBudgetDTO> ListUserBudgetsInfo(UserIdDTO input)
+        {
+            using (var context = new ProjectContext())
+            {
+                var budgetInfoList = (from u in context.User
+                                      join b in context.Budgets on u.UserId equals b.UserId
+                                      where u.UserId == input.UserId
+                                      select new UserBudgetDTO
+                                      {
+                                          BudgetId = b.BudgetId,
+                                          BudgetName = b.BudgetName,
+                                          BudgetStartDate = b.BudgetStartDate,
+                                          BudgetEndDate = b.BudgetEndDate,
+                                          BudgetMaxAmountMoney = b.BudgetMaxAmountMoney
+                                      }).ToList();
+
+                return budgetInfoList;
+            }
+        }
+
+        public void AddBudget(AddBudgetDTO input)
+        {
+            using (var context = new ProjectContext())
+            {
+                context.Add(
+                    new Budget
+                    {
+                        BudgetName = input.BudgetName,
+                        BudgetStartDate = input.BudgetStartDate,
+                        BudgetEndDate = input.BudgetEndDate,
+                        BudgetMaxAmountMoney = input.BudgetAmount,
+                        UserId = input.UserId
+                    });
+                context.SaveChanges();
+            }
+        }
     }
 }

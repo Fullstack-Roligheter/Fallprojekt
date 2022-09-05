@@ -43,5 +43,32 @@ namespace Fallprojekt.Controllers
             }
         }
 
+        [HttpPost("/ListAllBudgetInfosForSpecificUser")]
+        public IActionResult ListAllBudgetInfosForSpecificUser(UserIdDTO input)
+        {
+            try
+            {
+                return Ok(BudgetService.Instance.ListUserBudgetsInfo(input));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost("/AddBudget")]
+        public IActionResult AddBudget(AddBudgetDTO input)
+        {
+            try
+            {
+                BudgetService.Instance.AddBudget(input);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
     }
 }
