@@ -1,12 +1,11 @@
-﻿using DAL.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace DAL
+namespace DAL.Models
 {
     public class Debit
     {
         [Key] // <-- Kör med Data annotations tills vidare bara för att vara tydlig
-        public new Guid Id { get; set; }
+        public Guid Id { get; set; }
         public DateTime Date { get; set; }
         public decimal Amount { get; set; }
         public string? Comment { get; set; }

@@ -10,10 +10,10 @@ namespace Fallprojekt.Controllers
     [ApiController]
     public class DebugController : ControllerBase
     {
-        [HttpGet("/GetDebitListForUser")] //Exempel Controller
+        [HttpGet("GetDebitListForUser")] //Exempel Controller
         public List<DebitDTO> GetExpensesListForUser(Guid userId)
         {
-            return ExpenseService.Instance.GetDebitListForUser(userId);
+            return DebitService.Instance.GetDebitListForUser(userId);
         }
 
         //[HttpPost("/CalculateBudgetFromCatagories")]

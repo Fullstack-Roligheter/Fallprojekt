@@ -8,22 +8,22 @@ using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace Service
 {
-    public class ExpenseService
+    public class DebitService
     {
         //SINGLETON--------------------------------------------------------------------------------------------------
-        private static ExpenseService _instance;
-        public static ExpenseService Instance
+        private static DebitService _instance;
+        public static DebitService Instance
         {
             get
             {
                 if (_instance == null)
                 {
-                    _instance = new ExpenseService();
+                    _instance = new DebitService();
                 }
                 return _instance;
             }
         }
-        private ExpenseService() { }
+        private DebitService() { }
         //SINGLETON--------------------------------------------------------------------------------------------------
 
         public List<DebitDTO> GetDebitListForUser(Guid userId)
