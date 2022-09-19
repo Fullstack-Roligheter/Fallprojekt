@@ -1,79 +1,65 @@
-﻿using DAL.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace DAL.Extensions
+namespace DAL.Extensions;
+
+internal static class ModelBuilderExtensions
 {
-    internal static class ModelBuilderExtensions
+    public static void Seed(this ModelBuilder builder)
     {
-        public static void Seed(this ModelBuilder builder)
-        {
-            builder.Entity<User>().HasData //User tabell
-                (
-                    new User { UserId = 1, UserName = "adam", UserAge = 20, UserEmail = "adam_01@hotmail.com", UserPassword = "123" },
-                    new User { UserId = 2, UserName = "berit", UserAge = 30, UserEmail = "berit_02@msn.com", UserPassword = "123" }
-                );
+        var userGuidOne = new Guid("ce43e8a5-b655-435f-9dee-f0df2ee936c1"); //adam
+        var userGuidTwo = new Guid("720892b1-b076-49ec-8ec2-88b73040b351"); //berit
 
-            builder.Entity<Budget>().HasData //Budget tabell
-                (
-                    new Budget { BudgetId = 1, UserId = 1, BudgetName = "Default", BudgetStartDate = DateTime.ParseExact("2022-01-01", "yyyy-MM-dd", null), BudgetEndDate = DateTime.ParseExact("2022-01-31", "yyyy-MM-dd", null), BudgetMaxAmountMoney = 0 },
-                    new Budget { BudgetId = 2, UserId = 1, BudgetName = "Vår 2022", BudgetStartDate = DateTime.ParseExact("2022-03-01", "yyyy-MM-dd", null), BudgetEndDate = DateTime.ParseExact("2022-05-31", "yyyy-MM-dd", null), BudgetMaxAmountMoney = 0 },
-                    new Budget { BudgetId = 3, UserId = 1, BudgetName = "Sommar 2022", BudgetStartDate = DateTime.ParseExact("2022-06-01", "yyyy-MM-dd", null), BudgetEndDate = DateTime.ParseExact("2022-08-31", "yyyy-MM-dd", null), BudgetMaxAmountMoney = 0 },
-                    new Budget { BudgetId = 4, UserId = 2, BudgetName = "Default", BudgetStartDate = DateTime.ParseExact("2022-01-01", "yyyy-MM-dd", null), BudgetEndDate = DateTime.ParseExact("2022-01-31", "yyyy-MM-dd", null), BudgetMaxAmountMoney = 0 }
+        var budgetGuidOne = new Guid("496ef686-6b83-4c24-9e0f-d6f51b29fad2");
+        var budgetGuidTwo = new Guid("d96f9337-0b84-4a79-9977-d27125420898");
+        var budgetGuidThree = new Guid("fe0219cc-eb57-417e-b07b-87aa2784a92b");
+        var budgetGuidFour = new Guid("7264a099-8b0e-4953-a548-fa62dd2fad4a");
 
-                );
+        var categoryGuidOne = new Guid("5959ed9c-f081-45e6-ae2e-aa102c3e5a46");
+        var categoryGuidTwo = new Guid("b78fd823-20cc-49b2-90c5-6e5df0dadbb3");
+        var categoryGuidThree = new Guid("2da1939c-8f8f-46f2-819a-3b405311be9d");
+        var categoryGuidFour = new Guid("6cbc9ea2-359d-4035-ad23-f597fb12b31a");
+        var categoryGuidFive = new Guid("6539ea84-9f69-4c84-a66a-6131ef955749");
 
-            builder.Entity<Category>().HasData //Category tabell
-                (
-                    new Category { CategoryId = 1, CategoryName = "Default", BudgetId = 1, CategoryMaxAmount = 1000 },
-                    new Category { CategoryId = 2, CategoryName = "Hem & Hushåll", BudgetId = 1, CategoryMaxAmount = 1500 },
-                    new Category { CategoryId = 3, CategoryName = "Home Stuff Vår 2022", BudgetId = 2, CategoryMaxAmount = 1500 },
-                    new Category { CategoryId = 4, CategoryName = "Other Stuff Vår 2022", BudgetId = 2, CategoryMaxAmount = 1500 },
-                    new Category { CategoryId = 5, CategoryName = "Home Stuff Sommar 2022", BudgetId = 3, CategoryMaxAmount = 1500 },
-                    new Category { CategoryId = 6, CategoryName = "Other Stuff Sommar 2022", BudgetId = 3, CategoryMaxAmount = 1500 },
-                    new Category { CategoryId = 7, CategoryName = "Default", BudgetId = 4, CategoryMaxAmount = 1000 }
+        builder.Entity<User>().HasData //User tabell
+        (
+            new User { Id = userGuidOne, FirstName = "Adam", LastName = "Adamsson", Email = "adam_01@hotmail.com", Password = "123" },
+            new User { Id = userGuidTwo, FirstName = "Berit", LastName = "Beritsdotter", Email = "berit_02@msn.com", Password = "123" }
+        );
 
-                );
+        builder.Entity<Budget>().HasData //Budget tabell
+        (
+            new Budget { Id = budgetGuidOne, UserId = userGuidOne, Name = "Nya möbler", StartDate = DateTime.ParseExact("2022-04-01", "yyyy-MM-dd", null), EndDate = DateTime.ParseExact("2022-12-01", "yyyy-MM-dd", null), Amount = 6000 },
+            new Budget { Id = budgetGuidTwo, UserId = userGuidOne, Name = "Julklappar", StartDate = DateTime.ParseExact("2022-09-01", "yyyy-MM-dd", null), EndDate = DateTime.ParseExact("2022-12-01", "yyyy-MM-dd", null), Amount = 3000 },
+            new Budget { Id = budgetGuidThree, UserId = userGuidTwo, Name = "Ny Dator", StartDate = DateTime.ParseExact("2022-05-01", "yyyy-MM-dd", null), EndDate = DateTime.ParseExact("2023-04-30", "yyyy-MM-dd", null), Amount = 12000 },
+            new Budget { Id = budgetGuidFour, UserId = userGuidTwo, Name = "Film o Pizza kväll", StartDate = DateTime.ParseExact("2022-10-14", "yyyy-MM-dd", null), EndDate = DateTime.ParseExact("2022-10-14", "yyyy-MM-dd", null), Amount = 1000 }
 
-            builder.Entity<Expense>().HasData //Expense tabell
-                (
-                    new Expense { ExpenseId = 1, ExpenseRecipient = "ICA",      ExpenseAmount = 500, ExpenseDate = DateTime.ParseExact("2022-01-15", "yyyy-MM-dd", null), CategoryId = 1 },
-                    new Expense { ExpenseId = 2, ExpenseRecipient = "Hemköp",   ExpenseAmount = 250, ExpenseDate = DateTime.ParseExact("2022-01-17", "yyyy-MM-dd", null), CategoryId = 1 },
-                    new Expense { ExpenseId = 3, ExpenseRecipient = "Vår HOME ICA 2022", ExpenseAmount = 250, ExpenseDate = DateTime.ParseExact("2022-03-02", "yyyy-MM-dd", null), CategoryId = 3 },
-                    new Expense { ExpenseId = 4, ExpenseRecipient = "Vår HOME IKEA 2022", ExpenseAmount = 250, ExpenseDate = DateTime.ParseExact("2022-03-04", "yyyy-MM-dd", null), CategoryId = 3 },
-                    new Expense { ExpenseId = 5, ExpenseRecipient = "Vår OTHER Hemköp 2022", ExpenseAmount = 250, ExpenseDate = DateTime.ParseExact("2022-03-05", "yyyy-MM-dd", null), CategoryId = 4 },
-                    new Expense { ExpenseId = 6, ExpenseRecipient = "Vår OTHER ICA 2022", ExpenseAmount = 250, ExpenseDate = DateTime.ParseExact("2022-03-06", "yyyy-MM-dd", null), CategoryId = 4 },
-                    new Expense { ExpenseId = 7, ExpenseRecipient = "Sommar HOME ICA 2022", ExpenseAmount = 250, ExpenseDate = DateTime.ParseExact("2022-03-07", "yyyy-MM-dd", null), CategoryId = 5 },
-                    new Expense { ExpenseId = 8, ExpenseRecipient = "Sommar HOME IKEA 2022", ExpenseAmount = 250, ExpenseDate = DateTime.ParseExact("2022-03-08", "yyyy-MM-dd", null), CategoryId = 5 },
-                    new Expense { ExpenseId = 9, ExpenseRecipient = "Sommar OTHER Hemköp 2022", ExpenseAmount = 250, ExpenseDate = DateTime.ParseExact("2022-03-09", "yyyy-MM-dd", null), CategoryId = 6 },
-                    new Expense { ExpenseId = 10, ExpenseRecipient = "Sommar OTHER ICA 2022", ExpenseAmount = 250, ExpenseDate = DateTime.ParseExact("2022-03-10", "yyyy-MM-dd", null), CategoryId = 6 }
-                );
+        );
 
-            builder.Entity<DefaultIncomeCategory>().HasData
-                (
-                    new DefaultIncomeCategory
-                    {
-                        Id = 1,
-                        Name = "Salary"
-                    },
+        builder.Entity<Category>().HasData //Category tabell
+        (
+            new Category { Id = categoryGuidOne, Name = "Default", },       //Delat kategori
+            new Category { Id = categoryGuidTwo, Name = "Leksaker", UserId = userGuidOne},      //bara adam
+            new Category { Id = categoryGuidThree, Name = "Nöje", UserId = userGuidTwo },        //bara berit
+            new Category { Id = categoryGuidFour, Name = "Räkningar", UserId = userGuidTwo },    //bara berit
+            new Category { Id = categoryGuidFive, Name = "Hemsaker", UserId = userGuidOne }      //bara adam
 
-                    new DefaultIncomeCategory
-                    {
-                        Id = 2,
-                        Name = "Business"
-                    },
+        );
 
-                    new DefaultIncomeCategory
-                    {
-                        Id = 3,
-                        Name = "Other"
-                    }
+        builder.Entity<Debit>().HasData //Debit tabell
+        (
+            //adam
+            new Debit { Id = Guid.NewGuid(), Comment = "Mjukisdjur",      Amount = 150, Date = DateTime.ParseExact("2022-09-15", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidTwo, CategoryId = categoryGuidTwo },
+            new Debit { Id = Guid.NewGuid(), Comment = "Ny Soffa",   Amount = 7000, Date = DateTime.ParseExact("2022-01-17", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidOne, CategoryId = categoryGuidFive},
+            new Debit { Id = Guid.NewGuid(), Comment = "Lego", Amount = 500, Date = DateTime.ParseExact("2022-03-02", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidTwo, CategoryId = categoryGuidTwo},
+            new Debit { Id = Guid.NewGuid(), Comment = "Ny Köksbord", Amount = 850, Date = DateTime.ParseExact("2022-03-04", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidOne, CategoryId = categoryGuidFive},
+            new Debit { Id = Guid.NewGuid(), Comment = "Storhandla BBQ", Amount = 1500, Date = DateTime.ParseExact("2022-03-05", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = null, CategoryId  = categoryGuidOne},
 
-                );
-        }
+            //berit
+            new Debit { Id = Guid.NewGuid(), Comment = "Ny Moderkort", Amount = 2500, Date = DateTime.ParseExact("2022-03-06", "yyyy-MM-dd", null), UserId = userGuidTwo, BudgetId = budgetGuidThree, CategoryId = categoryGuidThree },
+            new Debit { Id = Guid.NewGuid(), Comment = "Ny Grafikkort", Amount = 8500, Date = DateTime.ParseExact("2022-03-07", "yyyy-MM-dd", null), UserId = userGuidTwo, BudgetId = budgetGuidThree, CategoryId = categoryGuidThree },
+            new Debit { Id = Guid.NewGuid(), Comment = "Spotify", Amount = 180, Date = DateTime.ParseExact("2022-03-08", "yyyy-MM-dd", null), UserId = userGuidTwo, BudgetId = null, CategoryId = categoryGuidFour },
+            new Debit { Id = Guid.NewGuid(), Comment = "Bredband", Amount = 400, Date = DateTime.ParseExact("2022-03-09", "yyyy-MM-dd", null), UserId = userGuidTwo, BudgetId = null, CategoryId = categoryGuidFour },
+            new Debit { Id = Guid.NewGuid(), Comment = "Film o Pizza kväll", Amount = 750, Date = DateTime.ParseExact("2022-03-10", "yyyy-MM-dd", null), UserId = userGuidTwo, BudgetId = budgetGuidFour, CategoryId = categoryGuidThree }
+        );
     }
 }
