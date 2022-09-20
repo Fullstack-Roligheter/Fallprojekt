@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Threading.Tasks.Dataflow;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Query.Internal;
+using DAL.Models;
 
 namespace Service
 {
@@ -25,80 +26,84 @@ namespace Service
         }
         private DebitService() { }
         //SINGLETON--------------------------------------------------------------------------------------------------
+        
+        public List<DebitDTO> GetAllDebits()
+        {
+            using var context = new ProjectContext();
+            var result = (from d in context.Debits
+                select new DebitDTO()
+                {
+                    Id = d.Id,
+                    Date = d.Date,
+                    Amount = d.Amount,
+                    Comment = d.Comment,
+                    Category = d.Category == null ? string.Empty : d.Category.Name,
+                    Budget = d.Budget == null ? string.Empty : d.Budget.Name,
+                    UserFirstName = d.User.FirstName,
+                }).ToList();
+            return result;
+        }
 
         public List<DebitDTO> GetDebitListForUser(Guid userId)
         {
-            using (var context = new ProjectContext() { })
+            using var context = new ProjectContext();
+            var result = (from d in context.Debits
+                where d.UserId == userId
+                select new DebitDTO()
+                {
+                    Id = d.Id,
+                    Date = d.Date,
+                    Amount = d.Amount,
+                    Comment = d.Comment,
+                    Category = d.Category == null ? string.Empty : d.Category.Name,
+                    Budget = d.Budget == null ? string.Empty : d.Budget.Name,
+                    UserFirstName = d.User.FirstName,
+                }).ToList();
+            return result;
+        }
+        
+        public void AddDebit(AddDebitDTO debit)
+        {
+            using var context = new ProjectContext();
+            context.Add(new Debit
             {
-                var result = (from d in context.Debits
-                    where d.UserId == userId
-                    select new DebitDTO()
-                    {
-                        Id = d.Id,
-                        Date = d.Date,
-                        Amount = d.Amount,
-                        Comment = d.Comment,
-                        Category = d.Category == null ? string.Empty : d.Category.Name,
-                        Budget = d.Budget == null ? string.Empty : d.Budget.Name,
-                        UserFirstName = d.User.FirstName,
-                    }).ToList();
+                Id = Guid.NewGuid(),
+                UserId = debit.UserId,
+                Date = debit.Date,
+                Amount = debit.Amount,
+                Comment = debit.Comment,
+                CategoryId = debit.CategoryId,
+                BudgetId = debit.BudgetId,
+            });
+            context.SaveChanges();
+        }
 
-                return result;
-            }
+        public GetExpenseForSpecificBudgetOutputDTO GetDebitsForBudget(GetDebitsForBudgetDTO input)
+        {
+            using var context = new ProjectContext();
+
+            var budget = context.Budgets.FirstOrDefault(b => b.Id == input.BudgetId)?.Name;
+            var debits = context.Debits.Where(d => d.UserId == input.UserId && d.BudgetId == input.BudgetId).ToList();
+
+            var tempList = debits.Select(item => new GEFSBODebitDTO()
+                {
+                    ExpenseId = item.Id,
+                    Amount = item.Amount,
+                    Date = item.Date,
+                    Comment = item.Comment ?? string.Empty,
+                    CategoryName = item.Category?.Name ?? string.Empty,
+                    CategoryId = item.CategoryId ?? Guid.Empty,
+                }).ToList();
+
+            var result = new GetExpenseForSpecificBudgetOutputDTO()
+            {
+                BudgetName = budget,
+                Debits = tempList
+            };
+
+            return result;
         }
     }
-
-    //public void InsertExpense(AddExpenseDTO expenseDTO)
-    //{
-
-    //    using (var context = new ProjectContext())
-    //    {
-    //        var categoryID = context.Categories
-    //            .Where(n => n.CategoryName == expenseDTO.CategoryName)
-    //            .Select(id => id.CategoryId)
-    //            .FirstOrDefault();
-    //        context.Add(
-    //            new Debit
-    //            {
-    //                ExpenseAmount = expenseDTO.Amount,
-    //                ExpenseRecipient = expenseDTO.Recipient,
-    //                ExpenseDate = expenseDTO.Date,
-    //                ExpenseComment = expenseDTO.Comment,
-    //                CategoryId = categoryID
-    //            });
-    //        context.SaveChanges();
-    //    }
-    //}
-
-    //public ICollection<GetExpenseForSpecificBudgetOutputDTO> GetExpensesForSpecificBudget(GetExpenseForSpecificBudgetInputDTO input)
-    //{
-    //    using (var context = new ProjectContext())
-    //    {
-    //        var result = from b in context.Budgets
-    //                     join u in context.User on b.UserId equals u.UserId
-    //                     where b.BudgetId == input.BudgetId && u.UserId == input.UserId
-    //                     select new GetExpenseForSpecificBudgetOutputDTO
-    //                     {
-    //                         BudgetName = b.BudgetName,
-    //                         Expenses = (from e in context.Expense
-    //                                     join c in context.Category on e.CategoryId equals c.CategoryId
-    //                                     join b in context.Budgets on c.BudgetId equals b.BudgetId
-    //                                     join u in context.User on u.UserId equals b.UserId
-    //                                     where b.BudgetId == input.BudgetId && u.UserId == input.UserId
-    //                                     select new GEFSBOExpenseDTO
-    //                                     {
-    //                                         CategoryName = c.CategoryName,
-    //                                         Date = e.ExpenseDate.ToString("yyyy-MM-dd"),
-    //                                         Recipient = e.ExpenseRecipient,
-    //                                         Amount = e.ExpenseAmount,
-    //                                         Comment = e.ExpenseComment
-    //                                     }).ToList()
-    //                     };
-
-    //        return result.ToList();
-    //    }
-    //}
-
 
     //public List<FilterByBudgetAndCategoryDTO> GetExpenseListFilteredByBudgetAndCategory(BudgetCategoryExpenseFilterDTO input)
     //{

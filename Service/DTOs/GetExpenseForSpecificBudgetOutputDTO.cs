@@ -8,7 +8,7 @@ namespace Service.DTOs
 {
     public class GetExpenseForSpecificBudgetOutputDTO
     {
-        public string BudgetName { get; set; }
-        public ICollection<GEFSBOExpenseDTO> Expenses { get; set; }
+        public string? BudgetName { get; set; }
+        public List<GEFSBODebitDTO> Debits { get; set; }
     }
 }
