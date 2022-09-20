@@ -81,7 +81,6 @@ namespace Service
         public GetExpenseForSpecificBudgetOutputDTO GetDebitsForBudget(GetDebitsForBudgetDTO input)
         {
             using var context = new ProjectContext();
-
             var budget = context.Budgets.FirstOrDefault(b => b.Id == input.BudgetId)?.Name;
             var debits = context.Debits.Where(d => d.UserId == input.UserId && d.BudgetId == input.BudgetId).ToList();
 
