@@ -100,7 +100,6 @@ namespace Service
                 BudgetName = budget,
                 Debits = tempList
             };
-
             return result;
         }
     }
