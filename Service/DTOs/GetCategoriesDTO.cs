@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Service.DTOs
 {
-    public class UserIdDTO
+    public class GetCategoriesDTO
     {
         public Guid UserId { get; set; }
     }

@@ -26,9 +26,9 @@ namespace Fallprojekt.Controllers
 
 
         [HttpGet("GetDebitListForUser")]
-        public List<DebitDTO> GetExpensesListForUser(Guid userId)
+        public List<DebitDTO> GetExpensesListForUser(UserIdDTO input)
         {
-            return DebitService.Instance.GetDebitListForUser(userId);
+            return DebitService.Instance.GetDebitListForUser(input);
         }
 
 

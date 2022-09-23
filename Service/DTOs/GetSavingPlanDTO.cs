@@ -8,7 +8,7 @@ namespace Service.DTOs
 {
     public class GetSavingPlanDTO
     {
-        public int SavingId { get; set; }
+        public Guid SavingId { get; set; }
         public string Name { get; set; }
         public int Amount { get; set; }
         public string PlanStartDate { get; set; }

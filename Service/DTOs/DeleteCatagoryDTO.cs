@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Service.DTOs
 {
-    public class NewCategoryDTO
+    public class DeleteCategoryDTO
     {
+        public Guid CategoryId { get; set; }
         public Guid UserId { get; set; }
-        public string Name { get; set; }
     }
 }

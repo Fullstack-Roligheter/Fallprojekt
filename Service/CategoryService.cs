@@ -49,12 +49,12 @@ namespace Service
         {
             using var context = new ProjectContext();
             var result = (from c in context.Categories
-                select new CheckForCategoryDuplicatesDTO()
-                {
-                    Id = c.Id,
-                    CategoryName = c.Name,
-                    UserId = c.UserId == null ? Guid.Empty : c.User.Id,
-                }).ToList();
+                          select new CheckForCategoryDuplicatesDTO()
+                          {
+                              Id = c.Id,
+                              CategoryName = c.Name,
+                              UserId = c.UserId == null ? Guid.Empty : c.User.Id,
+                          }).ToList();
             return result;
         }
 
@@ -79,7 +79,19 @@ namespace Service
         //            }
         //        }
 
-        public void AddNewCategory(NewCategoryDTO input)
+        public List<CategoryDTO> GetCategoriesForUser(GetCategoriesDTO input)
+        {
+            using var context = new ProjectContext();
+            var result = (from c in context.Categories where c.UserId == input.UserId
+                select new CategoryDTO()
+                {
+                    CategoryId = c.Id,
+                    CategoryName = c.Name,
+                }).ToList();
+            return result;
+        }
+
+        public void CreateCategory(CreateCategoryDTO input)
         {
             using var context = new ProjectContext();
             var newCategory = context.Set<Category>();
@@ -89,6 +101,45 @@ namespace Service
                 Name = input.Name,
                 UserId = input.UserId
             });
+            context.SaveChanges();
+        }
+
+        public void DeleteCategory(DeleteCategoryDTO input)
+        {
+            using var context = new ProjectContext();
+            try
+            {
+                var result = context.Categories.FirstOrDefault(x => x.Id == input.CategoryId);
+                if (result == null)
+                {
+                    throw new NullReferenceException($"No such Category found!");
+                }
+                var affectedDebits = context.Debits.Where(x => x.CategoryId == input.CategoryId).ToList();
+                foreach (var debit in affectedDebits)
+                {
+                    debit.CategoryId = null;
+                }
+                context.Categories.Remove(result);
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public void EditCategory(EditCategoryDTO editCategory)
+        {
+            using var context = new ProjectContext();
+
+            var category = context.Categories.FirstOrDefault(x => x.Id == editCategory.CategoryId);
+            if (category == null)
+            {
+                throw new NullReferenceException($"No such Category found!");
+            }
+            category.Id = editCategory.CategoryId;
+            category.Name = editCategory.CategoryName;
             context.SaveChanges();
         }
     }

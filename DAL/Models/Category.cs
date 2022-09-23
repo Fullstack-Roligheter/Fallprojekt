@@ -12,5 +12,4 @@ namespace DAL
         public Guid? UserId { get; set; }
         public User? User { get; set; } // En User kan ha många Categories ("MÅNGA" SIDAN HÄR)
     }
-
 }

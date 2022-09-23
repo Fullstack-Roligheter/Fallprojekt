@@ -1,47 +1,86 @@
-//using Microsoft.AspNetCore.Mvc;
-//using Service;
-//using Service.DTOs;
+using DAL;
+using Microsoft.AspNetCore.Mvc;
+using Service;
+using Service.DTOs;
 
-//namespace Fallprojekt.Controllers
-//{
-//    [Route("api/budget")]
-//    [ApiController]
-//    public class BudgetController : ControllerBase
-//    {
-//        [HttpPost("/ListAllBudgetForSpecificUser")]
-//        public IActionResult ListAllListUserBudgets(UserIdDTO input)
-//        {
-//            //try
-//            //{
-//            //    return Ok(BudgetService.Instance.ListUserBudgets(input));
-//            //}
-//            //catch (Exception ex)
-//            //{
-//            //    return BadRequest(ex.Message);
-//            //}
-//            try
-//            {
-//                return Ok(BudgetService.Instance.ListUserBudgets(input));
-//            }
-//            catch (Exception ex)
-//            {
-//                Console.WriteLine(ex);
-//                return StatusCode(500);
-//            }
-//        }
+namespace Fallprojekt.Controllers
+{
+    [Route("api/budget")]
+    [ApiController]
+    public class BudgetController : ControllerBase
+    {
 
-//        [HttpGet("/ListAllBudgetForSpecificUser")]
-//        public IActionResult GetUserIdFromQuery([FromQuery]UserIdDTO input)
-//        {
-//            try
-//            {
-//                return Ok(BudgetService.Instance.ListUserBudgets(input));
-//            }
-//            catch (Exception ex)
-//            {
-//                return BadRequest(ex.Message);
-//            }
-//        }
+        [HttpPost("CreateBudget")]
+        public IActionResult CreateBudget(CreateBudgetDTO input)
+        {
+            try
+            {
+                var result = UserService.Instance.CheckUserId(input.UserId);
+                if (result)
+                {
+                    BudgetService.Instance.CreateBudget(input);
+                    return StatusCode(201);
+                }
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500);
+            }
+        }
 
-//    }
-//}
+        [HttpDelete("DeleteBudget")]
+        public IActionResult DeleteBudget([FromQuery] DeleteBudgetDTO input)
+        {
+            try
+            {
+                var result = UserService.Instance.CheckUserId(input.UserId);
+                if (!result) return NotFound();
+                BudgetService.Instance.DeleteBudget(input);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPut("EditBudget")]
+        public IActionResult EditBudget(EditBudgetDTO input)
+        {
+            try
+            {
+                var result = UserService.Instance.CheckUserId(input.UserId);
+                if (!result) return NotFound();
+                BudgetService.Instance.EditBudget(input);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet("GetBudgetsForUser")]
+        public IActionResult GetBudgetsForUser([FromQuery] UserIdDTO input)
+        {
+            try
+            {
+                var result = UserService.Instance.CheckUserId(input.UserId);
+                if (result)
+                {
+                    return Ok(BudgetService.Instance.GetBudgetsForUser(input));
+                }
+                return NotFound("User not found");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500);
+            }
+        }
+    }
+}

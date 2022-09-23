@@ -1,5 +1,4 @@
-﻿using DAL;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Service.DTOs
 {
-    public class AddDebitDTO
+    public class EditDebitDTO
     {
+        public Guid DebitId { get; set; }
         public DateTime Date { get; set; }
         public int Amount { get; set; }
         public string? Comment { get; set; }

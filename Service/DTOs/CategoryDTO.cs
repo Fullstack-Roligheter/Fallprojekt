@@ -8,6 +8,7 @@ namespace Service.DTOs
 {
     public class CategoryDTO
     {
-        public string CategoryName { get; set; }
+        public Guid CategoryId { get; set; }
+        public string? CategoryName { get; set; }
     }
 }

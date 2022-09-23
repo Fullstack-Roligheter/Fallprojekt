@@ -1,4 +1,5 @@
 ﻿using Castle.Core.Internal;
+using DAL;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service;
@@ -11,11 +12,11 @@ namespace Fallprojekt.Controllers
     public class DebitController : ControllerBase
     {
         [HttpGet("GetDebitListForUser")]
-        public IActionResult GetExpensesListForUser(Guid userId)
+        public IActionResult GetExpensesListForUser([FromQuery]UserIdDTO input)
         {
             try
             {
-                var result = DebitService.Instance.GetDebitListForUser(userId);
+                var result = DebitService.Instance.GetDebitListForUser(input);
                 return result.IsNullOrEmpty() ? StatusCode(404, "UserId not found") : Ok(result);
             }
             catch (Exception ex)
@@ -25,12 +26,12 @@ namespace Fallprojekt.Controllers
             }
         }
 
-        [HttpPost("AddDebit")]
-        public IActionResult AddDebit(AddDebitDTO expenseDTO)
+        [HttpPost("CreateDebit")]
+        public IActionResult CreateDebit(CreateDebitDTO createDebit)
         {
             try
             {
-                DebitService.Instance.AddDebit(expenseDTO);
+                DebitService.Instance.CreateDebit(createDebit);
                 return Ok();
             }
             catch (Exception ex)
@@ -40,13 +41,63 @@ namespace Fallprojekt.Controllers
             }
         }
 
-        [HttpPost("GetDebitsForBudget")]
-        public IActionResult GetExpenseForSpecificBudget(GetDebitsForBudgetDTO input)
+        [HttpGet("GetDebitsForBudget")]
+        public IActionResult GetDebitsForBudget([FromQuery]GetDebitsDTO input)
         {
             try
             {
                 var result = DebitService.Instance.GetDebitsForBudget(input);
                 return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500);
+            }
+        }
+
+        [HttpDelete("DeleteDebit")]
+        public IActionResult DeleteDebit(Guid userId, Guid debitId)
+        {
+            try
+            {
+                var result = UserService.Instance.CheckUserId(userId);
+                if (!result) return NotFound("User not found");
+                DebitService.Instance.DeleteDebit(debitId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet("GetDebitsForCategory")]
+        public IActionResult GetDebitsForCategory([FromQuery]GetDebitsDTO input)
+        {
+            try
+            {
+                var result = UserService.Instance.CheckUserId(input.UserId);
+                if (!result) return NotFound("User not found");
+                return Ok(DebitService.Instance.GetDebitsForCategory(input));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPut("EditDebit")]
+        public IActionResult EditDebit(EditDebitDTO input)
+        {
+            try
+            {
+                var result = UserService.Instance.CheckUserId(input.UserId);
+                if (!result) return NotFound("User not found");
+                DebitService.Instance.EditDebit(input);
+                return Ok();
             }
             catch (Exception ex)
             {
