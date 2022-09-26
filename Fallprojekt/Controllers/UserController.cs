@@ -9,47 +9,43 @@ namespace Fallprojekt.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        [HttpPost("login")]
-        public IActionResult UserLogin(LoginDTO loginDTO)
+        [HttpPost("Login")]
+        public IActionResult UserLogin(LoginDTO login)
         {
             try
             {
+                var result = UserService.Instance.LogIn(login);
 
-                var result = UserService.Instance.LogIn(loginDTO);
-                
-                if(result == null)
+                if (result == null)
                 {
                     return StatusCode(401);
                 }
-                else 
-                {
-                    return Ok(result);    
-                }
-
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
-                return StatusCode(500);     //Om du försöker returnera en bad request tillbaka i en
-                                            //json fil kommer du istället få en 500 kod
-                                            //När den inte kan göra om det till en ordentlig json fil
+                Console.WriteLine(ex.Message);
+                return StatusCode(500);
             }
         }
 
-        [HttpPost("register")]
-
-        public IActionResult UserRegistering(RegisterDTO reg)
+        [HttpPost("Register")]
+        public IActionResult UserRegister(RegisterDTO reg)
         {
-            if (UserService.Instance.CheckEmailExist(reg))
+            try
             {
-                return StatusCode(401);
-            }
-            else
-            {
-                UserService.Instance.UserRegistering(reg);
+                if (UserService.Instance.CheckEmail(reg))
+                {
+                    return StatusCode(409, "Account already exists");
+                }
+                UserService.Instance.UserRegister(reg);
                 return Ok();
             }
-
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500);
+            }
         }
     }
 }

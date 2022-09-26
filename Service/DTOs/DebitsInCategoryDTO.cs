@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 
 namespace Service.DTOs
 {
-    public class GEFSBOExpenseDTO
+    public class DebitsInCategoryDTO
     {
+        public Guid CategoryId { get; set; }
         public string CategoryName { get; set; }
-        public decimal Amount { get; set; }
-        public string? Recipient { get; set; }
-        public string Date { get; set; }
-        public string? Comment { get; set; }
+        public List<DebitItemInCategoryListDTO> Debits { get; set; }
     }
 }

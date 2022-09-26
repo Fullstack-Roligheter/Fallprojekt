@@ -9,7 +9,7 @@ namespace Fallprojekt.Controllers
     [ApiController]
     public class SavingPlanController : ControllerBase
     {
-        [HttpPost("addplan")]
+        [HttpPost("AddPlan")]
         public IActionResult CreateSavingPlan(SavingPlanDTO saving)
         {
             try
@@ -22,7 +22,7 @@ namespace Fallprojekt.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet("getplans")]
+        [HttpGet("GetPlans")]
         public IActionResult ListAllPlan([FromQuery] UserIdDTO user)
         {
             try
@@ -34,7 +34,7 @@ namespace Fallprojekt.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPut("updateplan/{id}")]
+        [HttpPut("UpdatePlan/{id}")]
         public IActionResult UpdateSavingPlan(EditSavingPlanDTO editPlan)
         {
             try
@@ -47,8 +47,8 @@ namespace Fallprojekt.Controllers
             }
             return Ok();
         }
-        [HttpDelete("deteleplan/{id}")]
-        public IActionResult DeleteSavingPlan(int id)
+        [HttpDelete("DeletePlan/{id}")]
+        public IActionResult DeleteSavingPlan(Guid id)
         {
             try
             {

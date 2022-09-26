@@ -22,76 +22,125 @@ namespace Service
         private CategoryService() { }
         //SINGLETON--------------------------------------------------------------------------------------------------
 
-        public void AddDefaultCategoryToNewUser(int inputUserId)
+        //        public void AddDefaultCategoryToNewUser(int inputUserId)
+        //        {
+        //            using (var context = new ProjectContext())
+        //            {
+        //                var tempNewUserBudgetId = (from u in context.User
+        //                                           join b in context.Budgets
+        //                                           on u.UserId equals b.UserId
+        //                                           where u.UserId == inputUserId
+        //                                           select b.BudgetId).FirstOrDefault();
+
+        //                var newUserBudgetId = Convert.ToInt32(tempNewUserBudgetId);
+
+        //                var newUserDefaultCategory = context.Set<Category>();
+        //                newUserDefaultCategory.Add(new Category
+        //                {
+        //                    CategoryName = "Default",
+        //                    BudgetId = newUserBudgetId,
+        //                    CategoryMaxAmount = 0
+        //                });
+        //                context.SaveChanges();
+        //            }
+        //        }
+
+        public List<CheckForCategoryDuplicatesDTO> ListAllCategories()
         {
-            using (var context = new ProjectContext())
-            {
-                var tempNewUserBudgetId = (from u in context.User
-                                           join b in context.Budgets
-                                           on u.UserId equals b.UserId
-                                           where u.UserId == inputUserId
-                                           select b.BudgetId).FirstOrDefault();
+            using var context = new ProjectContext();
+            var result = (from c in context.Categories
+                          select new CheckForCategoryDuplicatesDTO()
+                          {
+                              Id = c.Id,
+                              CategoryName = c.Name,
+                              UserId = c.UserId == null ? Guid.Empty : c.User.Id,
+                          }).ToList();
+            return result;
+        }
 
-                var newUserBudgetId = Convert.ToInt32(tempNewUserBudgetId);
+        //        //List Category to match budget
+        //        public List<CheckForCategoryDuplicatesDTO> ListAllCategoryMatchBudget(BudgetNameDTO budget)
+        //        {
+        //            using (var context = new ProjectContext())
+        //            {
+        //                var budgetID = context.Budgets
+        //                    .Where(n => n.BudgetName == budget.BudgetName)
+        //                    .Select(id => id.BudgetId)
+        //                    .FirstOrDefault();
 
-                var newUserDefaultCategory = context.Set<Category>();
-                newUserDefaultCategory.Add(new Category
+        //                //var CategoryBudget = context.Categories.Where(x => x.CategoryId == budgetID);
+
+        //                return context.Categories.Where(x => x.BudgetId == budgetID)
+        //                    .Select(n => new CheckForCategoryDuplicatesDTO
+        //                    {
+        //                        CategoryName = n.CategoryName,
+        //                    })
+        //                    .ToList();
+        //            }
+        //        }
+
+        public List<CategoryDTO> GetCategoriesForUser(GetCategoriesDTO input)
+        {
+            using var context = new ProjectContext();
+            var result = (from c in context.Categories where c.UserId == input.UserId
+                select new CategoryDTO()
                 {
-                    CategoryName = "Default",
-                    BudgetId = newUserBudgetId,
-                    CategoryMaxAmount = 0
-                });
+                    CategoryId = c.Id,
+                    CategoryName = c.Name,
+                }).ToList();
+            return result;
+        }
+
+        public void CreateCategory(CreateCategoryDTO input)
+        {
+            using var context = new ProjectContext();
+            var newCategory = context.Set<Category>();
+            newCategory.Add(new Category
+            {
+                Id = Guid.NewGuid(),
+                Name = input.Name,
+                UserId = input.UserId
+            });
+            context.SaveChanges();
+        }
+
+        public void DeleteCategory(DeleteCategoryDTO input)
+        {
+            using var context = new ProjectContext();
+            try
+            {
+                var result = context.Categories.FirstOrDefault(x => x.Id == input.CategoryId);
+                if (result == null)
+                {
+                    throw new NullReferenceException($"No such Category found!");
+                }
+                var affectedDebits = context.Debits.Where(x => x.CategoryId == input.CategoryId).ToList();
+                foreach (var debit in affectedDebits)
+                {
+                    debit.CategoryId = null;
+                }
+                context.Categories.Remove(result);
                 context.SaveChanges();
             }
-        }
-
-        public List<CheckForCategoryDuplicatesDTO> ListAllCategory()
-        {
-            using (var context = new ProjectContext())
+            catch (Exception ex)
             {
-                return context.Categories
-                    .Select(n => new CheckForCategoryDuplicatesDTO
-                    {
-                        CategoryName = n.CategoryName,
-                    })
-                    .ToList();
+                Console.Write(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
 
-        //List Category to match budget
-        public List<CheckForCategoryDuplicatesDTO> ListAllCategoryMatchBudget(BudgetNameDTO budget)
+        public void EditCategory(EditCategoryDTO editCategory)
         {
-            using (var context = new ProjectContext())
+            using var context = new ProjectContext();
+
+            var category = context.Categories.FirstOrDefault(x => x.Id == editCategory.CategoryId);
+            if (category == null)
             {
-                var budgetID = context.Budgets
-                    .Where(n => n.BudgetName == budget.BudgetName)
-                    .Select(id => id.BudgetId)
-                    .FirstOrDefault();
-
-                //var CategoryBudget = context.Categories.Where(x => x.CategoryId == budgetID);
-
-                return context.Categories.Where(x => x.BudgetId == budgetID)
-                    .Select(n => new CheckForCategoryDuplicatesDTO
-                    {
-                        CategoryName = n.CategoryName,
-                    })
-                    .ToList();
+                throw new NullReferenceException($"No such Category found!");
             }
-        }
-
-        public void AddNewCategory(NewCategoryDTO input)
-        {
-            using (var context = new ProjectContext())
-            {
-                var newCategory = context.Set<Category>();
-                newCategory.Add(new Category
-                {
-                    CategoryName = input.CategoryName,
-                    BudgetId = input.BudgetId,
-                    CategoryMaxAmount = input.CategoryMaxAmount
-                });
-                context.SaveChanges();
-            }
+            category.Id = editCategory.CategoryId;
+            category.Name = editCategory.CategoryName;
+            context.SaveChanges();
         }
     }
 }

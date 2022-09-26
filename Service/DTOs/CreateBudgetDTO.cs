@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace Service.DTOs
 {
-    public class SavingPlanDTO
+    public class CreateBudgetDTO
     {
         public Guid UserId { get; set; }
         public string Name { get; set; }
-        public int Amount { get; set; }
-        public DateTime PlanStartDate { get; set; }
-        public DateTime PlanEndDate { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public decimal? Amount { get; set; }
+        public string? Comment { get; set; }
     }
 }

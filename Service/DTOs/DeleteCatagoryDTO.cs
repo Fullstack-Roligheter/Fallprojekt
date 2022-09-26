@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Service.DTOs
 {
-    public class GetExpenseForSpecificBudgetInputDTO
+    public class DeleteCategoryDTO
     {
-        public int UserId { get; set; }
-        public int BudgetId { get; set; }
+        public Guid CategoryId { get; set; }
+        public Guid UserId { get; set; }
     }
 }

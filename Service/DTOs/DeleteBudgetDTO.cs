@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Service.DTOs
 {
-    public class SuccesLoginDTO
+    public class DeleteBudgetDTO
     {
-        public int UserID { get; set; } 
-        public string? email { get; set; }
+        public Guid BudgetId { get; set; }
+        public Guid UserId { get; set; }
     }
 }

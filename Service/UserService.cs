@@ -25,78 +25,68 @@ namespace Service
         //SINGLETON--------------------------------------------------------------------------------------------------
 
 
-        public List<UserDTO> ListAllUsers()
+        public List<UserDTO> GetAllUsers()
         {
-            using (var context = new ProjectContext())
-            {
-                return context.User
-                    .Select(u => new UserDTO
-                    {
-                        UserId = u.UserId,
-                        Name = u.UserName,
-                        Age = u.UserAge,
-                        Email = u.UserEmail,
-                        Password = u.UserPassword
-                    })
-                    .ToList();
-            }
-        }
-
-        public SuccesLoginDTO? LogIn(LoginDTO loginDTO)
-        {
-            using (var db = new ProjectContext()) //, StringComparison.OrdinalIgnoreCase
-            {
-                    var tempUserId = (from u in db.User
-                                               where u.UserName == loginDTO.UserName
-                                               && u.UserPassword == loginDTO.Password
-                                               select new SuccesLoginDTO
-                                               {
-                                                   UserID = u.UserId,
-                                                   email = u.UserEmail,
-                                               }).FirstOrDefault();
-                    return tempUserId;
-            }
-        }
-
-        public int FetchingUserId(string username)
-        {
-            using (var db = new ProjectContext())
-            {
-                return db.User.Where(u => u.UserName == username).Select(i => i.UserId).FirstOrDefault();
-            }
-        }
-
-        public bool CheckEmailExist(RegisterDTO reg)
-        {
-            using (var context = new ProjectContext())
-            {
-                return context.User.Any(x => x.UserEmail == reg.Email);
-            }
-        }
-        public void UserRegistering(RegisterDTO reg)
-        {
-            using (var db = new ProjectContext())
-            {
-                var userExist = db.User.FirstOrDefault(e => e.UserEmail == reg.Email);
-                db.Add(new User()
+            using var context = new ProjectContext();
+            return context.Users
+                .Select(u => new UserDTO
                 {
-                    UserName = reg.Name.ToLower(),
-                    UserAge = reg.Age,
-                    UserEmail = reg.Email,
-                    UserPassword = reg.Password
-                });
-                db.SaveChanges();
-
-                BudgetService.Instance.AddDefaultBudgetToNewUser(reg.Email);
-            }
+                    UserId = u.Id,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Email = u.Email,
+                    Password = u.Password
+                })
+                .ToList();
         }
 
-        public bool UserIdValidation(int userId)
+        public SuccessLoginDTO? LogIn(LoginDTO login)
         {
-            using (var context = new ProjectContext())
+            using var db = new ProjectContext();
+            var result = (from u in db.Users
+                where u.Email == login.Email && u.Password == login.Password
+                select new SuccessLoginDTO
+                {
+                    UserId = u.Id,
+                    Email = u.Email,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName
+                }).FirstOrDefault();
+            return result;
+        }
+
+        //        public int FetchingUserId(string username)
+        //        {
+        //            using (var db = new ProjectContext())
+        //            {
+        //                return db.User.Where(u => u.UserName == username).Select(i => i.UserId).FirstOrDefault();
+        //            }
+        //        }
+
+        public bool CheckEmail(RegisterDTO reg)
+        {
+            using var context = new ProjectContext();
+            return context.Users.Any(u => u.Email == reg.Email);
+        }
+
+        public void UserRegister(RegisterDTO reg)
+        {
+            using var context = new ProjectContext();
+            context.Add(new User()
             {
-                return context.User.Any(x => x.UserId == userId);
-            }
+                Id = Guid.NewGuid(),
+                FirstName = reg.FirstName.ToLower(),
+                LastName = reg.LastName.ToLower(),
+                Email = reg.Email,
+                Password = reg.Password
+            });
+            context.SaveChanges();
+        }
+
+        public bool CheckUserId(Guid userId)
+        {
+            using var context = new ProjectContext();
+            return context.Users.Any(x => x.Id == userId);
         }
 
     }

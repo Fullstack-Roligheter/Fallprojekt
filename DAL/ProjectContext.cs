@@ -12,19 +12,16 @@ namespace DAL
 {
     public class ProjectContext : DbContext
     {
-        public DbSet <User> User { get; set; } //Lägg tabeller här
+        public DbSet <User> Users { get; set; } //Lägg tabeller här
         public DbSet <Budget> Budgets { get; set; }
         public DbSet <Category> Categories { get; set; }
-        public DbSet <Expense> Expense { get; set; }
-        public DbSet <Category> Category { get; set; }
-        public DbSet <Income> Incomes { get; set; }
-        public DbSet <DefaultIncomeCategory> DefaultIncomeCategories { get; set; }
-        public DbSet<SavingPlan> Savingplan { get; set; }
+        public DbSet <Debit> Debits { get; set; }
+        public DbSet<SavingPlan> Savingplans { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
 
             var serverAddress = "localhost\\SQLEXPRESS";
-            var databaseName = "Fallprojekt_DB";
+            var databaseName = "Fallprojekt_DB_v2";
             var connectionString = @"Server =" + serverAddress + "; Database =" + databaseName + "; Integrated Security = true;";
             builder
                 .UseSqlServer(connectionString)
@@ -36,24 +33,21 @@ namespace DAL
         {
 
             modelBuilder.Entity<Budget>()
-                .Property(b => b.BudgetStartDate).HasColumnType("date"); //Vi specifierar att kolumnen "StartDate" har en SQL datatyp av sorten "date"
+                .Property(b => b.StartDate).HasColumnType("date");
             modelBuilder.Entity<Budget>()
-                .Property(b => b.BudgetEndDate).HasColumnType("date");
+                .Property(b => b.EndDate).HasColumnType("date");
             modelBuilder.Entity<Budget>()
-                .Property(b => b.BudgetMaxAmountMoney).HasColumnType("money");
+                .Property(b => b.Amount).HasColumnType("money");
 
-            modelBuilder.Entity<Category>()
-                .Property(c => c.CategoryMaxAmount).HasColumnType("money");
-
-            modelBuilder.Entity<Expense>()
-                .Property(e => e.ExpenseDate).HasColumnType("date");
-            modelBuilder.Entity<Expense>()
-                .Property(e => e.ExpenseAmount).HasColumnType("money");
+            modelBuilder.Entity<Debit>()
+                .Property(e => e.Date).HasColumnType("date");
+            modelBuilder.Entity<Debit>()
+                .Property(e => e.Amount).HasColumnType("money");
 
             modelBuilder.Entity<SavingPlan>()
-                .Property(e => e.PlanStartDate).HasColumnType("date");
+                .Property(e => e.StartDate).HasColumnType("date");
             modelBuilder.Entity<SavingPlan>()
-               .Property(e => e.PlanEndDate).HasColumnType("date");
+               .Property(e => e.EndDate).HasColumnType("date");
 
 
             modelBuilder.Entity<Budget>() //En USER kan ha MÅNGA Budgets. FK är Budgets.UserId på MÅNGA sidan
@@ -62,18 +56,24 @@ namespace DAL
                 .HasForeignKey(b => b.UserId);
 
             modelBuilder.Entity<Category>()
-                .HasOne<Budget>(b => b.Budget)
+                .HasOne<User>(u => u.User)
                 .WithMany(c => c.Categories)
-                .HasForeignKey(c => c.BudgetId);
+                .HasForeignKey(c => c.UserId);
 
-            modelBuilder.Entity<Expense>()
-                .HasOne<Category>(c => c.Category)
-                .WithMany(e => e.Expenses)
-                .HasForeignKey(e => e.CategoryId);
+            //modelBuilder.Entity<Debit>()
+            //    .HasOne<Category>(c => c.Category)
+            //    .WithMany(d => d.Debits)
+            //    .HasForeignKey(d => d.CategoryId);
 
-            modelBuilder.Entity<User>()
-                .Property(u => u.UserAge)
-                .HasDefaultValue(0);
+            modelBuilder.Entity<Debit>()
+                .HasOne<Budget>(b => b.Budget)
+                .WithMany(d => d.Debits)
+                .HasForeignKey(d => d.BudgetId);
+
+            modelBuilder.Entity<Debit>()
+                .HasOne<User>(u => u.User)
+                .WithMany(d => d.Debits)
+                .HasForeignKey(d => d.UserId);
 
             modelBuilder.Seed();
         }

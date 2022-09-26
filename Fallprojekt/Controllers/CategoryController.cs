@@ -4,57 +4,93 @@ using Service.DTOs;
 
 namespace Fallprojekt.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/categories")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
+        //        [HttpGet("categoryBudget")]
+        //        public IActionResult ListAllCategoryMatchBudget([FromQuery] BudgetNameDTO input)
+        //        {
+        //            try
+        //            {
+        //                return Ok(CategoryService.Instance.ListAllCategoryMatchBudget(input));
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                return BadRequest(ex.Message);
+        //            }
+        //        }
 
-        [HttpGet("category")]
-        public IActionResult ListAllCategories()
+        [HttpPost("CreateCategory")]
+        public IActionResult AddCategory(CreateCategoryDTO input)
         {
             try
             {
-                return Ok(CategoryService.Instance.ListAllCategory());
+                if (UserService.Instance.CheckUserId(input.UserId))
+                {
+                    CategoryService.Instance.CreateCategory(input);
+                    return Ok();
+                }
+                return StatusCode(404);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                Console.WriteLine(ex);
+                return StatusCode(500);
             }
         }
 
-        [HttpGet("categoryBudget")]
-        public IActionResult ListAllCategoryMatchBudget([FromQuery] BudgetNameDTO input)
+        [HttpDelete("DeleteCategory")]
+        public IActionResult DeleteCategory([FromQuery]DeleteCategoryDTO input)
         {
             try
             {
-                return Ok(CategoryService.Instance.ListAllCategoryMatchBudget(input));
+                if (UserService.Instance.CheckUserId(input.UserId))
+                {
+                    CategoryService.Instance.DeleteCategory(input);
+                    return Ok();
+                }
+                return StatusCode(404);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                Console.WriteLine(ex);
+                return StatusCode(500);
             }
         }
 
-        [HttpPost("AddNewCategory")]
-        public IActionResult AddNewCategory(NewCategoryDTO input)
+        [HttpGet("GetCategoriesForUser")]
+        public IActionResult GetCategoriesForUser([FromQuery]GetCategoriesDTO input)
         {
             try
             {
-                if (!ValidationService.Instance.ValidateUser(input.UserId))
+                if (UserService.Instance.CheckUserId(input.UserId))
                 {
-                    return StatusCode(418, "ValidateUser failed...");
+                    var result = CategoryService.Instance.GetCategoriesForUser(input);
+                    return Ok(result);
                 }
-                if (!ValidationService.Instance.ValidateBudget(input.UserId, input.BudgetId))
-                {
-                    return StatusCode(418, "ValidateBudget failed...");
-                }
-                if (!ValidationService.Instance.CheckForCategoryDuplicates(input.UserId, input.CategoryName))
-                {
-                    return StatusCode(418, "CheckForCategoryDuplicates failed...");
-                }
+                return StatusCode(404);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500);
+            }
+        }
 
-                CategoryService.Instance.AddNewCategory(input);
-                return Ok();
+        [HttpPut("EditCategory")]
+        public IActionResult EditDebit(EditCategoryDTO input)
+        {
+            try
+            {
+                var result = UserService.Instance.CheckUserId(input.UserId);
+                input.CategoryName ??= "Default";
+                if (result)
+                {
+                    CategoryService.Instance.EditCategory(input);
+                    return Ok();
+                }
+                return NotFound("User not found");
             }
             catch (Exception ex)
             {
