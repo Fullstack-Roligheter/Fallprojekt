@@ -9,8 +9,8 @@ namespace Fallprojekt.Controllers
     [ApiController]
     public class SavingPlanController : ControllerBase
     {
-        [HttpPost("AddPlan")]
-        public IActionResult CreateSavingPlan(SavingPlanDTO saving)
+        [HttpPost("CreateSavingPlan")]
+        public IActionResult CreateSavingPlan([FromBody]SavingPlanDTO saving)
         {
             try
             {
