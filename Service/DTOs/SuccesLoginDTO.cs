@@ -9,5 +9,6 @@ namespace Service.DTOs
     public class SuccesLoginDTO
     {
         public int UserID { get; set; } 
+        public string? email { get; set; }
     }
 }

@@ -51,7 +51,8 @@ namespace Service
                                                && u.UserPassword == loginDTO.Password
                                                select new SuccesLoginDTO
                                                {
-                                                   UserID = u.UserId
+                                                   UserID = u.UserId,
+                                                   email = u.UserEmail,
                                                }).FirstOrDefault();
                     return tempUserId;
             }
