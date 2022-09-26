@@ -43,12 +43,12 @@ namespace Fallprojekt.Controllers
             }
         }
 
-        [HttpPost("/ListAllBudgetInfosForSpecificUser")]
-        public IActionResult ListAllBudgetInfosForSpecificUser(UserIdDTO input)
+        [HttpGet("/ListAllBudgetInfosForSpecificUser/{userId}")]
+        public IActionResult ListAllBudgetInfosForSpecificUser(int userId)
         {
             try
             {
-                return Ok(BudgetService.Instance.ListUserBudgetsInfo(input));
+                return Ok(BudgetService.Instance.ListUserBudgetsInfo(userId));
             }
             catch (Exception ex)
             {

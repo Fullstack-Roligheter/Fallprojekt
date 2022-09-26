@@ -109,16 +109,16 @@ namespace Service
             }
         }
 
-        public List<UserBudgetDTO> ListUserBudgetsInfo(UserIdDTO input)
+        public List<UserBudgetDTO> ListUserBudgetsInfo(int input)
         {
             using (var context = new ProjectContext())
             {
                 var budgetInfoList = (from u in context.User
                                       join b in context.Budgets on u.UserId equals b.UserId
-                                      where u.UserId == input.UserId
+                                      where u.UserId == input
                                       select new UserBudgetDTO
                                       {
-                                          BudgetId = b.BudgetId,
+                                          Id = b.BudgetId,
                                           BudgetName = b.BudgetName,
                                           BudgetStartDate = b.BudgetStartDate,
                                           BudgetEndDate = b.BudgetEndDate,

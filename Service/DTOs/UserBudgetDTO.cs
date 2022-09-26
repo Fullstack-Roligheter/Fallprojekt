@@ -8,7 +8,7 @@ namespace Service.DTOs
 {
     public class UserBudgetDTO
     {
-        public int BudgetId { get; set; }
+        public int  Id { get; set; }
         public string BudgetName { get; set; }
         public DateTime BudgetStartDate { get; set; }
         public DateTime BudgetEndDate { get; set; }
