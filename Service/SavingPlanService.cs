@@ -42,8 +42,8 @@ namespace Service
                     UserId = saving.UserId,
                     Name = saving.Name,
                     Amount = saving.Amount,
-                    StartDate = saving.PlanStartDate,
-                    EndDate = saving.PlanEndDate
+                    StartDate = DateTime.Parse(saving.StartDate),
+                    EndDate = DateTime.Parse(saving.EndDate)
                 });
             context.SaveChanges();
         }
@@ -80,8 +80,8 @@ namespace Service
             }
             plan.Name = editPlan.Name;
             plan.Amount = editPlan.Amount;
-            plan.StartDate = editPlan.PlanStartDate;
-            plan.EndDate = editPlan.PlanEndDate;
+            plan.StartDate = editPlan.StartDate;
+            plan.EndDate = editPlan.EndDate;
             context.SaveChanges();
         }
 

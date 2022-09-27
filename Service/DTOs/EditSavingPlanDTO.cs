@@ -11,7 +11,7 @@ namespace Service.DTOs
         public Guid SavingId { get; set; }
         public string Name { get; set; }
         public int Amount { get; set; }
-        public DateTime PlanStartDate { get; set; }
-        public DateTime PlanEndDate { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
     }
 }
