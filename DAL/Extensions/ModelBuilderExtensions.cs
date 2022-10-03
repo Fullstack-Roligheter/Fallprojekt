@@ -20,6 +20,13 @@ internal static class ModelBuilderExtensions
         var categoryGuidThree = new Guid("2da1939c-8f8f-46f2-819a-3b405311be9d");
         var categoryGuidFour = new Guid("6cbc9ea2-359d-4035-ad23-f597fb12b31a");
         var categoryGuidFive = new Guid("6539ea84-9f69-4c84-a66a-6131ef955749");
+        var categoryGuidSix = new Guid("5d6b57f2-aa20-4956-9a01-fb06b26e4221");
+        var categoryGuidSeven = new Guid("c6e05044-60e3-4759-9aa1-91e0e09c1dbf");
+        
+        var userCategoryOne = new Guid("583aca7b-aff4-4f2d-b76b-5c74112ff699");
+        var userCategoryTwo = new Guid("2d06e9df-8df0-44a3-84ca-ad8db8703188");
+        var userCategoryThree = new Guid("e004e107-dfd6-4ffa-8b47-39a8d0b62df7");
+        var userCategoryFour = new Guid("3c9100af-5ed9-48cc-8fdd-8b6839bfddb6");
 
         builder.Entity<User>().HasData //User tabell
         (
@@ -38,12 +45,22 @@ internal static class ModelBuilderExtensions
 
         builder.Entity<Category>().HasData //Category tabell
         (
-            new Category { Id = categoryGuidOne, Name = "Default", },       //Delat kategori
-            new Category { Id = categoryGuidTwo, Name = "Leksaker", UserId = userGuidOne},      //bara adam
-            new Category { Id = categoryGuidThree, Name = "Nöje", UserId = userGuidTwo },        //bara berit
-            new Category { Id = categoryGuidFour, Name = "Räkningar", UserId = userGuidTwo },    //bara berit
-            new Category { Id = categoryGuidFive, Name = "Hemsaker", UserId = userGuidOne }      //bara adam
+            new Category { Id = categoryGuidOne, Name = "Mat", },                               //Default Kategori
+            new Category { Id = categoryGuidTwo, Name = "Transport", },                         //Default Kategori
+            new Category { Id = categoryGuidThree, Name = "Nöje", },                            //Default Kategori
+            new Category { Id = categoryGuidFour, Name = "Boende", },                           //Default Kategori
+            new Category { Id = categoryGuidFive, Name = "Hushåll", },                          //Default Kategori
+            new Category { Id = categoryGuidSix, Name = "Sparande", },                          //Default Kategori
+            new Category { Id = categoryGuidSeven, Name = "Övrigt", }                           //Default Kategori
 
+        );
+       
+        builder.Entity<UserCategories>().HasData //Category tabell
+        (
+            new UserCategories { Id = userCategoryOne, Name = "Leksaker", UserId = userGuidOne },    //bara adam
+            new UserCategories { Id = userCategoryTwo, Name = "Nöje", UserId = userGuidTwo },        //bara berit
+            new UserCategories { Id = userCategoryThree, Name = "Räkningar", UserId = userGuidTwo }, //bara berit
+            new UserCategories { Id = userCategoryFour, Name = "Hemsaker", UserId = userGuidOne }    //bara adam
         );
 
         builder.Entity<Debit>().HasData //Debit tabell

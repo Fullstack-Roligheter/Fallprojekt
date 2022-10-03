@@ -79,16 +79,38 @@ namespace Service
         //            }
         //        }
 
-        public List<CategoryDTO> GetCategoriesForUser(GetCategoriesDTO input)
+        public List<UserCategoriesDTO> GetCategoriesForUser(GetCategoriesDTO input)
         {
             using var context = new ProjectContext();
-            var result = (from c in context.Categories where c.UserId == input.UserId
-                select new CategoryDTO()
-                {
-                    CategoryId = c.Id,
-                    CategoryName = c.Name,
-                }).ToList();
-            return result;
+            //var result = (from c in context.Categories where c.UserId == input.UserId || c.UserId == null
+            //    select new CategoryDTO()
+            //    {
+            //        CategoryId = c.Id,
+            //        CategoryName = c.Name,
+            //    }).ToList();
+            //return result;
+
+
+            var defaultresult = (from c in context.Categories
+                                 select new UserCategoriesDTO()
+                                 {
+                                     CategoryId = c.Id,
+                                     CategoryName = c.Name,
+                                 }).ToList();
+            var customresult = (from c in context.UserCategories
+                                where c.UserId == input.UserId
+                                select new UserCategoriesDTO()
+                                {
+                                    CategoryId = c.Id,
+                                    CategoryName = c.Name,
+                                    UserId = c.UserId
+                                }).ToList();
+
+            defaultresult.AddRange(customresult);
+            
+            List<UserCategoriesDTO> CombinedList = defaultresult;
+
+            return CombinedList;
         }
 
         public void CreateCategory(CreateCategoryDTO input)
