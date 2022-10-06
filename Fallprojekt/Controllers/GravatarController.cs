@@ -9,7 +9,7 @@ namespace Fallprojekt.Controllers
     public class GravatarController : ControllerBase
     {
         [HttpGet("GetGravatarProfile")]
-        public async Task<string> GetGravatarProfile(string hash)
+        public async Task<IActionResult> GetGravatarProfile(string hash)
         {
             string profileurl = $"https://www.gravatar.com/{hash}.json";
 
@@ -22,12 +22,12 @@ namespace Fallprojekt.Controllers
 
                 string JSONResponse = await httpResponseMessege.Content.ReadAsStringAsync();
 
-                return (JSONResponse);
+                return Ok(JSONResponse);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return ("");
+                return StatusCode(500);
             }
             finally
             {
