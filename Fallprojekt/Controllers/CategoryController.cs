@@ -85,7 +85,7 @@ namespace Fallprojekt.Controllers
             {
                 if (UserService.Instance.CheckUserId(input.UserId))
                 {
-                    var result = CategoryService.Instance.GetCategoriesForUseradasd(input);
+                    var result = CategoryService.Instance.GetUserCreatedCategories(input);
                     return Ok(result);
                 }
                 return StatusCode(404);

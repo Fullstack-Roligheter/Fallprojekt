@@ -105,11 +105,11 @@ namespace Service
             return CombinedList;
         }
 
-        public List<UserCategoriesDTO> GetCategoriesForUseradasd(GetCategoriesDTO input)
+        public List<UserCategoriesDTO> GetUserCreatedCategories(GetCategoriesDTO input)
         {
             using var context = new ProjectContext();
             var result = (from c in context.UserCategories
-                          where c.UserId == input.UserId || c.UserId == null
+                          where c.UserId == input.UserId
                           select new UserCategoriesDTO()
                           {
                               CategoryId = c.Id,
