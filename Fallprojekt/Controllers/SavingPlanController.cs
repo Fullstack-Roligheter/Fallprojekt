@@ -34,8 +34,8 @@ namespace Fallprojekt.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPut("UpdatePlan/{id}")]
-        public IActionResult UpdateSavingPlan(EditSavingPlanDTO editPlan)
+        [HttpPut("UpdatePlan")]
+        public IActionResult UpdateSavingPlan([FromBody]EditSavingPlanDTO editPlan)
         {
             try
             {

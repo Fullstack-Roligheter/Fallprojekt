@@ -80,8 +80,8 @@ namespace Service
             }
             plan.Name = editPlan.Name;
             plan.Amount = editPlan.Amount;
-            plan.StartDate = editPlan.StartDate;
-            plan.EndDate = editPlan.EndDate;
+            plan.StartDate = DateTime.Parse(editPlan.StartDate);
+            plan.EndDate = DateTime.Parse(editPlan.EndDate);
             context.SaveChanges();
         }
 
