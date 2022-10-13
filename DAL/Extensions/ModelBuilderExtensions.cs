@@ -27,6 +27,11 @@ internal static class ModelBuilderExtensions
         var userCategoryTwo = new Guid("2d06e9df-8df0-44a3-84ca-ad8db8703188");
         var userCategoryThree = new Guid("e004e107-dfd6-4ffa-8b47-39a8d0b62df7");
         var userCategoryFour = new Guid("3c9100af-5ed9-48cc-8fdd-8b6839bfddb6");
+        var userCategoryFive = new Guid("0dddc255-e362-4b71-8177-14a9df9e5373");
+        var userCategorySix = new Guid("efbf7bb5-ac81-4bf2-a5cd-3e66c2171186");
+        var userCategorySeven = new Guid("1ce05fc8-29b2-4ce6-af6c-5eee53bfd3a5");
+        var userCategoryEight = new Guid("c229efe0-45cd-46bb-ab96-d9de8588ea0f");
+  
 
         builder.Entity<User>().HasData //User tabell
         (
@@ -58,9 +63,13 @@ internal static class ModelBuilderExtensions
         builder.Entity<UserCategories>().HasData //Category tabell
         (
             new UserCategories { Id = userCategoryOne, Name = "Leksaker", UserId = userGuidOne },    //bara adam
-            new UserCategories { Id = userCategoryTwo, Name = "Nöje", UserId = userGuidTwo },        //bara berit
-            new UserCategories { Id = userCategoryThree, Name = "Räkningar", UserId = userGuidTwo }, //bara berit
-            new UserCategories { Id = userCategoryFour, Name = "Hemsaker", UserId = userGuidOne }    //bara adam
+            new UserCategories { Id = userCategoryTwo, Name = "Bilar", UserId = userGuidTwo },        //bara berit
+            new UserCategories { Id = userCategoryThree, Name = "Kryssningar", UserId = userGuidTwo }, //bara berit
+            new UserCategories { Id = userCategoryFour, Name = "Flygresor", UserId = userGuidTwo }, //bara berit
+            new UserCategories { Id = userCategoryFive, Name = "Husköp", UserId = userGuidTwo }, //bara berit
+            new UserCategories { Id = userCategorySix, Name = "Papegojfoder", UserId = userGuidTwo }, //bara berit
+            new UserCategories { Id = userCategorySeven, Name = "Hundleksaker", UserId = userGuidTwo }, //bara berit
+            new UserCategories { Id = userCategoryEight, Name = "Hemsaker", UserId = userGuidOne }    //bara adam
         );
 
         builder.Entity<Debit>().HasData //Debit tabell

@@ -82,14 +82,6 @@ namespace Service
         public List<UserCategoriesDTO> GetCategoriesForUser(GetCategoriesDTO input)
         {
             using var context = new ProjectContext();
-            //var result = (from c in context.Categories where c.UserId == input.UserId || c.UserId == null
-            //    select new CategoryDTO()
-            //    {
-            //        CategoryId = c.Id,
-            //        CategoryName = c.Name,
-            //    }).ToList();
-            //return result;
-
 
             var defaultresult = (from c in context.Categories
                                  select new UserCategoriesDTO()
@@ -111,6 +103,19 @@ namespace Service
             List<UserCategoriesDTO> CombinedList = defaultresult;
 
             return CombinedList;
+        }
+
+        public List<UserCategoriesDTO> GetCategoriesForUseradasd(GetCategoriesDTO input)
+        {
+            using var context = new ProjectContext();
+            var result = (from c in context.UserCategories
+                          where c.UserId == input.UserId || c.UserId == null
+                          select new UserCategoriesDTO()
+                          {
+                              CategoryId = c.Id,
+                              CategoryName = c.Name,
+                          }).ToList();
+            return result;
         }
 
         public void CreateCategory(CreateCategoryDTO input)

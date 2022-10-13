@@ -78,6 +78,25 @@ namespace Fallprojekt.Controllers
             }
         }
 
+        [HttpGet("GetUserCreatedCategories")]
+        public IActionResult GetUserCreatedCategories([FromQuery] GetCategoriesDTO input)
+        {
+            try
+            {
+                if (UserService.Instance.CheckUserId(input.UserId))
+                {
+                    var result = CategoryService.Instance.GetCategoriesForUseradasd(input);
+                    return Ok(result);
+                }
+                return StatusCode(404);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500);
+            }
+        }
+
         [HttpPut("EditCategory")]
         public IActionResult EditDebit(EditCategoryDTO input)
         {
