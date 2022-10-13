@@ -4,6 +4,7 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ProjectContext))]
-    partial class ProjectContextModelSnapshot : ModelSnapshot
+    [Migration("20221003122127_inital")]
+    partial class inital
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -146,6 +148,30 @@ namespace DAL.Migrations
                         {
                             Id = new Guid("c6e05044-60e3-4759-9aa1-91e0e09c1dbf"),
                             Name = "Övrigt"
+                        },
+                        new
+                        {
+                            Id = new Guid("583aca7b-aff4-4f2d-b76b-5c74112ff699"),
+                            Name = "Leksaker",
+                            UserId = new Guid("ce43e8a5-b655-435f-9dee-f0df2ee936c1")
+                        },
+                        new
+                        {
+                            Id = new Guid("2d06e9df-8df0-44a3-84ca-ad8db8703188"),
+                            Name = "Nöje",
+                            UserId = new Guid("720892b1-b076-49ec-8ec2-88b73040b351")
+                        },
+                        new
+                        {
+                            Id = new Guid("e004e107-dfd6-4ffa-8b47-39a8d0b62df7"),
+                            Name = "Räkningar",
+                            UserId = new Guid("720892b1-b076-49ec-8ec2-88b73040b351")
+                        },
+                        new
+                        {
+                            Id = new Guid("3c9100af-5ed9-48cc-8fdd-8b6839bfddb6"),
+                            Name = "Hemsaker",
+                            UserId = new Guid("ce43e8a5-b655-435f-9dee-f0df2ee936c1")
                         });
                 });
 
@@ -186,7 +212,7 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("6b46680c-796e-4a7a-b9ac-fb66c53f4130"),
+                            Id = new Guid("180009c3-9a02-47cc-8351-09c72c860be7"),
                             Amount = 150m,
                             BudgetId = new Guid("d96f9337-0b84-4a79-9977-d27125420898"),
                             CategoryId = new Guid("b78fd823-20cc-49b2-90c5-6e5df0dadbb3"),
@@ -196,7 +222,7 @@ namespace DAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("fad735b5-025e-43af-a05f-66e6bee46cfc"),
+                            Id = new Guid("49352ad7-4aa5-4947-a1d5-13ec1f6e543e"),
                             Amount = 7000m,
                             BudgetId = new Guid("496ef686-6b83-4c24-9e0f-d6f51b29fad2"),
                             CategoryId = new Guid("6539ea84-9f69-4c84-a66a-6131ef955749"),
@@ -206,7 +232,7 @@ namespace DAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("e72961eb-9e1a-4fe0-8b08-35de33ef07e8"),
+                            Id = new Guid("9e15cd08-777d-46e1-b891-6c75a1b646ea"),
                             Amount = 500m,
                             BudgetId = new Guid("d96f9337-0b84-4a79-9977-d27125420898"),
                             CategoryId = new Guid("b78fd823-20cc-49b2-90c5-6e5df0dadbb3"),
@@ -216,7 +242,7 @@ namespace DAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("0f09b6fc-f8ab-4069-bd79-82805fe4b6ff"),
+                            Id = new Guid("5a718118-d8da-4006-80ab-a700ce694d57"),
                             Amount = 850m,
                             BudgetId = new Guid("496ef686-6b83-4c24-9e0f-d6f51b29fad2"),
                             CategoryId = new Guid("6539ea84-9f69-4c84-a66a-6131ef955749"),
@@ -226,7 +252,7 @@ namespace DAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("7a8398b9-7afd-41ce-b454-e71a32000a6d"),
+                            Id = new Guid("d52f9aa3-7ae4-462c-8282-8986aaf24fc1"),
                             Amount = 1500m,
                             CategoryId = new Guid("5959ed9c-f081-45e6-ae2e-aa102c3e5a46"),
                             Comment = "Storhandla BBQ",
@@ -235,7 +261,7 @@ namespace DAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("c1d48360-2aef-44ca-8db7-ff87878aabb2"),
+                            Id = new Guid("8c76010f-4e2b-4b49-908e-51e413c6e530"),
                             Amount = 2500m,
                             BudgetId = new Guid("fe0219cc-eb57-417e-b07b-87aa2784a92b"),
                             CategoryId = new Guid("2da1939c-8f8f-46f2-819a-3b405311be9d"),
@@ -245,7 +271,7 @@ namespace DAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("1e5a26ec-99f3-41ce-be38-04266251a830"),
+                            Id = new Guid("f726a427-0d72-4a8f-bdf5-8f8feb23f007"),
                             Amount = 8500m,
                             BudgetId = new Guid("fe0219cc-eb57-417e-b07b-87aa2784a92b"),
                             CategoryId = new Guid("2da1939c-8f8f-46f2-819a-3b405311be9d"),
@@ -255,7 +281,7 @@ namespace DAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("6da5f9ab-2ced-475a-8e7d-472e4446d4f3"),
+                            Id = new Guid("a75369ac-5456-4ca9-a9e0-32eb7f116118"),
                             Amount = 180m,
                             CategoryId = new Guid("6cbc9ea2-359d-4035-ad23-f597fb12b31a"),
                             Comment = "Spotify",
@@ -264,7 +290,7 @@ namespace DAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("3a36ac98-6f49-43b9-ae2d-c29c9e813b26"),
+                            Id = new Guid("b712fcc0-0039-413b-b00f-8b3245aa84d6"),
                             Amount = 400m,
                             CategoryId = new Guid("6cbc9ea2-359d-4035-ad23-f597fb12b31a"),
                             Comment = "Bredband",
@@ -273,7 +299,7 @@ namespace DAL.Migrations
                         },
                         new
                         {
-                            Id = new Guid("bf1e0fef-8973-4ca6-a9b1-78ece8d8f424"),
+                            Id = new Guid("15cd7b09-3f0e-4dd3-8fb4-72a7c00d7b3a"),
                             Amount = 750m,
                             BudgetId = new Guid("7264a099-8b0e-4953-a548-fa62dd2fad4a"),
                             CategoryId = new Guid("2da1939c-8f8f-46f2-819a-3b405311be9d"),
@@ -310,52 +336,6 @@ namespace DAL.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Savingplans");
-                });
-
-            modelBuilder.Entity("DAL.Models.UserCategories", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserCategories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("583aca7b-aff4-4f2d-b76b-5c74112ff699"),
-                            Name = "Leksaker",
-                            UserId = new Guid("ce43e8a5-b655-435f-9dee-f0df2ee936c1")
-                        },
-                        new
-                        {
-                            Id = new Guid("2d06e9df-8df0-44a3-84ca-ad8db8703188"),
-                            Name = "Nöje",
-                            UserId = new Guid("720892b1-b076-49ec-8ec2-88b73040b351")
-                        },
-                        new
-                        {
-                            Id = new Guid("e004e107-dfd6-4ffa-8b47-39a8d0b62df7"),
-                            Name = "Räkningar",
-                            UserId = new Guid("720892b1-b076-49ec-8ec2-88b73040b351")
-                        },
-                        new
-                        {
-                            Id = new Guid("3c9100af-5ed9-48cc-8fdd-8b6839bfddb6"),
-                            Name = "Hemsaker",
-                            UserId = new Guid("ce43e8a5-b655-435f-9dee-f0df2ee936c1")
-                        });
                 });
 
             modelBuilder.Entity("DAL.User", b =>
@@ -457,17 +437,6 @@ namespace DAL.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DAL.Models.UserCategories", b =>
-                {
-                    b.HasOne("DAL.User", "User")
-                        .WithMany("UserCategories")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("DAL.Budget", b =>
                 {
                     b.Navigation("Debits");
@@ -482,8 +451,6 @@ namespace DAL.Migrations
                     b.Navigation("Debits");
 
                     b.Navigation("SavingPlans");
-
-                    b.Navigation("UserCategories");
                 });
 #pragma warning restore 612, 618
         }

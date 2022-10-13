@@ -17,6 +17,7 @@ namespace DAL
         public DbSet <Category> Categories { get; set; }
         public DbSet <Debit> Debits { get; set; }
         public DbSet<SavingPlan> Savingplans { get; set; }
+        public DbSet<UserCategories> UserCategories { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
 
@@ -58,6 +59,11 @@ namespace DAL
             modelBuilder.Entity<Category>()
                 .HasOne<User>(u => u.User)
                 .WithMany(c => c.Categories)
+                .HasForeignKey(c => c.UserId);
+            
+            modelBuilder.Entity<UserCategories>()
+                .HasOne<User>(u => u.User)
+                .WithMany(c => c.UserCategories)
                 .HasForeignKey(c => c.UserId);
 
             //modelBuilder.Entity<Debit>()
