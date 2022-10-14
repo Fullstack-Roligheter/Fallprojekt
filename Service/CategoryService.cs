@@ -161,7 +161,7 @@ namespace Service
         {
             using var context = new ProjectContext();
 
-            var category = context.Categories.FirstOrDefault(x => x.Id == editCategory.CategoryId);
+            var category = context.UserCategories.FirstOrDefault(x => x.Id == editCategory.CategoryId);
             if (category == null)
             {
                 throw new NullReferenceException($"No such Category found!");
