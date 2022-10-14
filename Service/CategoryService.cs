@@ -137,7 +137,7 @@ namespace Service
             using var context = new ProjectContext();
             try
             {
-                var result = context.Categories.FirstOrDefault(x => x.Id == input.CategoryId);
+                var result = context.UserCategories.FirstOrDefault(x => x.Id == input.CategoryId);
                 if (result == null)
                 {
                     throw new NullReferenceException($"No such Category found!");
@@ -147,7 +147,7 @@ namespace Service
                 {
                     debit.CategoryId = null;
                 }
-                context.Categories.Remove(result);
+                context.UserCategories.Remove(result);
                 context.SaveChanges();
             }
             catch (Exception ex)
