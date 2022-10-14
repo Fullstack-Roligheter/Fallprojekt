@@ -1,4 +1,5 @@
 using DAL;
+using DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using Service.DTOs;
 using System.Data.SqlClient;
@@ -121,8 +122,8 @@ namespace Service
         public void CreateCategory(CreateCategoryDTO input)
         {
             using var context = new ProjectContext();
-            var newCategory = context.Set<Category>();
-            newCategory.Add(new Category
+            var newCategory = context.Set<UserCategories>();
+            newCategory.Add(new UserCategories
             {
                 Id = Guid.NewGuid(),
                 Name = input.Name,
