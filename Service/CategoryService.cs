@@ -1,4 +1,5 @@
 using DAL;
+using DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using Service.DTOs;
 using System.Data.SqlClient;
@@ -121,8 +122,8 @@ namespace Service
         public void CreateCategory(CreateCategoryDTO input)
         {
             using var context = new ProjectContext();
-            var newCategory = context.Set<Category>();
-            newCategory.Add(new Category
+            var newCategory = context.Set<UserCategories>();
+            newCategory.Add(new UserCategories
             {
                 Id = Guid.NewGuid(),
                 Name = input.Name,
@@ -136,7 +137,7 @@ namespace Service
             using var context = new ProjectContext();
             try
             {
-                var result = context.Categories.FirstOrDefault(x => x.Id == input.CategoryId);
+                var result = context.UserCategories.FirstOrDefault(x => x.Id == input.CategoryId);
                 if (result == null)
                 {
                     throw new NullReferenceException($"No such Category found!");
@@ -146,7 +147,7 @@ namespace Service
                 {
                     debit.CategoryId = null;
                 }
-                context.Categories.Remove(result);
+                context.UserCategories.Remove(result);
                 context.SaveChanges();
             }
             catch (Exception ex)
@@ -160,7 +161,7 @@ namespace Service
         {
             using var context = new ProjectContext();
 
-            var category = context.Categories.FirstOrDefault(x => x.Id == editCategory.CategoryId);
+            var category = context.UserCategories.FirstOrDefault(x => x.Id == editCategory.CategoryId);
             if (category == null)
             {
                 throw new NullReferenceException($"No such Category found!");
