@@ -41,7 +41,7 @@ namespace Fallprojekt.Controllers
         }
 
         [HttpDelete("DeleteCategory")]
-        public IActionResult DeleteCategory(DeleteCategoryDTO input)
+        public IActionResult DeleteCategory([FromQuery]DeleteCategoryDTO input)
         {
             try
             {
