@@ -48,9 +48,9 @@ namespace Service
 
         //        public int FetchingUserId(string username)
         //        {
-        //            using (var db = new ProjectContext())
+        //            using (_projectContext)
         //            {
-        //                return db.User.Where(u => u.UserName == username).Select(i => i.UserId).FirstOrDefault();
+        //                return _projectContext.User.Where(u => u.UserName == username).Select(i => i.UserId).FirstOrDefault();
         //            }
         //        }
 
