@@ -2,54 +2,22 @@ using DAL;
 using DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using Service.DTOs;
+using Service.Interfaces;
 using System.Data.SqlClient;
 namespace Service
 {
-    public class CategoryService
+    public class CategoryService : ICategoryService
     {
-        //SINGLETON--------------------------------------------------------------------------------------------------
-        private static CategoryService _instance;
-        public static CategoryService Instance
+        private readonly ProjectContext _projectContext;
+
+        public CategoryService(ProjectContext projectContext)
         {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new CategoryService();
-                }
-                return _instance;
-            }
+            _projectContext = projectContext;
         }
-        private CategoryService() { }
-        //SINGLETON--------------------------------------------------------------------------------------------------
-
-        //        public void AddDefaultCategoryToNewUser(int inputUserId)
-        //        {
-        //            using (var context = new ProjectContext())
-        //            {
-        //                var tempNewUserBudgetId = (from u in context.User
-        //                                           join b in context.Budgets
-        //                                           on u.UserId equals b.UserId
-        //                                           where u.UserId == inputUserId
-        //                                           select b.BudgetId).FirstOrDefault();
-
-        //                var newUserBudgetId = Convert.ToInt32(tempNewUserBudgetId);
-
-        //                var newUserDefaultCategory = context.Set<Category>();
-        //                newUserDefaultCategory.Add(new Category
-        //                {
-        //                    CategoryName = "Default",
-        //                    BudgetId = newUserBudgetId,
-        //                    CategoryMaxAmount = 0
-        //                });
-        //                context.SaveChanges();
-        //            }
-        //        }
 
         public List<CheckForCategoryDuplicatesDTO> ListAllCategories()
         {
-            using var context = new ProjectContext();
-            var result = (from c in context.Categories
+            var result = (from c in _projectContext.Categories
                           select new CheckForCategoryDuplicatesDTO()
                           {
                               Id = c.Id,
@@ -59,38 +27,15 @@ namespace Service
             return result;
         }
 
-        //        //List Category to match budget
-        //        public List<CheckForCategoryDuplicatesDTO> ListAllCategoryMatchBudget(BudgetNameDTO budget)
-        //        {
-        //            using (var context = new ProjectContext())
-        //            {
-        //                var budgetID = context.Budgets
-        //                    .Where(n => n.BudgetName == budget.BudgetName)
-        //                    .Select(id => id.BudgetId)
-        //                    .FirstOrDefault();
-
-        //                //var CategoryBudget = context.Categories.Where(x => x.CategoryId == budgetID);
-
-        //                return context.Categories.Where(x => x.BudgetId == budgetID)
-        //                    .Select(n => new CheckForCategoryDuplicatesDTO
-        //                    {
-        //                        CategoryName = n.CategoryName,
-        //                    })
-        //                    .ToList();
-        //            }
-        //        }
-
         public List<UserCategoriesDTO> GetCategoriesForUser(GetCategoriesDTO input)
         {
-            using var context = new ProjectContext();
-
-            var defaultresult = (from c in context.Categories
+            var defaultresult = (from c in _projectContext.Categories
                                  select new UserCategoriesDTO()
                                  {
                                      CategoryId = c.Id,
                                      CategoryName = c.Name,
                                  }).ToList();
-            var customresult = (from c in context.UserCategories
+            var customresult = (from c in _projectContext.UserCategories
                                 where c.UserId == input.UserId
                                 select new UserCategoriesDTO()
                                 {
@@ -100,7 +45,7 @@ namespace Service
                                 }).ToList();
 
             defaultresult.AddRange(customresult);
-            
+
             List<UserCategoriesDTO> CombinedList = defaultresult;
 
             return CombinedList;
@@ -108,8 +53,7 @@ namespace Service
 
         public List<UserCategoriesDTO> GetUserCreatedCategories(GetCategoriesDTO input)
         {
-            using var context = new ProjectContext();
-            var result = (from c in context.UserCategories
+            var result = (from c in _projectContext.UserCategories
                           where c.UserId == input.UserId
                           select new UserCategoriesDTO()
                           {
@@ -121,34 +65,32 @@ namespace Service
 
         public void CreateCategory(CreateCategoryDTO input)
         {
-            using var context = new ProjectContext();
-            var newCategory = context.Set<UserCategories>();
+            var newCategory = _projectContext.Set<UserCategories>();
             newCategory.Add(new UserCategories
             {
                 Id = Guid.NewGuid(),
                 Name = input.Name,
                 UserId = input.UserId
             });
-            context.SaveChanges();
+            _projectContext.SaveChanges();
         }
 
         public void DeleteCategory(DeleteCategoryDTO input)
         {
-            using var context = new ProjectContext();
             try
             {
-                var result = context.UserCategories.FirstOrDefault(x => x.Id == input.CategoryId);
+                var result = _projectContext.UserCategories.FirstOrDefault(x => x.Id == input.CategoryId);
                 if (result == null)
                 {
                     throw new NullReferenceException($"No such Category found!");
                 }
-                var affectedDebits = context.Debits.Where(x => x.CategoryId == input.CategoryId).ToList();
+                var affectedDebits = _projectContext.Debits.Where(x => x.CategoryId == input.CategoryId).ToList();
                 foreach (var debit in affectedDebits)
                 {
                     debit.CategoryId = null;
                 }
-                context.UserCategories.Remove(result);
-                context.SaveChanges();
+                _projectContext.UserCategories.Remove(result);
+                _projectContext.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -159,16 +101,14 @@ namespace Service
 
         public void EditCategory(EditCategoryDTO editCategory)
         {
-            using var context = new ProjectContext();
-
-            var category = context.UserCategories.FirstOrDefault(x => x.Id == editCategory.CategoryId);
+            var category = _projectContext.UserCategories.FirstOrDefault(x => x.Id == editCategory.CategoryId);
             if (category == null)
             {
                 throw new NullReferenceException($"No such Category found!");
             }
             category.Id = editCategory.CategoryId;
             category.Name = editCategory.CategoryName;
-            context.SaveChanges();
+            _projectContext.SaveChanges();
         }
     }
 }
