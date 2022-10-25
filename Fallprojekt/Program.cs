@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IBudgetService, BudgetService>();
 builder.Services.AddScoped<ISavingPlanService,SavingPlanService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ProjectContext>();
 
 // Add services to the container.

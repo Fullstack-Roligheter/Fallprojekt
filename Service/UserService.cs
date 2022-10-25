@@ -2,33 +2,24 @@ using DAL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Service.DTOs;
+using Service.Interfaces;
 using System.Data.SqlClient;
 
 namespace Service
 {
-    public class UserService
+    public class UserService : IUserService
     {
-        //SINGLETON--------------------------------------------------------------------------------------------------
-        private static UserService _instance;
-        public static UserService Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new UserService();
-                }
-                return _instance;
-            }
-        }
-        private UserService() { }
-        //SINGLETON--------------------------------------------------------------------------------------------------
+        private static ProjectContext _projectContext;
 
+        public UserService (ProjectContext context)
+        {
+            _projectContext = context;
+        }
 
         public List<UserDTO> GetAllUsers()
         {
-            using var context = new ProjectContext();
-            return context.Users
+           
+            return _projectContext.Users
                 .Select(u => new UserDTO
                 {
                     UserId = u.Id,
@@ -42,8 +33,8 @@ namespace Service
 
         public SuccessLoginDTO? LogIn(LoginDTO login)
         {
-            using var db = new ProjectContext();
-            var result = (from u in db.Users
+            
+            var result = (from u in _projectContext.Users
                 where u.Email == login.Email && u.Password == login.Password
                 select new SuccessLoginDTO
                 {
@@ -65,14 +56,14 @@ namespace Service
 
         public bool CheckEmail(RegisterDTO reg)
         {
-            using var context = new ProjectContext();
-            return context.Users.Any(u => u.Email == reg.Email);
+            
+            return _projectContext.Users.Any(u => u.Email == reg.Email);
         }
 
         public void UserRegister(RegisterDTO reg)
         {
-            using var context = new ProjectContext();
-            context.Add(new User()
+
+            _projectContext.Add(new User()
             {
                 Id = Guid.NewGuid(),
                 FirstName = reg.FirstName.ToLower(),
@@ -80,13 +71,13 @@ namespace Service
                 Email = reg.Email,
                 Password = reg.Password
             });
-            context.SaveChanges();
+            _projectContext.SaveChanges();
         }
 
         public bool CheckUserId(Guid userId)
         {
-            using var context = new ProjectContext();
-            return context.Users.Any(x => x.Id == userId);
+            
+            return _projectContext.Users.Any(x => x.Id == userId);
         }
 
     }
