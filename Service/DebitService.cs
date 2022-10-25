@@ -60,7 +60,7 @@ namespace Service
                     Category = d.Category == null ? string.Empty : d.Category.Name,
                     Budget = d.Budget == null ? string.Empty : d.Budget.Name,
                     UserFirstName = d.User.FirstName,
-                }).ToList();
+                }).OrderByDescending(x => x.Date).ToList();
             return result;
         }
         

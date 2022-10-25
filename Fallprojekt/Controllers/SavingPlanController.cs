@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Service;
 using Service.DTOs;
+using Service.Interfaces;
 
 namespace Fallprojekt.Controllers
 {
@@ -9,12 +10,18 @@ namespace Fallprojekt.Controllers
     [ApiController]
     public class SavingPlanController : ControllerBase
     {
+        private readonly ISavingPlanService _savingPlanService;
+        public SavingPlanController(ISavingPlanService plan)
+        {
+            _savingPlanService = plan;
+        }
+
         [HttpPost("CreateSavingPlan")]
         public IActionResult CreateSavingPlan([FromBody]SavingPlanDTO saving)
         {
             try
             {
-                SavingPlanService.Instance.CreateSavingPlan(saving);
+                _savingPlanService.CreateSavingPlan(saving);
                 return Ok();
             }
             catch (Exception ex)
@@ -27,7 +34,7 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                return Ok(SavingPlanService.Instance.ListAllPlan(user));
+                return Ok(_savingPlanService.ListAllPlan(user));
             }
             catch (Exception ex)
             {
@@ -39,7 +46,7 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                SavingPlanService.Instance.UpdatePlan(editPlan);
+                _savingPlanService.UpdatePlan(editPlan);
             }
             catch (Exception ex)
             {
@@ -52,7 +59,7 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                SavingPlanService.Instance.DeletePlan(id);
+                _savingPlanService.DeletePlan(id);
             }
             catch (Exception ex)
             {
