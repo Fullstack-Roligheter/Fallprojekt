@@ -13,7 +13,7 @@ namespace Service.DTOs
         public int Amount { get; set; }
         public string PlanStartDate { get; set; }
         public string PlanEndDate { get; set; }
-        public int CountDown { get; set; }
+       
        
     }
 }

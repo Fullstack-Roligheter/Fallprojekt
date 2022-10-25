@@ -1,6 +1,7 @@
 ﻿using DAL;
 using DAL.Models;
 using Service.DTOs;
+using Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,23 +10,14 @@ using System.Threading.Tasks;
 
 namespace Service
 {
-    public class SavingPlanService
+    public class SavingPlanService: ISavingPlanService
     {
-        //SINGLETON--------------------------------------------------------------------------------------------------
-        private static SavingPlanService _instance;
-        public static SavingPlanService Instance
+        private readonly ProjectContext _projectContext;
+        public SavingPlanService(ProjectContext context)
         {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new SavingPlanService();
-                }
-                return _instance;
-            }
+            _projectContext = context;
         }
-        private SavingPlanService() { }
-        //SINGLETON--------------------------------------------------------------------------------------------------
+
 
         public void CreateSavingPlan(SavingPlanDTO saving)
         {
@@ -65,7 +57,7 @@ namespace Service
                     Amount = s.Amount,
                     PlanStartDate = s.StartDate.ToString("yyyy-MM-dd"),
                     PlanEndDate = s.EndDate.ToString("yyyy-MM-dd"),
-                    CountDown = DateDiff(s.StartDate.ToString("yyyy-MM-dd"), s.EndDate.ToString("yyyy-MM-dd"))
+                   
                 })
                 .ToList();
         }
@@ -97,12 +89,6 @@ namespace Service
             context.SaveChanges();
         }
 
-        public static int DateDiff(string dateStart, string dateEnd)
-        {
-            DateTime start = Convert.ToDateTime(dateStart);
-            DateTime end = Convert.ToDateTime(dateEnd);
-            TimeSpan ts = end.Subtract(start);
-            return ts.Days + 1;
-        }
+       
     }
 }
