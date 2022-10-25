@@ -1,4 +1,11 @@
+using DAL;
+using Service;
+using Service.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<IBudgetService, BudgetService>();
+builder.Services.AddScoped<ProjectContext>();
 
 // Add services to the container.
 

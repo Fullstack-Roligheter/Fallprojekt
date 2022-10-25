@@ -2,6 +2,7 @@ using DAL;
 using Microsoft.AspNetCore.Mvc;
 using Service;
 using Service.DTOs;
+using Service.Interfaces;
 
 namespace Fallprojekt.Controllers
 {
@@ -9,6 +10,12 @@ namespace Fallprojekt.Controllers
     [ApiController]
     public class BudgetController : ControllerBase
     {
+        private readonly IBudgetService _budgetService;
+
+        public BudgetController(IBudgetService budgetService)
+        {
+            _budgetService = budgetService;
+        }
 
         [HttpPost("CreateBudget")]
         public IActionResult CreateBudget(CreateBudgetDTO input)
@@ -18,7 +25,7 @@ namespace Fallprojekt.Controllers
                 var result = UserService.Instance.CheckUserId(input.UserId);
                 if (result)
                 {
-                    BudgetService.Instance.CreateBudget(input);
+                    _budgetService.CreateBudget(input);
                     return StatusCode(201);
                 }
                 return NotFound();
@@ -37,7 +44,7 @@ namespace Fallprojekt.Controllers
             {
                 var result = UserService.Instance.CheckUserId(input.UserId);
                 if (!result) return NotFound();
-                BudgetService.Instance.DeleteBudget(input);
+                _budgetService.DeleteBudget(input);
                 return NoContent();
             }
             catch (Exception ex)
@@ -54,7 +61,7 @@ namespace Fallprojekt.Controllers
             {
                 var result = UserService.Instance.CheckUserId(input.UserId);
                 if (!result) return NotFound();
-                BudgetService.Instance.EditBudget(input);
+                _budgetService.EditBudget(input);
                 return Ok();
             }
             catch (Exception ex)
@@ -72,7 +79,7 @@ namespace Fallprojekt.Controllers
                 var result = UserService.Instance.CheckUserId(input.UserId);
                 if (result)
                 {
-                    return Ok(BudgetService.Instance.GetBudgetsForUser(input));
+                    return Ok(_budgetService.GetBudgetsForUser(input));
                 }
                 return NotFound("User not found");
             }
