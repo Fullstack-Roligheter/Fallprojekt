@@ -8,6 +8,7 @@ builder.Services.AddScoped<IBudgetService, BudgetService>();
 builder.Services.AddScoped<ISavingPlanService,SavingPlanService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IDebitService, DebitService>();
 builder.Services.AddScoped<ProjectContext>();
 
 // Add services to the container.
