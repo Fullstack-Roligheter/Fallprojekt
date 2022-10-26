@@ -21,14 +21,13 @@ namespace Service
 
         public void CreateSavingPlan(SavingPlanDTO saving)
         {
-            using var context = new ProjectContext();
-            var data = context.Users
+            var data = _projectContext.Users
                 .FirstOrDefault(x => x.Id == saving.UserId);
             if (data == null)
             {
                 throw new Exception("user not found!");
             }
-            context.Add(
+            _projectContext.Add(
                 new SavingPlan
                 {
                     UserId = saving.UserId,
@@ -37,19 +36,18 @@ namespace Service
                     StartDate = DateTime.Parse(saving.StartDate),
                     EndDate = DateTime.Parse(saving.EndDate)
                 });
-            context.SaveChanges();
+            _projectContext.SaveChanges();
         }
 
         public List<GetSavingPlanDTO> ListAllPlan(UserIdDTO user)
         {
-            using var context = new ProjectContext();
-            var data = context.Users.Any(x => x.Id == user.UserId);
+            var data = _projectContext.Users.Any(x => x.Id == user.UserId);
             if (!data)
             {
                 throw new Exception("User not found!");
             }
 
-            return context.Savingplans.Where(x => x.UserId == user.UserId)
+            return _projectContext.Savingplans.Where(x => x.UserId == user.UserId)
                 .Select(s => new GetSavingPlanDTO
                 {
                     SavingId = s.Id,
@@ -64,8 +62,7 @@ namespace Service
 
         public void UpdatePlan(EditSavingPlanDTO editPlan)
         {
-            using var context = new ProjectContext();
-            var plan = context.Savingplans.FirstOrDefault(x => x.Id == editPlan.SavingId);
+            var plan = _projectContext.Savingplans.FirstOrDefault(x => x.Id == editPlan.SavingId);
             if (plan == null)
             {
                 throw new NullReferenceException($"No Plan!");
@@ -74,19 +71,18 @@ namespace Service
             plan.Amount = editPlan.Amount;
             plan.StartDate = DateTime.Parse(editPlan.StartDate);
             plan.EndDate = DateTime.Parse(editPlan.EndDate);
-            context.SaveChanges();
+            _projectContext.SaveChanges();
         }
 
         public void DeletePlan(Guid id)
         {
-            using var context = new ProjectContext();
-            var plan = context.Savingplans.FirstOrDefault(x => x.Id == id);
+            var plan = _projectContext.Savingplans.FirstOrDefault(x => x.Id == id);
             if (plan == null)
             {
                 throw new NullReferenceException($"No Plan!");
             }
-            context.Remove(plan);
-            context.SaveChanges();
+            _projectContext.Remove(plan);
+            _projectContext.SaveChanges();
         }
 
        

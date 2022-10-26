@@ -14,10 +14,12 @@ namespace Fallprojekt.Controllers
     {
         private readonly ICategoryService _categoryService;
         private readonly IUserService _userService;
-        public DebugController(ICategoryService categoryService, IUserService userService)
+        private readonly IDebitService _debitService;
+        public DebugController(ICategoryService categoryService, IUserService userService, IDebitService debitService)
         {
             _categoryService = categoryService;
             _userService = userService;
+            _debitService = debitService;
         }
 
         [HttpGet("GetAllUsers")]
@@ -30,14 +32,14 @@ namespace Fallprojekt.Controllers
         [HttpGet("GetAllDebits")]
         public List<DebitDTO> GetAllDebits()
         {
-            return DebitService.Instance.GetAllDebits();
+            return _debitService.GetAllDebits();
         }
 
 
         [HttpGet("GetDebitListForUser")]
         public List<DebitDTO> GetExpensesListForUser(UserIdDTO input)
         {
-            return DebitService.Instance.GetDebitListForUser(input);
+            return _debitService.GetDebitListForUser(input);
         }
 
 
@@ -59,23 +61,5 @@ namespace Fallprojekt.Controllers
                 return BadRequest();
             }
         }
-
-        //[HttpPost("/CalculateBudgetFromCatagories")]
-        //public decimal CalculateBudgetFromCatagories([FromBody] CountMaxMoneyDTO input)
-        //{
-        //    return BudgetService.Instance.CalculateBudgetFromCatagories(input);
-        //}
-
-        //[HttpPost("/AddDefaultBudgetAndCategoryToNewUser")]
-        //public void AddDefaultBudgetAndCategoryToNewUser([FromBody] string input)
-        //{
-        //    BudgetService.Instance.AddDefaultBudgetToNewUser(input);
-        //}
-
-        //[HttpPost("/ListUserBudgets")]
-        //public List<BudgetNameDTO> ListUserBudgets(UserIdDTO input)
-        //{
-        //    return BudgetService.Instance.ListUserBudgets(input);
-        //}
     }
 }
