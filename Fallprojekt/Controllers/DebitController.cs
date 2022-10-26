@@ -13,10 +13,12 @@ namespace Fallprojekt.Controllers
     public class DebitController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IDebitService _debitService;
 
-        public DebitController(IUserService userService)
+        public DebitController(IUserService userService, IDebitService debitService)
         {
             _userService = userService;
+            _debitService = debitService;
         }
 
         [HttpGet("GetDebitListForUser")]
@@ -24,7 +26,7 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                var result = DebitService.Instance.GetDebitListForUser(input);
+                var result = _debitService.GetDebitListForUser(input);
                 return result.IsNullOrEmpty() ? StatusCode(404, "UserId not found") : Ok(result);
             }
             catch (Exception ex)
@@ -39,7 +41,7 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                DebitService.Instance.CreateDebit(createDebit);
+                _debitService.CreateDebit(createDebit);
                 return Ok();
             }
             catch (Exception ex)
@@ -54,7 +56,7 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                var result = DebitService.Instance.GetDebitsForBudget(input);
+                var result = _debitService.GetDebitsForBudget(input);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -71,7 +73,7 @@ namespace Fallprojekt.Controllers
             {
                 var result = _userService.CheckUserId(userId);
                 if (!result) return NotFound("User not found");
-                DebitService.Instance.DeleteDebit(debitId);
+                _debitService.DeleteDebit(debitId);
                 return Ok();
             }
             catch (Exception ex)
@@ -88,7 +90,7 @@ namespace Fallprojekt.Controllers
             {
                 var result = _userService.CheckUserId(input.UserId);
                 if (!result) return NotFound("User not found");
-                return Ok(DebitService.Instance.GetDebitsForCategory(input));
+                return Ok(_debitService.GetDebitsForCategory(input));
             }
             catch (Exception ex)
             {
@@ -104,7 +106,7 @@ namespace Fallprojekt.Controllers
             {
                 var result = _userService.CheckUserId(input.UserId);
                 if (!result) return NotFound("User not found");
-                DebitService.Instance.EditDebit(input);
+                _debitService.EditDebit(input);
                 return Ok();
             }
             catch (Exception ex)
@@ -113,47 +115,5 @@ namespace Fallprojekt.Controllers
                 return StatusCode(500);
             }
         }
-
-        //[HttpPost("/GetExpenseForSpecificBudgetSortedIntoCategories")]
-        //public IActionResult GetExpenseForSpecificBudgetSortedIntoCategories(GetExpenseForSpecificBudgetSortedIntoCategoriesInputDTO input)
-        //{
-        //    try
-        //    {
-        //        var userIdValidation = UserService.Instance.UserIdValidation(input.UserId);
-        //        var budgetIdValidation = BudgetService.Instance.BudgetIdValidation(input.BudgetId);
-
-        //        if (!userIdValidation)
-        //        {
-        //            return StatusCode(401); // Statuscode 401 = UserId does not exist
-        //        }
-        //        if (!budgetIdValidation)
-        //        {
-        //            return StatusCode(402); // Statuscode 402 = BudgetId does not exist
-        //        }
-
-        //        var result = ExpenseService.Instance.GetExpensesForSpecificBudgetSortedIntoCategories(input);
-
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex);
-        //        return StatusCode(418);
-        //    }
-        //}
-
-        //[HttpGet("expensefilter")]
-        //public IActionResult FilterByBudgetCategory([FromQuery] BudgetCategoryExpenseFilterDTO input)
-        //{
-        //    try
-        //    {
-        //        return Ok(ExpenseService.Instance.GetExpenseListFilteredByBudgetAndCategory(input));
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
     }
 }
