@@ -10,9 +10,11 @@ namespace Fallprojekt.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
-        public CategoryController(ICategoryService categoryService)
+        private readonly IUserService _userService;
+        public CategoryController(ICategoryService categoryService, IUserService userService)
         {
             _categoryService = categoryService;
+            _userService = userService;
         }
 
         [HttpPost("CreateCategory")]
@@ -20,7 +22,7 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                if (UserService.Instance.CheckUserId(input.UserId))
+                if (_userService.CheckUserId(input.UserId))
                 {
                     _categoryService.CreateCategory(input);
                     return Ok();
@@ -39,7 +41,7 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                if (UserService.Instance.CheckUserId(input.UserId))
+                if (_userService.CheckUserId(input.UserId))
                 {
                     _categoryService.DeleteCategory(input);
                     return Ok();
@@ -58,7 +60,7 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                if (UserService.Instance.CheckUserId(input.UserId))
+                if (_userService.CheckUserId(input.UserId))
                 {
                     var result = _categoryService.GetCategoriesForUser(input);
                     return Ok(result);
@@ -77,7 +79,7 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                if (UserService.Instance.CheckUserId(input.UserId))
+                if (_userService.CheckUserId(input.UserId))
                 {
                     var result = _categoryService.GetUserCreatedCategories(input);
                     return Ok(result);
@@ -96,7 +98,7 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                var result = UserService.Instance.CheckUserId(input.UserId);
+                var result = _userService.CheckUserId(input.UserId);
                 input.CategoryName ??= "Default";
                 if (result)
                 {

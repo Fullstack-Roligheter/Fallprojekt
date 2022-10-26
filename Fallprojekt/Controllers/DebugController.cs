@@ -13,15 +13,17 @@ namespace Fallprojekt.Controllers
     public class DebugController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
-        public DebugController(ICategoryService categoryService)
+        private readonly IUserService _userService;
+        public DebugController(ICategoryService categoryService, IUserService userService)
         {
             _categoryService = categoryService;
+            _userService = userService;
         }
 
         [HttpGet("GetAllUsers")]
         public List<UserDTO> GetAllUsers()
         {
-            return UserService.Instance.GetAllUsers();
+            return _userService.GetAllUsers();
         }
 
 

@@ -11,10 +11,12 @@ namespace Fallprojekt.Controllers
     public class BudgetController : ControllerBase
     {
         private readonly IBudgetService _budgetService;
+        private readonly IUserService _userService;
 
-        public BudgetController(IBudgetService budgetService)
+        public BudgetController(IBudgetService budgetService, IUserService userService)
         {
             _budgetService = budgetService;
+            _userService = userService;
         }
 
         [HttpPost("CreateBudget")]
@@ -22,7 +24,7 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                var result = UserService.Instance.CheckUserId(input.UserId);
+                var result = _userService.CheckUserId(input.UserId);
                 if (result)
                 {
                     _budgetService.CreateBudget(input);
@@ -42,7 +44,7 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                var result = UserService.Instance.CheckUserId(input.UserId);
+                var result = _userService.CheckUserId(input.UserId);
                 if (!result) return NotFound();
                 _budgetService.DeleteBudget(input);
                 return NoContent();
@@ -59,7 +61,7 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                var result = UserService.Instance.CheckUserId(input.UserId);
+                var result = _userService.CheckUserId(input.UserId);
                 if (!result) return NotFound();
                 _budgetService.EditBudget(input);
                 return Ok();
@@ -76,7 +78,7 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                var result = UserService.Instance.CheckUserId(input.UserId);
+                var result = _userService.CheckUserId(input.UserId);
                 if (result)
                 {
                     return Ok(_budgetService.GetBudgetsForUser(input));
