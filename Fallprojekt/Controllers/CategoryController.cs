@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Service;
 using Service.DTOs;
+using Service.Interfaces;
 
 namespace Fallprojekt.Controllers
 {
@@ -8,7 +9,11 @@ namespace Fallprojekt.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        
+        private readonly ICategoryService _categoryService;
+        public CategoryController(ICategoryService categoryService)
+        {
+            _categoryService = categoryService;
+        }
 
         [HttpPost("CreateCategory")]
         public IActionResult AddCategory(CreateCategoryDTO input)
@@ -17,7 +22,7 @@ namespace Fallprojekt.Controllers
             {
                 if (UserService.Instance.CheckUserId(input.UserId))
                 {
-                    CategoryService.Instance.CreateCategory(input);
+                    _categoryService.CreateCategory(input);
                     return Ok();
                 }
                 return StatusCode(404);
@@ -36,7 +41,7 @@ namespace Fallprojekt.Controllers
             {
                 if (UserService.Instance.CheckUserId(input.UserId))
                 {
-                    CategoryService.Instance.DeleteCategory(input);
+                    _categoryService.DeleteCategory(input);
                     return Ok();
                 }
                 return StatusCode(404);
@@ -55,7 +60,7 @@ namespace Fallprojekt.Controllers
             {
                 if (UserService.Instance.CheckUserId(input.UserId))
                 {
-                    var result = CategoryService.Instance.GetCategoriesForUser(input);
+                    var result = _categoryService.GetCategoriesForUser(input);
                     return Ok(result);
                 }
                 return StatusCode(404);
@@ -74,7 +79,7 @@ namespace Fallprojekt.Controllers
             {
                 if (UserService.Instance.CheckUserId(input.UserId))
                 {
-                    var result = CategoryService.Instance.GetUserCreatedCategories(input);
+                    var result = _categoryService.GetUserCreatedCategories(input);
                     return Ok(result);
                 }
                 return StatusCode(404);
@@ -95,7 +100,7 @@ namespace Fallprojekt.Controllers
                 input.CategoryName ??= "Default";
                 if (result)
                 {
-                    CategoryService.Instance.EditCategory(input);
+                    _categoryService.EditCategory(input);
                     return Ok();
                 }
                 return NotFound("User not found");

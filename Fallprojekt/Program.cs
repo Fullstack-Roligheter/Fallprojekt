@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IBudgetService, BudgetService>();
 builder.Services.AddScoped<ISavingPlanService,SavingPlanService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ProjectContext>();
 
