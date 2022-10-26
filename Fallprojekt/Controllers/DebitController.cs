@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service;
 using Service.DTOs;
+using Service.Interfaces;
 
 namespace Fallprojekt.Controllers
 {
@@ -11,6 +12,13 @@ namespace Fallprojekt.Controllers
     [ApiController]
     public class DebitController : ControllerBase
     {
+        private readonly IUserService _userService;
+
+        public DebitController(IUserService userService)
+        {
+            _userService = userService;
+        }
+
         [HttpGet("GetDebitListForUser")]
         public IActionResult GetExpensesListForUser([FromQuery]UserIdDTO input)
         {
@@ -61,7 +69,7 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                var result = UserService.Instance.CheckUserId(userId);
+                var result = _userService.CheckUserId(userId);
                 if (!result) return NotFound("User not found");
                 DebitService.Instance.DeleteDebit(debitId);
                 return Ok();
@@ -78,7 +86,7 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                var result = UserService.Instance.CheckUserId(input.UserId);
+                var result = _userService.CheckUserId(input.UserId);
                 if (!result) return NotFound("User not found");
                 return Ok(DebitService.Instance.GetDebitsForCategory(input));
             }
@@ -94,7 +102,7 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                var result = UserService.Instance.CheckUserId(input.UserId);
+                var result = _userService.CheckUserId(input.UserId);
                 if (!result) return NotFound("User not found");
                 DebitService.Instance.EditDebit(input);
                 return Ok();
