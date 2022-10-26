@@ -4,9 +4,10 @@ using Service.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddScoped<ProjectContext>();
 builder.Services.AddScoped<IBudgetService, BudgetService>();
 builder.Services.AddScoped<ISavingPlanService,SavingPlanService>();
-builder.Services.AddScoped<ProjectContext>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 // Add services to the container.
 

@@ -4,6 +4,7 @@ using Service;
 using Service.DTOs;
 using System.Collections.Generic;
 using Castle.Core.Internal;
+using Service.Interfaces;
 
 namespace Fallprojekt.Controllers
 {
@@ -11,6 +12,12 @@ namespace Fallprojekt.Controllers
     [ApiController]
     public class DebugController : ControllerBase
     {
+        private readonly ICategoryService _categoryService;
+        public DebugController(ICategoryService categoryService)
+        {
+            _categoryService = categoryService;
+        }
+
         [HttpGet("GetAllUsers")]
         public List<UserDTO> GetAllUsers()
         {
@@ -37,7 +44,7 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                var result = CategoryService.Instance.ListAllCategories();
+                var result = _categoryService.ListAllCategories();
                 if (result.IsNullOrEmpty())
                 {
                     return NotFound();
