@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Service;
 using Service.DTOs;
+using Service.Interfaces;
 
 namespace Fallprojekt.Controllers
 {
@@ -9,12 +10,19 @@ namespace Fallprojekt.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly IUserService _userService;
+
+        public UserController(IUserService userService)
+        {
+            _userService = userService;
+        }
+        
         [HttpPost("Login")]
         public IActionResult UserLogin(LoginDTO login)
         {
             try
             {
-                var result = UserService.Instance.LogIn(login);
+                var result = _userService.LogIn(login);
 
                 if (result == null)
                 {
@@ -34,11 +42,11 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                if (UserService.Instance.CheckEmail(reg))
+                if (_userService.CheckEmail(reg))
                 {
                     return StatusCode(409, "Account already exists");
                 }
-                UserService.Instance.UserRegister(reg);
+                _userService.UserRegister(reg);
                 return Ok();
             }
             catch(Exception ex)

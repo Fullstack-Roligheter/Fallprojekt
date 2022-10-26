@@ -8,18 +8,7 @@ namespace Fallprojekt.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        //        [HttpGet("categoryBudget")]
-        //        public IActionResult ListAllCategoryMatchBudget([FromQuery] BudgetNameDTO input)
-        //        {
-        //            try
-        //            {
-        //                return Ok(CategoryService.Instance.ListAllCategoryMatchBudget(input));
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                return BadRequest(ex.Message);
-        //            }
-        //        }
+        
 
         [HttpPost("CreateCategory")]
         public IActionResult AddCategory(CreateCategoryDTO input)

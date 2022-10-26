@@ -9,7 +9,7 @@ namespace Service
 {
     public class UserService : IUserService
     {
-        private static ProjectContext _projectContext;
+        private ProjectContext _projectContext;
 
         public UserService (ProjectContext context)
         {
