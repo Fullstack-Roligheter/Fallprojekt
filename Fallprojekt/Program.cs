@@ -1,4 +1,6 @@
 using DAL;
+using DAL.Repositories;
+using DAL.Repositories.Interfaces;
 using Service;
 using Service.Interfaces;
 
@@ -10,6 +12,8 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IDebitService, DebitService>();
 builder.Services.AddScoped<ProjectContext>();
+
+builder.Services.AddScoped<IUserRepo, UserRepo>();
 
 // Add services to the container.
 

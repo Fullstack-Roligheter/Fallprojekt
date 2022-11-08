@@ -1,84 +1,82 @@
 using DAL;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Service.DTOs;
 using Service.Interfaces;
-using System.Data.SqlClient;
+using DAL.Repositories.Interfaces;
 
-namespace Service
+namespace Service;
+
+public class UserService : IUserService
 {
-    public class UserService : IUserService
+    private readonly IUserRepo _userRepo;
+
+    public UserService(IUserRepo userRepo)
     {
-        private ProjectContext _projectContext;
+        _userRepo = userRepo;
+    }
 
-        public UserService (ProjectContext context)
+    public List<UserDTO> GetAllUsers()
+    {
+        var userList = _userRepo.GetAllUsers();
+        if (userList == null) throw new NullReferenceException("No Users Found");
+
+        var result = new List<UserDTO>();
+        foreach (var user in userList)
         {
-            _projectContext = context;
+            result.Add(new UserDTO()
+            {
+                UserId = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Password = user.Password
+            });
         }
+        return result;
+    }
 
-        public List<UserDTO> GetAllUsers()
+    public SuccessLoginDTO? LogIn(LoginDTO login)
+    {
+        var user = _userRepo.GetUser(login.Email);
+        if (user == null) throw new NullReferenceException("No User Found");
+
+        return new SuccessLoginDTO()
         {
-           
-            return _projectContext.Users
-                .Select(u => new UserDTO
-                {
-                    UserId = u.Id,
-                    FirstName = u.FirstName,
-                    LastName = u.LastName,
-                    Email = u.Email,
-                    Password = u.Password
-                })
-                .ToList();
-        }
+            UserId = user.Id,
+            Email = user.Email,
+            FirstName = user.FirstName,
+            LastName = user.LastName
+        };
+    }
 
-        public SuccessLoginDTO? LogIn(LoginDTO login)
+    public bool CheckEmail(RegisterDTO reg)
+    {
+        var user = _userRepo.GetUser(reg.Email);
+        return user != null;
+    }
+
+    public void UserRegister(RegisterDTO reg)
+    {
+        try
         {
-            
-            var result = (from u in _projectContext.Users
-                where u.Email == login.Email && u.Password == login.Password
-                select new SuccessLoginDTO
-                {
-                    UserId = u.Id,
-                    Email = u.Email,
-                    FirstName = u.FirstName,
-                    LastName = u.LastName
-                }).FirstOrDefault();
-            return result;
-        }
-
-        //        public int FetchingUserId(string username)
-        //        {
-        //            using (_projectContext)
-        //            {
-        //                return _projectContext.User.Where(u => u.UserName == username).Select(i => i.UserId).FirstOrDefault();
-        //            }
-        //        }
-
-        public bool CheckEmail(RegisterDTO reg)
-        {
-            
-            return _projectContext.Users.Any(u => u.Email == reg.Email);
-        }
-
-        public void UserRegister(RegisterDTO reg)
-        {
-
-            _projectContext.Add(new User()
+            var newUser = new User()
             {
                 Id = Guid.NewGuid(),
                 FirstName = reg.FirstName.ToLower(),
                 LastName = reg.LastName.ToLower(),
                 Email = reg.Email,
                 Password = reg.Password
-            });
-            _projectContext.SaveChanges();
+            };
+            _userRepo.CreateUser(newUser);
         }
-
-        public bool CheckUserId(Guid userId)
+        catch (Exception ex)
         {
-            
-            return _projectContext.Users.Any(x => x.Id == userId);
+            throw new Exception($"Error registering User: {ex.Message}");
         }
+    }
 
+    public bool CheckUserId(Guid userId)
+    {
+        var user = _userRepo.GetUser(userId);
+        return user != null;
     }
 }
