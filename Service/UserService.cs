@@ -11,14 +11,14 @@ namespace Service
     {
         private ProjectContext _projectContext;
 
-        public UserService (ProjectContext context)
+        public UserService(ProjectContext context)
         {
             _projectContext = context;
         }
 
         public List<UserDTO> GetAllUsers()
         {
-           
+
             return _projectContext.Users
                 .Select(u => new UserDTO
                 {
@@ -33,16 +33,16 @@ namespace Service
 
         public SuccessLoginDTO? LogIn(LoginDTO login)
         {
-            
+
             var result = (from u in _projectContext.Users
-                where u.Email == login.Email && u.Password == login.Password
-                select new SuccessLoginDTO
-                {
-                    UserId = u.Id,
-                    Email = u.Email,
-                    FirstName = u.FirstName,
-                    LastName = u.LastName
-                }).FirstOrDefault();
+                          where u.Email == login.Email && u.Password == login.Password
+                          select new SuccessLoginDTO
+                          {
+                              UserId = u.Id,
+                              Email = u.Email,
+                              FirstName = u.FirstName,
+                              LastName = u.LastName
+                          }).FirstOrDefault();
             return result;
         }
 
@@ -56,7 +56,7 @@ namespace Service
 
         public bool CheckEmail(RegisterDTO reg)
         {
-            
+
             return _projectContext.Users.Any(u => u.Email == reg.Email);
         }
 
@@ -76,7 +76,7 @@ namespace Service
 
         public bool CheckUserId(Guid userId)
         {
-            
+
             return _projectContext.Users.Any(x => x.Id == userId);
         }
 
