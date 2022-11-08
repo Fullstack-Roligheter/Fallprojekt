@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service;
 using Service.DTOs;
@@ -42,10 +43,12 @@ namespace Fallprojekt.Controllers
         {
             try
             {
-                if (_userService.CheckEmail(reg))
-                {
-                    return StatusCode(409, "Account already exists");
-                }
+                var r = new Regex(@"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{4,}$");
+
+                if (!r.Match(reg.Password).Success) return BadRequest("Invalid Password");
+
+                if (!_userService.CheckEmail(reg)) return StatusCode(409, "Account already exists");
+
                 _userService.UserRegister(reg);
                 return Ok();
             }
