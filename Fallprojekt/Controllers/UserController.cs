@@ -47,7 +47,7 @@ namespace Fallprojekt.Controllers
 
                 if (!r.Match(reg.Password).Success) return BadRequest("Invalid Password");
 
-                if (!_userService.CheckEmail(reg)) return StatusCode(409, "Account already exists");
+                if (_userService.CheckEmail(reg)) return StatusCode(409, "Account already exists");
 
                 _userService.UserRegister(reg);
                 return Ok();
