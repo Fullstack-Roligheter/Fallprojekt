@@ -1,6 +1,10 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Service;
 using Service.DTOs;
 using Service.Interfaces;
@@ -12,14 +16,16 @@ namespace Fallprojekt.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        public IConfiguration _configuration;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IConfiguration configuration)
         {
             _userService = userService;
+            _configuration = configuration;
         }
         
         [HttpPost("Login")]
-        public IActionResult UserLogin(LoginDTO login)
+        public async Task<IActionResult> UserLogin(LoginDTO login)
         {
             try
             {
@@ -29,7 +35,30 @@ namespace Fallprojekt.Controllers
                 {
                     return StatusCode(401);
                 }
-                return Ok(result);
+                else
+                {
+                    var claims = new[]
+                    {
+                        new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
+                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                        new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                        new Claim("UserId", result.UserId.ToString()),
+                        new Claim("FirstName", result.FirstName),
+                        new Claim("LastName", result.LastName),
+                        new Claim("Email", result.Email)
+                    };
+
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+                    var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                    var token = new JwtSecurityToken(
+                        _configuration["Jwt:Issuer"],
+                        _configuration["Jwt:Audience"],
+                        claims,
+                        expires: DateTime.UtcNow.AddMinutes(5),
+                        signingCredentials: signIn);
+
+                    return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+                }
             }
             catch (Exception ex)
             {
