@@ -23,8 +23,7 @@ public class CategoryRepo : ICategoryRepo
     public IList<Category>? GetAllForUser(Guid userId)
     {
         return _projectContext.Categories
-            .Where(c => c.UserId == userId)
-            .Where(c => c.IsDefault == true)
+            .Where(c => c.UserId == userId || c.IsDefault == true)
             .Include(c => c.User)
             .ToList();
     }
