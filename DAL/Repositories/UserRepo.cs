@@ -11,24 +11,42 @@ public class UserRepo : IUserRepo
         _projectContext = projectContext;
     }
 
-    public List<User> GetAllUsers()
+    public IList<User> GetAll()
     {
         return _projectContext.Users.ToList();
     }
 
-    public User? GetUser(Guid id)
+    public User? GetWithId(Guid modelId)
     {
-        return _projectContext.Users.FirstOrDefault(u => u.Id == id);
+        return _projectContext.Users.FirstOrDefault(u => u.Id == modelId);
     }
 
-    public User? GetUser(string email)
+    public void Create(User model)
+    {
+        _projectContext.Users.Add(model);
+        _projectContext.SaveChanges();
+    }
+
+    public void Delete(Guid modelId)
+    {
+        var model = _projectContext.Users.FirstOrDefault(d => d.Id == modelId);
+        if (model == null) return;
+
+        _projectContext.Users.Remove(model);
+        _projectContext.SaveChanges();
+    }
+
+    public void Update(User model)
+    {
+        var affectedUser = _projectContext.Users.FirstOrDefault(d => d.Id == model.Id);
+        if (affectedUser == null) return;
+
+        _projectContext.Users.Update(model);
+        _projectContext.SaveChanges();
+    }
+
+    public User? GetWithEmail(string email)
     {
         return _projectContext.Users.FirstOrDefault(u => u.Email == email);
-    }
-
-    public void CreateUser(User user)
-    {
-        _projectContext.Users.Add(user);
-        _projectContext.SaveChanges();
     }
 }

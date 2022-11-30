@@ -1,62 +1,59 @@
 ﻿using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Service;
 using Service.DTOs;
 using Service.Interfaces;
 
-namespace Fallprojekt.Controllers
+namespace Fallprojekt.Controllers;
+
+[Route("api/user")]
+[ApiController]
+public class UserController : ControllerBase
 {
-    [Route("api/user")]
-    [ApiController]
-    public class UserController : ControllerBase
+    private readonly IUserService _userService;
+
+    public UserController(IUserService userService)
     {
-        private readonly IUserService _userService;
-
-        public UserController(IUserService userService)
-        {
-            _userService = userService;
-        }
+        _userService = userService;
+    }
         
-        [HttpPost("Login")]
-        public IActionResult UserLogin(LoginDTO login)
+    [HttpPost("Login")]
+    public IActionResult UserLogin(LoginDTO login)
+    {
+        try
         {
-            try
-            {
-                var result = _userService.LogIn(login);
+            var result = _userService.LogIn(login);
 
-                if (result == null)
-                {
-                    return StatusCode(401);
-                }
-                return Ok(result);
-            }
-            catch (Exception ex)
+            if (result == null)
             {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500);
+                return StatusCode(401);
             }
+            return Ok(result);
         }
-
-        [HttpPost("Register")]
-        public IActionResult UserRegister(RegisterDTO reg)
+        catch (Exception ex)
         {
-            try
-            {
-                var r = new Regex(@"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{4,}$");
+            Console.WriteLine(ex.Message);
+            return StatusCode(500);
+        }
+    }
 
-                if (!r.Match(reg.Password).Success) return BadRequest("Invalid Password");
+    [HttpPost("Register")]
+    public IActionResult UserRegister(RegisterDTO reg)
+    {
+        try
+        {
+            var r = new Regex(@"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{4,}$");
 
-                if (_userService.CheckEmail(reg)) return StatusCode(409, "Account already exists");
+            if (!r.Match(reg.Password).Success) return BadRequest("Invalid Password");
 
-                _userService.UserRegister(reg);
-                return Ok();
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500);
-            }
+            if (_userService.CheckEmail(reg)) return StatusCode(409, "Account already exists");
+
+            _userService.UserRegister(reg);
+            return Ok();
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return StatusCode(500);
         }
     }
 }

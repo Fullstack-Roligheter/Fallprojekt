@@ -1,20 +1,11 @@
 ﻿using Service.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Service.Interfaces
+namespace Service.Interfaces;
+
+public interface ISavingPlanService
 {
-    public interface ISavingPlanService
-    {
-        void CreateSavingPlan(SavingPlanDTO saving);
-        List<GetSavingPlanDTO> ListAllPlan(UserIdDTO user);
-        void UpdatePlan(EditSavingPlanDTO editPlan);
-        void DeletePlan(Guid id);
-
-
-       
-    }
+    void CreateSavingPlan(SavingPlanDTO newPlan);
+    IList<GetSavingPlanDTO> GetPlans(Guid userId);
+    void UpdatePlan(EditSavingPlanDTO editPlan);
+    void DeletePlan(Guid planId);
 }

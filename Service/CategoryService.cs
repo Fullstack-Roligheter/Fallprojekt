@@ -1,114 +1,138 @@
-using DAL;
 using DAL.Models;
-using Microsoft.EntityFrameworkCore;
+using DAL.Repositories.Interfaces;
 using Service.DTOs;
 using Service.Interfaces;
-using System.Data.SqlClient;
-namespace Service
+
+namespace Service;
+
+public class CategoryService : ICategoryService
 {
-    public class CategoryService : ICategoryService
+    private readonly ICategoryRepo _categoryRepo;
+    private readonly IDebitRepo _debitRepo;
+
+    public CategoryService(
+        ICategoryRepo categoryRepo,
+        IDebitRepo debitRepo
+        )
     {
-        private readonly ProjectContext _projectContext;
+        _categoryRepo = categoryRepo;
+        _debitRepo = debitRepo;
+    }
 
-        public CategoryService(ProjectContext projectContext)
+    public IList<CategoryDTO> ListAllCategories()
+    {
+        var defaultCategories = _categoryRepo.GetAll();
+        var result = new List<CategoryDTO>();
+
+        if (defaultCategories != null)
         {
-            _projectContext = projectContext;
-        }
-
-        public List<CheckForCategoryDuplicatesDTO> ListAllCategories()
-        {
-            var result = (from c in _projectContext.Categories
-                          select new CheckForCategoryDuplicatesDTO()
-                          {
-                              Id = c.Id,
-                              CategoryName = c.Name,
-                              UserId = c.UserId == null ? Guid.Empty : c.User.Id,
-                          }).ToList();
-            return result;
-        }
-
-        public List<UserCategoriesDTO> GetCategoriesForUser(GetCategoriesDTO input)
-        {
-            var defaultresult = (from c in _projectContext.Categories
-                                 select new UserCategoriesDTO()
-                                 {
-                                     CategoryId = c.Id,
-                                     CategoryName = c.Name,
-                                 }).ToList();
-            var customresult = (from c in _projectContext.UserCategories
-                                where c.UserId == input.UserId
-                                select new UserCategoriesDTO()
-                                {
-                                    CategoryId = c.Id,
-                                    CategoryName = c.Name,
-                                    UserId = c.UserId
-                                }).ToList();
-
-            defaultresult.AddRange(customresult);
-
-            List<UserCategoriesDTO> CombinedList = defaultresult;
-
-            return CombinedList;
-        }
-
-        public List<UserCategoriesDTO> GetUserCreatedCategories(GetCategoriesDTO input)
-        {
-            var result = (from c in _projectContext.UserCategories
-                          where c.UserId == input.UserId
-                          select new UserCategoriesDTO()
-                          {
-                              CategoryId = c.Id,
-                              CategoryName = c.Name,
-                          }).ToList();
-            return result;
-        }
-
-        public void CreateCategory(CreateCategoryDTO input)
-        {
-            var newCategory = _projectContext.Set<UserCategories>();
-            newCategory.Add(new UserCategories
-            {
-                Id = Guid.NewGuid(),
-                Name = input.Name,
-                UserId = input.UserId
-            });
-            _projectContext.SaveChanges();
-        }
-
-        public void DeleteCategory(DeleteCategoryDTO input)
-        {
-            try
-            {
-                var result = _projectContext.UserCategories.FirstOrDefault(x => x.Id == input.CategoryId);
-                if (result == null)
+            var categoryList = defaultCategories
+                .Select(category => new CategoryDTO()
                 {
-                    throw new NullReferenceException($"No such Category found!");
-                }
-                var affectedDebits = _projectContext.Debits.Where(x => x.CategoryId == input.CategoryId).ToList();
-                foreach (var debit in affectedDebits)
-                {
-                    debit.CategoryId = null;
-                }
-                _projectContext.UserCategories.Remove(result);
-                _projectContext.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                Console.Write(ex.Message);
-                throw new Exception(ex.Message);
-            }
+                    CategoryId = category.Id,
+                    CategoryName = category.Name,
+                    UserId = category.UserId == null ? Guid.Empty : category.User.Id,
+                }).ToList();
+            result.AddRange(categoryList);
         }
 
-        public void EditCategory(EditCategoryDTO editCategory)
+        return result;
+    }
+
+    public IList<CategoryDTO> GetCategoriesForUser(GetCategoriesDTO input)
+    {
+        var categories = _categoryRepo.GetAllForUser(input.UserId);
+
+        var result = new List<CategoryDTO>();
+
+        if (categories != null)
         {
-            var category = _projectContext.UserCategories.FirstOrDefault(x => x.Id == editCategory.CategoryId);
-            if (category == null)
-            {
-                throw new NullReferenceException($"No such Category found!");
-            }
-            category.Id = editCategory.CategoryId;
-            category.Name = editCategory.CategoryName;
-            _projectContext.SaveChanges();
+            var categoryList = categories
+                .Select(category => new CategoryDTO()
+                {
+                    CategoryId = category.Id,
+                    CategoryName = category.Name,
+                    UserId = category.UserId == null ? Guid.Empty : category.User.Id,
+                }).ToList();
+            result.AddRange(categoryList);
         }
+
+        return result;
+    }
+
+    public IList<CategoryDTO> GetUserCreatedCategories(GetCategoriesDTO input)
+    {
+        var userCategories = _categoryRepo.GetUserCategories(input.UserId);
+
+        var result = new List<CategoryDTO>();
+
+        if (userCategories != null)
+        {
+            result = userCategories
+                .Select(category => new CategoryDTO()
+                {
+                    CategoryId = category.Id,
+                    CategoryName = category.Name,
+                    UserId = category.UserId
+                }).ToList();
+        }
+        return result;
+    }
+
+    public void CreateCategory(CreateCategoryDTO input)
+    {
+        _categoryRepo.Create(new Category()
+        {
+            Id = Guid.NewGuid(),
+            Name = input.Name,
+            UserId = input.UserId,
+            IsDefault = false
+        });
+    }
+
+    public void DeleteCategory(DeleteCategoryDTO input)
+    {
+        var affectedCategory = _categoryRepo.Get(input.CategoryId);
+
+        if (affectedCategory == null)
+        {
+            throw new NullReferenceException($"No such Category found!");
+        }
+
+        if (affectedCategory.IsDefault)
+        {
+            throw new AccessViolationException($"Unable to Edit Default Categories");
+        }
+
+        var affectedDebits = _debitRepo.GetAllWithCategoryId(input.CategoryId);
+
+        if (affectedDebits != null)
+        {
+            foreach (var debit in affectedDebits)
+            {
+                debit.CategoryId = null;
+                debit.Category = null;
+            }
+        }
+        _categoryRepo.DeleteWithModel(affectedCategory);
+    }
+
+    public void EditCategory(EditCategoryDTO editCategory)
+    {
+        var affectedCategory = _categoryRepo.Get(editCategory.CategoryId);
+
+        if (affectedCategory == null)
+        {
+            throw new NullReferenceException($"No such Category found!");
+        }
+
+        if (affectedCategory.IsDefault)
+        {
+            throw new AccessViolationException($"Unable to Edit Default Categories");
+        }
+
+        affectedCategory.Name = editCategory.CategoryName;
+
+        _categoryRepo.Update(affectedCategory);
     }
 }

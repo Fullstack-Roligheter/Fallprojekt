@@ -22,7 +22,7 @@ internal static class ModelBuilderExtensions
         var categoryGuidFive = new Guid("6539ea84-9f69-4c84-a66a-6131ef955749");
         var categoryGuidSix = new Guid("5d6b57f2-aa20-4956-9a01-fb06b26e4221");
         var categoryGuidSeven = new Guid("c6e05044-60e3-4759-9aa1-91e0e09c1dbf");
-        
+
         var userCategoryOne = new Guid("583aca7b-aff4-4f2d-b76b-5c74112ff699");
         var userCategoryTwo = new Guid("2d06e9df-8df0-44a3-84ca-ad8db8703188");
         var userCategoryThree = new Guid("e004e107-dfd6-4ffa-8b47-39a8d0b62df7");
@@ -31,7 +31,7 @@ internal static class ModelBuilderExtensions
         var userCategorySix = new Guid("efbf7bb5-ac81-4bf2-a5cd-3e66c2171186");
         var userCategorySeven = new Guid("1ce05fc8-29b2-4ce6-af6c-5eee53bfd3a5");
         var userCategoryEight = new Guid("c229efe0-45cd-46bb-ab96-d9de8588ea0f");
-  
+
 
         builder.Entity<User>().HasData //User tabell
         (
@@ -50,36 +50,44 @@ internal static class ModelBuilderExtensions
 
         builder.Entity<Category>().HasData //Category tabell
         (
-            new Category { Id = categoryGuidOne, Name = "Mat", },                               //Default Kategori
-            new Category { Id = categoryGuidTwo, Name = "Transport", },                         //Default Kategori
-            new Category { Id = categoryGuidThree, Name = "Nöje", },                            //Default Kategori
-            new Category { Id = categoryGuidFour, Name = "Boende", },                           //Default Kategori
-            new Category { Id = categoryGuidFive, Name = "Hushåll", },                          //Default Kategori
-            new Category { Id = categoryGuidSix, Name = "Sparande", },                          //Default Kategori
-            new Category { Id = categoryGuidSeven, Name = "Övrigt", }                           //Default Kategori
+            new Category { Id = categoryGuidOne, Name = "Mat", IsDefault = true },
+            new Category { Id = categoryGuidTwo, Name = "Transport", IsDefault = true },
+            new Category { Id = categoryGuidThree, Name = "Nöje", IsDefault = true },
+            new Category { Id = categoryGuidFour, Name = "Boende", IsDefault = true },
+            new Category { Id = categoryGuidFive, Name = "Hushåll", IsDefault = true },
+            new Category { Id = categoryGuidSix, Name = "Sparande", IsDefault = true },
+            new Category { Id = categoryGuidSeven, Name = "Övrigt", IsDefault = true },
+            new Category { Id = userCategoryOne, Name = "Leksaker", UserId = userGuidOne, IsDefault = false },          //bara adam
+            new Category { Id = userCategoryTwo, Name = "Bilar", UserId = userGuidTwo, IsDefault = false },             //bara berit
+            new Category { Id = userCategoryThree, Name = "Kryssningar", UserId = userGuidTwo, IsDefault = false },     //bara berit
+            new Category { Id = userCategoryFour, Name = "Flygresor", UserId = userGuidTwo, IsDefault = false },        //bara berit
+            new Category { Id = userCategoryFive, Name = "Husköp", UserId = userGuidTwo, IsDefault = false },           //bara berit
+            new Category { Id = userCategorySix, Name = "Papegojfoder", UserId = userGuidTwo, IsDefault = false },      //bara berit
+            new Category { Id = userCategorySeven, Name = "Hundleksaker", UserId = userGuidTwo, IsDefault = false },    //bara berit
+            new Category { Id = userCategoryEight, Name = "Hemsaker", UserId = userGuidOne, IsDefault = false }         //bara adam
 
         );
-       
-        builder.Entity<UserCategories>().HasData //Category tabell
-        (
-            new UserCategories { Id = userCategoryOne, Name = "Leksaker", UserId = userGuidOne },    //bara adam
-            new UserCategories { Id = userCategoryTwo, Name = "Bilar", UserId = userGuidTwo },        //bara berit
-            new UserCategories { Id = userCategoryThree, Name = "Kryssningar", UserId = userGuidTwo }, //bara berit
-            new UserCategories { Id = userCategoryFour, Name = "Flygresor", UserId = userGuidTwo }, //bara berit
-            new UserCategories { Id = userCategoryFive, Name = "Husköp", UserId = userGuidTwo }, //bara berit
-            new UserCategories { Id = userCategorySix, Name = "Papegojfoder", UserId = userGuidTwo }, //bara berit
-            new UserCategories { Id = userCategorySeven, Name = "Hundleksaker", UserId = userGuidTwo }, //bara berit
-            new UserCategories { Id = userCategoryEight, Name = "Hemsaker", UserId = userGuidOne }    //bara adam
-        );
+
+        //builder.Entity<UserCategory>().HasData //Category tabell
+        //(
+        //    new UserCategory { Id = userCategoryOne, Name = "Leksaker", UserId = userGuidOne },    //bara adam
+        //    new UserCategory { Id = userCategoryTwo, Name = "Bilar", UserId = userGuidTwo },        //bara berit
+        //    new UserCategory { Id = userCategoryThree, Name = "Kryssningar", UserId = userGuidTwo }, //bara berit
+        //    new UserCategory { Id = userCategoryFour, Name = "Flygresor", UserId = userGuidTwo }, //bara berit
+        //    new UserCategory { Id = userCategoryFive, Name = "Husköp", UserId = userGuidTwo }, //bara berit
+        //    new UserCategory { Id = userCategorySix, Name = "Papegojfoder", UserId = userGuidTwo }, //bara berit
+        //    new UserCategory { Id = userCategorySeven, Name = "Hundleksaker", UserId = userGuidTwo }, //bara berit
+        //    new UserCategory { Id = userCategoryEight, Name = "Hemsaker", UserId = userGuidOne }    //bara adam
+        //);
 
         builder.Entity<Debit>().HasData //Debit tabell
         (
             //adam
-            new Debit { Id = Guid.NewGuid(), Comment = "Mjukisdjur",      Amount = 150, Date = DateTime.ParseExact("2022-09-15", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidTwo, CategoryId = categoryGuidTwo },
-            new Debit { Id = Guid.NewGuid(), Comment = "Ny Soffa",   Amount = 7000, Date = DateTime.ParseExact("2022-01-17", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidOne, CategoryId = categoryGuidFive},
-            new Debit { Id = Guid.NewGuid(), Comment = "Lego", Amount = 500, Date = DateTime.ParseExact("2022-03-02", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidTwo, CategoryId = categoryGuidTwo},
-            new Debit { Id = Guid.NewGuid(), Comment = "Ny Köksbord", Amount = 850, Date = DateTime.ParseExact("2022-03-04", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidOne, CategoryId = categoryGuidFive},
-            new Debit { Id = Guid.NewGuid(), Comment = "Storhandla BBQ", Amount = 1500, Date = DateTime.ParseExact("2022-03-05", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = null, CategoryId  = categoryGuidOne},
+            new Debit { Id = Guid.NewGuid(), Comment = "Mjukisdjur", Amount = 150, Date = DateTime.ParseExact("2022-09-15", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidTwo, CategoryId = categoryGuidTwo },
+            new Debit { Id = Guid.NewGuid(), Comment = "Ny Soffa", Amount = 7000, Date = DateTime.ParseExact("2022-01-17", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidOne, CategoryId = categoryGuidFive },
+            new Debit { Id = Guid.NewGuid(), Comment = "Lego", Amount = 500, Date = DateTime.ParseExact("2022-03-02", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidTwo, CategoryId = categoryGuidTwo },
+            new Debit { Id = Guid.NewGuid(), Comment = "Ny Köksbord", Amount = 850, Date = DateTime.ParseExact("2022-03-04", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidOne, CategoryId = categoryGuidFive },
+            new Debit { Id = Guid.NewGuid(), Comment = "Storhandla BBQ", Amount = 1500, Date = DateTime.ParseExact("2022-03-05", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = null, CategoryId = categoryGuidOne },
 
             //berit
             new Debit { Id = Guid.NewGuid(), Comment = "Ny Moderkort", Amount = 2500, Date = DateTime.ParseExact("2022-03-06", "yyyy-MM-dd", null), UserId = userGuidTwo, BudgetId = budgetGuidThree, CategoryId = categoryGuidThree },

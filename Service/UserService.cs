@@ -14,29 +14,25 @@ public class UserService : IUserService
         _userRepo = userRepo;
     }
 
-    public List<UserDTO> GetAllUsers()
+    public IList<UserDTO> GetAllUsers()
     {
-        var userList = _userRepo.GetAllUsers();
+        var userList = _userRepo.GetAll();
         if (userList == null) throw new NullReferenceException("No Users Found");
 
-        var result = new List<UserDTO>();
-        foreach (var user in userList)
-        {
-            result.Add(new UserDTO()
+        return userList.Select(user => new UserDTO()
             {
                 UserId = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
                 Password = user.Password
-            });
-        }
-        return result;
+            })
+            .ToList();
     }
 
     public SuccessLoginDTO? LogIn(LoginDTO login)
     {
-        var user = _userRepo.GetUser(login.Email);
+        var user = _userRepo.GetWithEmail(login.Email);
         if (user == null) throw new NullReferenceException("No User Found");
 
         return new SuccessLoginDTO()
@@ -46,12 +42,6 @@ public class UserService : IUserService
             FirstName = user.FirstName,
             LastName = user.LastName
         };
-    }
-
-    public bool CheckEmail(RegisterDTO reg)
-    {
-        var user = _userRepo.GetUser(reg.Email);
-        return user != null;
     }
 
     public void UserRegister(RegisterDTO reg)
@@ -66,7 +56,7 @@ public class UserService : IUserService
                 Email = reg.Email,
                 Password = reg.Password
             };
-            _userRepo.CreateUser(newUser);
+            _userRepo.Create(newUser);
         }
         catch (Exception ex)
         {
@@ -76,7 +66,12 @@ public class UserService : IUserService
 
     public bool CheckUserId(Guid userId)
     {
-        var user = _userRepo.GetUser(userId);
+        var user = _userRepo.GetWithId(userId);
+        return user != null;
+    }
+    public bool CheckEmail(RegisterDTO reg)
+    {
+        var user = _userRepo.GetWithEmail(reg.Email);
         return user != null;
     }
 }

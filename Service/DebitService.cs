@@ -1,157 +1,158 @@
-using DAL;
-using Microsoft.EntityFrameworkCore;
 using Service.DTOs;
-using System.Data.SqlClient;
-using System.Threading.Tasks.Dataflow;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using DAL.Models;
-using Exception = System.Exception;
-using System.Numerics;
+using DAL.Repositories.Interfaces;
 using Service.Interfaces;
 
-namespace Service
+namespace Service;
+
+public class DebitService : IDebitService
 {
-    public class DebitService : IDebitService
+    private readonly IDebitRepo _debitRepo;
+    private readonly ICategoryRepo _categoryRepo;
+    private readonly IBudgetRepo _budgetRepo;
+
+    public DebitService(
+        IDebitRepo debitRepo, 
+        ICategoryRepo categoryRepo,
+        IBudgetRepo budgetRepo
+        )
     {
-        private ProjectContext _projectContext;
+        _debitRepo = debitRepo;
+        _categoryRepo = categoryRepo;
+        _budgetRepo = budgetRepo;
+    }
 
-        public DebitService(ProjectContext context)
+    public IList<DebitDTO> GetAll()
+    {
+        return (from d in _debitRepo.GetAll()
+                select new DebitDTO()
+                {
+                    Id = d.Id,
+                    Date = d.Date,
+                    Amount = d.Amount,
+                    Comment = d.Comment,
+                    Category = d.Category == null ? string.Empty : d.Category.Name,
+                    Budget = d.Budget == null ? string.Empty : d.Budget.Name
+                }).ToList();
+    }
+
+    public IList<DebitDTO> GetAllWithUserId(Guid userId)
+    {
+        var debits = _debitRepo.GetAllWithUserId(userId);
+
+        if (debits == null)
         {
-            _projectContext = context;
+            throw new NullReferenceException("No Debits Found");
         }
 
-        public List<DebitDTO> GetAllDebits()
-        {
-            var result = (from d in _projectContext.Debits
-                          select new DebitDTO()
-                          {
-                              Id = d.Id,
-                              Date = d.Date,
-                              Amount = d.Amount,
-                              Comment = d.Comment,
-                              Category = d.Category == null ? string.Empty : d.Category.Name,
-                              Budget = d.Budget == null ? string.Empty : d.Budget.Name,
-                              UserFirstName = d.User.FirstName,
-                          }).ToList();
-            return result;
-        }
-
-        public List<DebitDTO> GetDebitListForUser(UserIdDTO userId)
-        {
-            var result = (from d in _projectContext.Debits
-                          where d.UserId == userId.UserId
-                          select new DebitDTO()
-                          {
-                              Id = d.Id,
-                              Date = d.Date,
-                              Amount = d.Amount,
-                              Comment = d.Comment,
-                              Category = d.Category == null ? string.Empty : d.Category.Name,
-                              Budget = d.Budget == null ? string.Empty : d.Budget.Name,
-                              UserFirstName = d.User.FirstName,
-                          }).OrderByDescending(x => x.Date).ToList();
-            return result;
-        }
-
-        public void CreateDebit(CreateDebitDTO debit)
-        {
-            _projectContext.Add(new Debit
+        var result = debits
+            .Select(d => new DebitDTO()
             {
-                Id = Guid.NewGuid(),
-                UserId = debit.UserId,
+                Id = d.Id,
+                Date = d.Date,
+                Amount = d.Amount,
+                Comment = d.Comment,
+                Category = d.Category == null ? string.Empty : d.Category.Name,
+                Budget = d.Budget == null ? string.Empty : d.Budget.Name
+            }).OrderByDescending(x => x.Date).ToList();
+
+        return result;
+    }
+
+    public void CreateDebit(CreateDebitDTO debit)
+    {
+        _debitRepo.Create(new Debit
+        {
+            Id = Guid.NewGuid(),
+            UserId = debit.UserId,
+            Date = debit.Date,
+            Amount = debit.Amount,
+            Comment = debit.Comment,
+            CategoryId = debit.CategoryId,
+            BudgetId = debit.BudgetId,
+        });
+    }
+
+    public GetExpenseForSpecificBudgetOutputDTO GetDebitsForBudget(GetDebitsDTO input)
+    {
+        var debitsList = _debitRepo.GetAllWithBudgetId(input.CollectionId);
+        if (debitsList == null) throw new NullReferenceException("No Debits Found for Specified Budget");
+
+        var result = new GetExpenseForSpecificBudgetOutputDTO();
+        foreach (var debit in debitsList)
+        {
+            result.BudgetId = debit.Budget.Id;
+            result.BudgetName = debit.Budget.Name;
+            result.Debits.Add(new GEFSBODebitDTO()
+            {
+                Amount = debit.Amount,
+                CategoryId = debit.CategoryId,
+                CategoryName = debit.Category?.Name,
+                Comment = debit.Comment,
+                Date = debit.Date,
+                ExpenseId = debit.Id
+            });
+        }
+        return result;
+    }
+
+    public DebitsInCategoryDTO GetDebitsForCategory(GetDebitsDTO input)
+    {
+        var debitsList = _debitRepo.GetAllWithCategoryId(input.CollectionId);
+        var category = _categoryRepo.Get(input.CollectionId);
+
+        if (debitsList == null || category == null)
+        {
+            throw new NullReferenceException("No Debits Found for Specified Category");
+        }
+
+        var result = new DebitsInCategoryDTO
+        {
+            CategoryId = category.Id,
+            CategoryName = category.Name
+        };
+
+        foreach (var debit in debitsList)
+        {
+            result.Debits.Add(new DebitItemInCategoryListDTO()
+            {
+                DebitId = debit.Id,
                 Date = debit.Date,
                 Amount = debit.Amount,
                 Comment = debit.Comment,
-                CategoryId = debit.CategoryId,
-                BudgetId = debit.BudgetId,
             });
-            _projectContext.SaveChanges();
         }
+        return result;
+    }
 
-        public GetExpenseForSpecificBudgetOutputDTO GetDebitsForBudget(GetDebitsDTO input)
+    public void DeleteDebit(Guid debitId)
+    {
+        var target = _debitRepo.Get(debitId);
+        if (target == null)
         {
-            var budget = _projectContext.Budgets.FirstOrDefault(b => b.Id == input.CollectionId);
-            var debits = _projectContext.Debits.Where(d => d.UserId == input.UserId && d.BudgetId == input.CollectionId)
-                .ToList();
-
-            var tempList = debits.Select(item => new GEFSBODebitDTO()
-            {
-                ExpenseId = item.Id,
-                Amount = item.Amount,
-                Date = item.Date,
-                Comment = item.Comment ?? string.Empty,
-                CategoryName = item.Category?.Name ?? string.Empty,
-                CategoryId = item.CategoryId ?? Guid.Empty,
-            }).ToList();
-
-            if (budget == null) throw new NullReferenceException($"No such Budget found!");
-            var result = new GetExpenseForSpecificBudgetOutputDTO()
-            {
-                BudgetId = budget.Id,
-                BudgetName = budget.Name,
-                Debits = tempList
-            };
-            return result;
+            throw new NullReferenceException($"No Debit Found with Id: {debitId}");
         }
 
-        public DebitsInCategoryDTO GetDebitsForCategory(GetDebitsDTO input)
+        _debitRepo.DeleteWithModel(target);
+    }
+
+    public void EditDebit(EditDebitDTO editDebit)
+    {
+        var affectedDebit = _debitRepo.Get(editDebit.DebitId);
+
+        if (affectedDebit == null)
         {
-            var category = _projectContext.Categories.FirstOrDefault(b => b.Id == input.CollectionId);
-            var debits = _projectContext.Debits.Where(d => d.UserId == input.UserId && d.CategoryId == input.CollectionId).ToList();
-
-            var tempList = debits.Select(item => new DebitItemInCategoryListDTO()
-            {
-                DebitId = item.Id,
-                Amount = item.Amount,
-                Date = item.Date,
-                Comment = item.Comment ?? string.Empty,
-            }).ToList();
-
-            var result = new DebitsInCategoryDTO()
-            {
-                CategoryId = category.Id,
-                CategoryName = category.Name,
-                Debits = tempList
-            };
-            return result;
+            throw new NullReferenceException($"No Debit Found with Id: {editDebit.DebitId}");
         }
 
-        public void DeleteDebit(Guid debitId)
-        {
-            try
-            {
-                var result = _projectContext.Debits.FirstOrDefault(x => x.Id == debitId);
+        affectedDebit.Id = editDebit.DebitId;
+        affectedDebit.UserId = editDebit.UserId;
+        affectedDebit.Date = editDebit.Date;
+        affectedDebit.Amount = editDebit.Amount;
+        affectedDebit.Comment = editDebit.Comment;
+        affectedDebit.CategoryId = editDebit.CategoryId;
+        affectedDebit.BudgetId = editDebit.BudgetId;
 
-                if (result != null)
-                {
-                    _projectContext.Debits.Remove(result);
-                    _projectContext.SaveChanges();
-                }
-                else { throw new NullReferenceException($"No such debit found!"); }
-            }
-            catch (Exception ex)
-            {
-                Console.Write(ex.Message);
-                throw new Exception(ex.Message);
-            }
-        }
-
-        public void EditDebit(EditDebitDTO editDebit)
-        {
-            var debit = _projectContext.Debits.FirstOrDefault(x => x.Id == editDebit.DebitId);
-            if (debit == null)
-            {
-                throw new NullReferenceException($"No Plan!");
-            }
-            debit.Id = editDebit.DebitId;
-            debit.UserId = editDebit.UserId;
-            debit.Date = editDebit.Date;
-            debit.Amount = editDebit.Amount;
-            debit.Comment = editDebit.Comment;
-            debit.CategoryId = editDebit.CategoryId;
-            debit.BudgetId = editDebit.BudgetId;
-            _projectContext.SaveChanges();
-        }
+        _debitRepo.UpdateWithModel(affectedDebit);
     }
 }

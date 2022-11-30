@@ -11,9 +11,15 @@ builder.Services.AddScoped<ISavingPlanService,SavingPlanService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IDebitService, DebitService>();
-builder.Services.AddScoped<ProjectContext>();
 
+builder.Services.AddScoped<IBudgetRepo, BudgetRepo>();
+builder.Services.AddScoped<ICategoryRepo, CategoryRepo>();
+builder.Services.AddScoped<IDebitRepo, DebitRepo>();
+builder.Services.AddScoped<ISavingPlanRepo, SavingPlanRepo>();
+//builder.Services.AddScoped<IUserCategoryRepo, UserCategoryRepo>();
 builder.Services.AddScoped<IUserRepo, UserRepo>();
+
+builder.Services.AddScoped<ProjectContext>();
 
 // Add services to the container.
 

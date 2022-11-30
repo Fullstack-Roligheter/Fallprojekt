@@ -1,90 +1,82 @@
 ﻿using DAL;
 using DAL.Models;
+using DAL.Repositories.Interfaces;
 using Service.DTOs;
 using Service.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Service
+namespace Service;
+
+public class SavingPlanService : ISavingPlanService
 {
-    public class SavingPlanService: ISavingPlanService
+    private readonly ISavingPlanRepo _savingPlanRepo;
+    private readonly IUserRepo _userRepo;
+
+    public SavingPlanService(ISavingPlanRepo savingPlanRepo, IUserRepo userRepo)
     {
-        private readonly ProjectContext _projectContext;
-        public SavingPlanService(ProjectContext context)
+        _savingPlanRepo = savingPlanRepo;
+        _userRepo = userRepo;
+    }
+
+
+    public void CreateSavingPlan(SavingPlanDTO newPlan)
+    {
+        var userId = newPlan.UserId;
+        FindUser(userId);
+
+        _savingPlanRepo.Create(new SavingPlan
         {
-            _projectContext = context;
+            UserId = newPlan.UserId,
+            Name = newPlan.Name,
+            Amount = newPlan.Amount,
+            StartDate = DateTime.Parse(newPlan.StartDate),
+            EndDate = DateTime.Parse(newPlan.EndDate)
+        });
+    }
+
+    public IList<GetSavingPlanDTO> GetPlans(Guid userId)
+    {
+        FindUser(userId);
+
+        var savingPlans = _savingPlanRepo.GetAll(userId);
+        if (savingPlans == null)
+        {
+            throw new NullReferenceException("No Saving Plans Found");
         }
 
-
-        public void CreateSavingPlan(SavingPlanDTO saving)
-        {
-            var data = _projectContext.Users
-                .FirstOrDefault(x => x.Id == saving.UserId);
-            if (data == null)
+        return savingPlans.Select(plan => new GetSavingPlanDTO()
             {
-                throw new Exception("user not found!");
-            }
-            _projectContext.Add(
-                new SavingPlan
-                {
-                    UserId = saving.UserId,
-                    Name = saving.Name,
-                    Amount = saving.Amount,
-                    StartDate = DateTime.Parse(saving.StartDate),
-                    EndDate = DateTime.Parse(saving.EndDate)
-                });
-            _projectContext.SaveChanges();
-        }
+                SavingId = plan.Id,
+                Name = plan.Name,
+                Amount = plan.Amount,
+                PlanStartDate = plan.StartDate.ToString("yyyy-MM-dd"),
+                PlanEndDate = plan.EndDate.ToString("yyyy-MM-dd"),
+            })
+            .ToList();
+    }
 
-        public List<GetSavingPlanDTO> ListAllPlan(UserIdDTO user)
+    public void UpdatePlan(EditSavingPlanDTO editPlan)
+    {
+        var affectedPlan = _savingPlanRepo.Get(editPlan.SavingId);
+        affectedPlan.Name = editPlan.Name;
+        affectedPlan.Amount = editPlan.Amount;
+        affectedPlan.StartDate = DateTime.Parse(editPlan.StartDate);
+        affectedPlan.EndDate = DateTime.Parse(editPlan.EndDate);
+
+        _savingPlanRepo.Update(affectedPlan);
+    }
+
+    public void DeletePlan(Guid planId)
+    {
+        _savingPlanRepo.Delete(planId);
+    }
+
+    private User FindUser(Guid userId)
+    {
+        var user = _userRepo.GetWithId(userId);
+        if (user == null)
         {
-            var data = _projectContext.Users.Any(x => x.Id == user.UserId);
-            if (!data)
-            {
-                throw new Exception("User not found!");
-            }
-
-            return _projectContext.Savingplans.Where(x => x.UserId == user.UserId)
-                .Select(s => new GetSavingPlanDTO
-                {
-                    SavingId = s.Id,
-                    Name = s.Name,
-                    Amount = s.Amount,
-                    PlanStartDate = s.StartDate.ToString("yyyy-MM-dd"),
-                    PlanEndDate = s.EndDate.ToString("yyyy-MM-dd"),
-                   
-                })
-                .ToList();
+            throw new NullReferenceException("No User Found");
         }
-
-        public void UpdatePlan(EditSavingPlanDTO editPlan)
-        {
-            var plan = _projectContext.Savingplans.FirstOrDefault(x => x.Id == editPlan.SavingId);
-            if (plan == null)
-            {
-                throw new NullReferenceException($"No Plan!");
-            }
-            plan.Name = editPlan.Name;
-            plan.Amount = editPlan.Amount;
-            plan.StartDate = DateTime.Parse(editPlan.StartDate);
-            plan.EndDate = DateTime.Parse(editPlan.EndDate);
-            _projectContext.SaveChanges();
-        }
-
-        public void DeletePlan(Guid id)
-        {
-            var plan = _projectContext.Savingplans.FirstOrDefault(x => x.Id == id);
-            if (plan == null)
-            {
-                throw new NullReferenceException($"No Plan!");
-            }
-            _projectContext.Remove(plan);
-            _projectContext.SaveChanges();
-        }
-
-       
+        return user;
     }
 }
