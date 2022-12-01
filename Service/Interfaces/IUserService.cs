@@ -1,23 +1,17 @@
 ﻿using Service.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Service.Interfaces
+namespace Service.Interfaces;
+
+public interface IUserService
 {
-    public interface IUserService
-    {
-        List<UserDTO> GetAllUsers();
+    IList<UserDTO> GetAllUsers();
 
-        SuccessLoginDTO? LogIn(LoginDTO login);
+    SuccessLoginDTO? LogIn(LoginDTO login);
 
-        bool CheckEmail(RegisterDTO reg);
+    bool CheckEmail(RegisterDTO reg);
 
-        void UserRegister(RegisterDTO reg);
+    void UserRegister(RegisterDTO reg);
 
-        bool CheckUserId(Guid userId);
+    bool CheckUserId(Guid userId);
 
-    }
 }

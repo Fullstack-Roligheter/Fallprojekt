@@ -8,5 +8,4 @@ public class DebitDTO
     public string? Comment { get; set; }
     public string? Category { get; set; }
     public string? Budget { get; set; }
-    public string? UserFirstName { get; set; }
 }

@@ -1,91 +1,70 @@
 using DAL;
-using DAL.Migrations;
-using DAL.Models;
-using Microsoft.EntityFrameworkCore;
+using DAL.Repositories.Interfaces;
 using Service.DTOs;
 using Service.Interfaces;
-using System.Data.SqlClient;
-namespace Service
+
+namespace Service;
+
+public class BudgetService : IBudgetService
 {
-    public class BudgetService : IBudgetService
+    private readonly IBudgetRepo _budgetRepo;
+    private readonly IUserRepo _userRepo;
+
+    public BudgetService(IBudgetRepo budgetRepo, IUserRepo userRepo)
     {
-        private readonly ProjectContext _projectContext;
+        _budgetRepo = budgetRepo;
+        _userRepo = userRepo;
+    }
 
-        public BudgetService(ProjectContext projectContext)
-        {
-            _projectContext = projectContext;
-        }
-
-        public List<BudgetNameDTO> GetBudgetsForUser(UserIdDTO user)
-        {
-            var budgetList = (from u in _projectContext.Users
-                              join b in _projectContext.Budgets on u.Id equals b.UserId
-                              where u.Id == user.UserId
-                              select new BudgetNameDTO
-                              {
-                                  BudgetName = b.Name,
-                                  BudgetId = b.Id
-                              }).ToList();
-
-            return budgetList;
-        }
-
-        public void CreateBudget(CreateBudgetDTO budget)
-        {
-            _projectContext.Add(new Budget
+    public IList<BudgetNameDTO>? GetBudgetsForUser(Guid userId)
+    {
+        var userBudgets = _budgetRepo.GetAll(userId);
+        if (userBudgets == null) throw new NullReferenceException();
+        var result = userBudgets
+            .Select(budget => new BudgetNameDTO()
             {
-                Id = Guid.NewGuid(),
-                Name = budget.Name,
-                StartDate = budget.StartDate,
-                EndDate = budget.EndDate,
-                Amount = budget.Amount,
-                Comment = budget.Comment,
-                UserId = budget.UserId
-            });
-            _projectContext.SaveChanges();
-        }
+                BudgetId = budget.Id,
+                BudgetName = budget.Name
+            }).ToList();
 
-        public void DeleteBudget(DeleteBudgetDTO input)
+        return result;
+    }
+
+    public void CreateBudget(CreateBudgetDTO budget)
+    {
+        _budgetRepo.Create(new Budget()
         {
-            try
-            {
-                var result = _projectContext.Budgets.FirstOrDefault(b => b.Id == input.BudgetId);
-                if (result == null) throw new NullReferenceException($"No such budget found!");
+            Id = Guid.NewGuid(),
+            Name = budget.Name,
+            StartDate = budget.StartDate,
+            EndDate = budget.EndDate,
+            Amount = budget.Amount,
+            Comment = budget.Comment,
+            UserId = budget.UserId
+        });
+    }
 
-                var affectedDebits = _projectContext.Debits.Where(x => x.BudgetId == input.BudgetId).ToList();
-                foreach (var debit in affectedDebits)
-                {
-                    debit.BudgetId = null;
-                }
-                _projectContext.Budgets.Remove(result);
-                _projectContext.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                Console.Write(ex.Message);
-                throw new Exception(ex.Message);
-            }
-        }
+    public void DeleteBudget(DeleteBudgetDTO input)
+    {
+        _budgetRepo.Delete(input.BudgetId);
+    }
 
-        public void EditBudget(EditBudgetDTO editBudget)
+    public void EditBudget(EditBudgetDTO editBudget)
+    {
+        _budgetRepo.Update(new Budget()
         {
-            var budget = _projectContext.Budgets.FirstOrDefault(x => x.Id == editBudget.BudgetId);
-            if (budget == null)
-            {
-                throw new NullReferenceException($"No Budget!");
-            }
-            budget.Id = budget.Id;
-            budget.Name = editBudget.Name;
-            budget.StartDate = editBudget.StartDate;
-            budget.EndDate = editBudget.EndDate;
-            budget.Amount = editBudget.Amount;
-            budget.Comment = editBudget.Comment;
-            _projectContext.SaveChanges();
-        }
+            Id = editBudget.BudgetId,
+            Name = editBudget.Name,
+            StartDate = editBudget.StartDate,
+            EndDate = editBudget.EndDate,
+            Amount = editBudget.Amount,
+            Comment = editBudget.Comment
+        });
+    }
 
-        public bool BudgetIdValidation(Guid budgetId)
-        {
-            return _projectContext.Budgets.Any(b => b.Id == budgetId);
-        }
+    public bool BudgetIdValidation(Guid budgetId)
+    {
+        var check = _budgetRepo.Get(budgetId);
+        return check != null;
     }
 }

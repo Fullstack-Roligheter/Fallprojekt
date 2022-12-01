@@ -1,15 +1,14 @@
 ﻿using Service.DTOs;
 
-namespace Service.Interfaces
+namespace Service.Interfaces;
+
+public interface IDebitService
 {
-    public interface IDebitService
-    {
-        void CreateDebit(CreateDebitDTO debit);
-        void DeleteDebit(Guid debitId);
-        void EditDebit(EditDebitDTO editDebit);
-        List<DebitDTO> GetAllDebits();
-        List<DebitDTO> GetDebitListForUser(UserIdDTO userId);
-        GetExpenseForSpecificBudgetOutputDTO GetDebitsForBudget(GetDebitsDTO input);
-        DebitsInCategoryDTO GetDebitsForCategory(GetDebitsDTO input);
-    }
+    void CreateDebit(CreateDebitDTO debit);
+    void DeleteDebit(Guid debitId);
+    void EditDebit(EditDebitDTO editDebit);
+    IList<DebitDTO> GetAll();
+    IList<DebitDTO> GetAllWithUserId(Guid userId);
+    GetExpenseForSpecificBudgetOutputDTO GetDebitsForBudget(GetDebitsDTO input);
+    DebitsInCategoryDTO GetDebitsForCategory(GetDebitsDTO input);
 }

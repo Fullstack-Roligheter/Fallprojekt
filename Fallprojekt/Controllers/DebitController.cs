@@ -1,119 +1,114 @@
-﻿using Castle.Core.Internal;
-using DAL;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Service;
+﻿using Microsoft.AspNetCore.Mvc;
 using Service.DTOs;
 using Service.Interfaces;
 
-namespace Fallprojekt.Controllers
+namespace Fallprojekt.Controllers;
+
+[Route("api/debit")]
+[ApiController]
+public class DebitController : ControllerBase
 {
-    [Route("api/debit")]
-    [ApiController]
-    public class DebitController : ControllerBase
+    private readonly IUserService _userService;
+    private readonly IDebitService _debitService;
+
+    public DebitController(IUserService userService, IDebitService debitService)
     {
-        private readonly IUserService _userService;
-        private readonly IDebitService _debitService;
+        _userService = userService;
+        _debitService = debitService;
+    }
 
-        public DebitController(IUserService userService, IDebitService debitService)
+    [HttpGet("GetDebitListForUser")]
+    public IActionResult GetExpensesListForUser([FromQuery]UserIdDTO input)
+    {
+        try
         {
-            _userService = userService;
-            _debitService = debitService;
+            var result = _debitService.GetAllWithUserId(input.UserId);
+            return Ok(result);
         }
-
-        [HttpGet("GetDebitListForUser")]
-        public IActionResult GetExpensesListForUser([FromQuery]UserIdDTO input)
+        catch (Exception ex)
         {
-            try
-            {
-                var result = _debitService.GetDebitListForUser(input);
-                return result.IsNullOrEmpty() ? StatusCode(404, "UserId not found") : Ok(result);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500);
-            }
+            Console.WriteLine(ex.Message);
+            return StatusCode(500);
         }
+    }
 
-        [HttpPost("CreateDebit")]
-        public IActionResult CreateDebit(CreateDebitDTO createDebit)
+    [HttpPost("CreateDebit")]
+    public IActionResult CreateDebit(CreateDebitDTO createDebit)
+    {
+        try
         {
-            try
-            {
-                _debitService.CreateDebit(createDebit);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500);
-            }
+            _debitService.CreateDebit(createDebit);
+            return Ok();
         }
-
-        [HttpGet("GetDebitsForBudget")]
-        public IActionResult GetDebitsForBudget([FromQuery]GetDebitsDTO input)
+        catch (Exception ex)
         {
-            try
-            {
-                var result = _debitService.GetDebitsForBudget(input);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                return StatusCode(500);
-            }
+            Console.WriteLine(ex.Message);
+            return StatusCode(500);
         }
+    }
 
-        [HttpDelete("DeleteDebit")]
-        public IActionResult DeleteDebit(Guid userId, Guid debitId)
+    [HttpGet("GetDebitsForBudget")]
+    public IActionResult GetDebitsForBudget([FromQuery]GetDebitsDTO input)
+    {
+        try
         {
-            try
-            {
-                var result = _userService.CheckUserId(userId);
-                if (!result) return NotFound("User not found");
-                _debitService.DeleteDebit(debitId);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500);
-            }
+            var result = _debitService.GetDebitsForBudget(input);
+            return Ok(result);
         }
-
-        [HttpGet("GetDebitsForCategory")]
-        public IActionResult GetDebitsForCategory([FromQuery]GetDebitsDTO input)
+        catch (Exception ex)
         {
-            try
-            {
-                var result = _userService.CheckUserId(input.UserId);
-                if (!result) return NotFound("User not found");
-                return Ok(_debitService.GetDebitsForCategory(input));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                return StatusCode(500);
-            }
+            Console.WriteLine(ex);
+            return StatusCode(500);
         }
+    }
 
-        [HttpPut("EditDebit")]
-        public IActionResult EditDebit(EditDebitDTO input)
+    [HttpDelete("DeleteDebit")]
+    public IActionResult DeleteDebit(Guid userId, Guid debitId)
+    {
+        try
         {
-            try
-            {
-                var result = _userService.CheckUserId(input.UserId);
-                if (!result) return NotFound("User not found");
-                _debitService.EditDebit(input);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                return StatusCode(500);
-            }
+            var result = _userService.CheckUserId(userId);
+            if (!result) return NotFound("User not found");
+            _debitService.DeleteDebit(debitId);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return StatusCode(500);
+        }
+    }
+
+    [HttpGet("GetDebitsForCategory")]
+    public IActionResult GetDebitsForCategory([FromQuery]GetDebitsDTO input)
+    {
+        try
+        {
+            var result = _userService.CheckUserId(input.UserId);
+            if (!result) return NotFound("User not found");
+            return Ok(_debitService.GetDebitsForCategory(input));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return StatusCode(500);
+        }
+    }
+
+    [HttpPut("EditDebit")]
+    public IActionResult EditDebit(EditDebitDTO input)
+    {
+        try
+        {
+            var result = _userService.CheckUserId(input.UserId);
+            if (!result) return NotFound("User not found");
+            _debitService.EditDebit(input);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return StatusCode(500);
         }
     }
 }
