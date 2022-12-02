@@ -23,11 +23,11 @@ public class DebugController : ControllerBase
 
 
     [HttpGet("GetAllUsers")]
-    public IActionResult GetAllUsers()
+    public async Task<IActionResult> GetAllUsers()
     {
         try
         {
-            return Ok(_userService.GetAllUsers());
+            return Ok(await _userService.GetAllUsers());
         }
         catch (Exception ex)
         {

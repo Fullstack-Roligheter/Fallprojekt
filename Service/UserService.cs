@@ -17,26 +17,26 @@ public class UserService : IUserService
         _logger = logger;
     }
 
-    public IList<UserDTO> GetAllUsers()
+    public async Task<IList<UserDTO>> GetAllUsers()
     {
         try
         {
-            var userList = _userRepo.GetAll();
+            var userList = await _userRepo.GetAll();
             if (userList == null)
             {
                 throw new NullReferenceException("No Users Found");
             }
             var result = userList.Select(user => new UserDTO()
-                {
-                    UserId = user.Id,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Email = user.Email,
-                    Password = user.Password
-                })
+            {
+                UserId = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Password = user.Password
+            })
                    .ToList();
 
-                return result;
+            return result;
         }
         catch (Exception)
         {
@@ -44,12 +44,20 @@ public class UserService : IUserService
         }
     }
 
-    public SuccessLoginDTO? LogIn(LoginDTO login)
+    public async Task<SuccessLoginDTO?> LogIn(LoginDTO login)
     {
         try
         {
-            var user = _userRepo.GetWithEmail(login.Email);
-            if (user == null) throw new NullReferenceException("No User Found");
+            if (login.Password == "" || login.Email == "")
+            {
+                throw new ArgumentException("Invalid Credentials");
+            }
+
+            var user = await _userRepo.GetWithEmailAndPassword(login.Email, login.Password);
+            if (user == null)
+            {
+                throw new NullReferenceException("Username / Password Mismatch");
+            }
 
             return new SuccessLoginDTO()
             {
@@ -59,13 +67,13 @@ public class UserService : IUserService
                 LastName = user.LastName
             };
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             throw;
         }
     }
 
-    public void UserRegister(RegisterDTO reg)
+    public async Task UserRegister(RegisterDTO reg)
     {
         try
         {
@@ -77,7 +85,7 @@ public class UserService : IUserService
                 Email = reg.Email,
                 Password = reg.Password
             };
-            _userRepo.Create(newUser);
+            await _userRepo.Create(newUser);
         }
         catch (Exception ex)
         {
@@ -85,34 +93,99 @@ public class UserService : IUserService
         }
     }
 
-    public void UpdateUserInfo(UserDTO user)
+    public async Task UpdateUserInfo(User user, UserDTO userInfo)
     {
         try
         {
-            var newUser = new User()
+            if (userInfo.FirstName == "" || userInfo.LastName == "" || userInfo.Email == "" || userInfo.Password == "")
             {
-                Id = Guid.NewGuid(),
-                FirstName = user.FirstName.ToLower(),
-                LastName = user.LastName.ToLower(),
-                Email = user.Email,
-                Password = user.Password
-            };
-            _userRepo.Update(newUser);
+                throw new ArgumentException($"Invalid Arguments passed to UpdateUserInfo");
+            }
+
+            user.FirstName = userInfo.FirstName;
+            user.LastName = userInfo.LastName;
+            user.Email = userInfo.Email;
+            user.Password = userInfo.Password;
+
+            await _userRepo.Update(user);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             throw;
         }
     }
 
-    public bool CheckUserId(Guid userId)
+    public async Task DeleteUser(User user)
     {
-        var user = _userRepo.GetWithId(userId);
-        return user != null;
+        try
+        {
+            if (user == null)
+            {
+                throw new ArgumentException($"Invalid User Argument");
+            }
+
+            await _userRepo.DeleteWithModel(user);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
-    public bool CheckEmail(RegisterDTO reg)
+
+    public async Task<bool> CheckUserId(Guid userId)
     {
-        var user = _userRepo.GetWithEmail(reg.Email);
-        return user != null;
+        try
+        {
+            var user = await _userRepo.GetWithId(userId);
+            return user != null;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public async Task<bool> CheckEmail(RegisterDTO reg)
+    {
+        try
+        {
+            var user = await _userRepo.GetWithEmail(reg.Email);
+            return user != null;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public async Task<User?> GetUserWithIdAndEmailAndPassword(Guid id, string email, string password)
+    {
+        try
+        {
+            if (email == "" || password == "")
+            {
+                throw new ArgumentException("Invalid Credentials passed as Argument");
+            }
+
+            var user = await _userRepo.GetWithIdAndEmailAndPassword(id, email, password);
+            return user;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public async Task<User?> GetUserWithId(Guid userId)
+    {
+        try
+        {
+            var user = await _userRepo.GetWithId(userId);
+            return user;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 }

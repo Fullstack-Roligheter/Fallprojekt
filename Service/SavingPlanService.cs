@@ -70,9 +70,9 @@ public class SavingPlanService : ISavingPlanService
         _savingPlanRepo.Delete(planId);
     }
 
-    private User FindUser(Guid userId)
+    private async Task<User> FindUser(Guid userId)
     {
-        var user = _userRepo.GetWithId(userId);
+        var user = await _userRepo.GetWithId(userId);
         if (user == null)
         {
             throw new NullReferenceException("No User Found");

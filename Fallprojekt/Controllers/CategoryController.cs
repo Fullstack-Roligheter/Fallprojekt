@@ -17,11 +17,11 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost("CreateCategory")]
-    public IActionResult AddCategory(CreateCategoryDTO input)
+    public async Task<IActionResult> AddCategory(CreateCategoryDTO input)
     {
         try
         {
-            if (!_userService.CheckUserId(input.UserId))
+            if (! await _userService.CheckUserId(input.UserId))
             {
                 return StatusCode(404);
             }
@@ -36,11 +36,11 @@ public class CategoryController : ControllerBase
     }
 
     [HttpDelete("DeleteCategory")]
-    public IActionResult DeleteCategory([FromQuery]DeleteCategoryDTO input)
+    public async Task<IActionResult> DeleteCategory([FromQuery]DeleteCategoryDTO input)
     {
         try
         {
-            if (!_userService.CheckUserId(input.UserId))
+            if (! await _userService.CheckUserId(input.UserId))
             {
                 return StatusCode(404);
             }
@@ -55,11 +55,11 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet("GetCategoriesForUser")]
-    public IActionResult GetCategoriesForUser([FromQuery]GetCategoriesDTO input)
+    public async Task<IActionResult> GetCategoriesForUser([FromQuery]GetCategoriesDTO input)
     {
         try
         {
-            if (!_userService.CheckUserId(input.UserId))
+            if (! await _userService.CheckUserId(input.UserId))
             {
                 return StatusCode(404);
             }
@@ -74,11 +74,11 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet("GetUserCreatedCategories")]
-    public IActionResult GetUserCreatedCategories([FromQuery] GetCategoriesDTO input)
+    public async Task<IActionResult> GetUserCreatedCategories([FromQuery] GetCategoriesDTO input)
     {
         try
         {
-            if (!_userService.CheckUserId(input.UserId))
+            if (! await _userService.CheckUserId(input.UserId))
             {
                 return StatusCode(404);
             }
@@ -93,12 +93,11 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPut("EditCategory")]
-    public IActionResult EditDebit(EditCategoryDTO input)
+    public async Task<IActionResult> EditDebit(EditCategoryDTO input)
     {
         try
         {
-            var result = _userService.CheckUserId(input.UserId);
-            if (!result)
+            if (! await _userService.CheckUserId(input.UserId))
             {
                 return NotFound("User not found");
             }
