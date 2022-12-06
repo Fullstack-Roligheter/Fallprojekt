@@ -86,7 +86,16 @@ public class UserController : ControllerBase
             }
 
             await _userService.UpdateUserInfo(user, userInfo);
-            return Ok();
+
+            var returnUser = new SuccessLoginDTO()
+            {
+                UserId = userInfo.UserId,
+                FirstName = userInfo.FirstName,
+                LastName = userInfo.LastName,
+                Email = userInfo.Email
+            };
+
+            return Ok(returnUser);
         }
         catch (Exception ex)
         {
@@ -116,6 +125,7 @@ public class UserController : ControllerBase
             }
 
             await _userService.DeleteUser(user);
+
             return Ok();
         }
         catch (Exception ex)
