@@ -105,7 +105,7 @@ public class UserController : ControllerBase
     }
 
     [HttpDelete("UserDelete")]
-    public async Task<IActionResult> DeleteUser(LoginDTO userInfo)
+    public async Task<IActionResult> DeleteUser([FromQuery]LoginDTO userInfo)
     {
         try
         {
