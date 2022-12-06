@@ -54,18 +54,19 @@ public class UserService : IUserService
             }
 
             var user = await _userRepo.GetWithEmailAndPassword(login.Email, login.Password);
-            if (user == null)
+            if (user != null)
             {
-                throw new NullReferenceException("Username / Password Mismatch");
+                return new SuccessLoginDTO()
+                {
+                    UserId = user.Id,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName
+                };
             }
+            _logger.LogWarning("Error Caught in UserService/LogIn: Null return ");
+            return null;
 
-            return new SuccessLoginDTO()
-            {
-                UserId = user.Id,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName
-            };
         }
         catch (Exception)
         {
@@ -164,7 +165,8 @@ public class UserService : IUserService
         {
             if (email == "" || password == "")
             {
-                throw new ArgumentException("Invalid Credentials passed as Argument");
+                _logger.LogWarning("Error caught in UserService/GetUserWithIdAndEmailAndPassword: Null return");
+                return null;
             }
 
             var user = await _userRepo.GetWithIdAndEmailAndPassword(id, email, password);
