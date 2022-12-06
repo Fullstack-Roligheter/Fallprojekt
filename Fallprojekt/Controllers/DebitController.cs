@@ -18,7 +18,7 @@ public class DebitController : ControllerBase
     }
 
     [HttpGet("GetDebitListForUser")]
-    public IActionResult GetExpensesListForUser([FromQuery]UserIdDTO input)
+    public async Task<IActionResult> GetExpensesListForUser([FromQuery]UserIdDTO input)
     {
         try
         {
@@ -33,7 +33,7 @@ public class DebitController : ControllerBase
     }
 
     [HttpPost("CreateDebit")]
-    public IActionResult CreateDebit(CreateDebitDTO createDebit)
+    public async Task<IActionResult> CreateDebit(CreateDebitDTO createDebit)
     {
         try
         {
@@ -48,7 +48,7 @@ public class DebitController : ControllerBase
     }
 
     [HttpGet("GetDebitsForBudget")]
-    public IActionResult GetDebitsForBudget([FromQuery]GetDebitsDTO input)
+    public async Task<IActionResult> GetDebitsForBudget([FromQuery]GetDebitsDTO input)
     {
         try
         {
@@ -63,12 +63,14 @@ public class DebitController : ControllerBase
     }
 
     [HttpDelete("DeleteDebit")]
-    public IActionResult DeleteDebit(Guid userId, Guid debitId)
+    public async Task<IActionResult> DeleteDebit(Guid userId, Guid debitId)
     {
         try
         {
-            var result = _userService.CheckUserId(userId);
-            if (!result) return NotFound("User not found");
+            if (! await _userService.CheckUserId(userId))
+            {
+                return NotFound("User not found");
+            }
             _debitService.DeleteDebit(debitId);
             return Ok();
         }
@@ -80,12 +82,14 @@ public class DebitController : ControllerBase
     }
 
     [HttpGet("GetDebitsForCategory")]
-    public IActionResult GetDebitsForCategory([FromQuery]GetDebitsDTO input)
+    public async Task<IActionResult> GetDebitsForCategory([FromQuery]GetDebitsDTO input)
     {
         try
         {
-            var result = _userService.CheckUserId(input.UserId);
-            if (!result) return NotFound("User not found");
+            if (! await _userService.CheckUserId(input.UserId))
+            {
+                return NotFound("User not found");
+            }
             return Ok(_debitService.GetDebitsForCategory(input));
         }
         catch (Exception ex)
@@ -96,12 +100,14 @@ public class DebitController : ControllerBase
     }
 
     [HttpPut("EditDebit")]
-    public IActionResult EditDebit(EditDebitDTO input)
+    public async Task<IActionResult> EditDebit(EditDebitDTO input)
     {
         try
         {
-            var result = _userService.CheckUserId(input.UserId);
-            if (!result) return NotFound("User not found");
+            if (! await _userService.CheckUserId(input.UserId))
+            {
+                return NotFound("User not found");
+            }
             _debitService.EditDebit(input);
             return Ok();
         }

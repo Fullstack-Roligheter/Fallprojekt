@@ -11,42 +11,111 @@ public class UserRepo : IUserRepo
         _projectContext = projectContext;
     }
 
-    public IList<User> GetAll()
+    public Task<List<User>> GetAll()
     {
-        return _projectContext.Users.ToList();
+        try
+        {
+            var result = _projectContext.Users.ToList();
+            return Task.FromResult(result);
+        }
+        catch(Exception)
+        {
+            throw;
+        }
     }
 
-    public User? GetWithId(Guid modelId)
+    public Task<User?> GetWithId(Guid modelId)
     {
-        return _projectContext.Users.FirstOrDefault(u => u.Id == modelId);
+        try
+        {
+            var result = _projectContext.Users.FirstOrDefault(u => u.Id == modelId);
+            return Task.FromResult(result);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
-    public void Create(User model)
+    public Task Create(User model)
     {
-        _projectContext.Users.Add(model);
-        _projectContext.SaveChanges();
+        try
+        {
+            _projectContext.Users.Add(model);
+            _projectContext.SaveChanges();
+            return Task.CompletedTask;
+        }
+        catch(Exception)
+        {
+            throw;
+        }
     }
 
-    public void Delete(Guid modelId)
+    public Task DeleteWithModel(User model)
     {
-        var model = _projectContext.Users.FirstOrDefault(d => d.Id == modelId);
-        if (model == null) return;
-
-        _projectContext.Users.Remove(model);
-        _projectContext.SaveChanges();
+        try
+        {
+            _projectContext.Users.Remove(model);
+            _projectContext.SaveChanges();
+            return Task.CompletedTask;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
-    public void Update(User model)
+    public Task<User?> GetWithEmailAndPassword(string email, string password)
     {
-        var affectedUser = _projectContext.Users.FirstOrDefault(d => d.Id == model.Id);
-        if (affectedUser == null) return;
-
-        _projectContext.Users.Update(model);
-        _projectContext.SaveChanges();
+        try
+        {
+            var user = _projectContext.Users.FirstOrDefault(u => u.Email == email && u.Password == password);
+            return Task.FromResult(user);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
-    public User? GetWithEmail(string email)
+    public Task<User?> GetWithIdAndEmailAndPassword(Guid id, string email, string password)
     {
-        return _projectContext.Users.FirstOrDefault(u => u.Email == email);
+        try
+        {
+            var result =
+                _projectContext.Users.FirstOrDefault(u => u.Id == id && u.Email == email && u.Password == password);
+            return Task.FromResult(result);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public Task Update(User model)
+    {
+        try
+        {
+            _projectContext.Users.Update(model);
+            _projectContext.SaveChanges();
+            return Task.CompletedTask;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public Task<User?> GetWithEmail(string email)
+    {
+        try
+        {
+            var result = _projectContext.Users.FirstOrDefault(u => u.Email == email);
+            return Task.FromResult(result);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 }

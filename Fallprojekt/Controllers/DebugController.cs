@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Castle.Core.Internal;
 using Service.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace Fallprojekt.Controllers;
 
@@ -11,18 +12,28 @@ public class DebugController : ControllerBase
     private readonly ICategoryService _categoryService;
     private readonly IUserService _userService;
     private readonly IDebitService _debitService;
-    public DebugController(ICategoryService categoryService, IUserService userService, IDebitService debitService)
+    private readonly ILogger<DebugController> _logger;
+    public DebugController(ICategoryService categoryService, IUserService userService, IDebitService debitService, ILogger<DebugController> logger)
     {
         _categoryService = categoryService;
         _userService = userService;
         _debitService = debitService;
+        _logger = logger;
     }
 
 
     [HttpGet("GetAllUsers")]
-    public IActionResult GetAllUsers()
+    public async Task<IActionResult> GetAllUsers()
     {
-        return Ok(_userService.GetAllUsers());
+        try
+        {
+            return Ok(await _userService.GetAllUsers());
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning("Error Caught in GetAllUsers Controller:\n {exception}", ex);
+            return StatusCode(500, $"{ex.Message}");
+        }
     }
 
 

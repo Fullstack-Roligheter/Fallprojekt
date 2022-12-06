@@ -18,12 +18,12 @@ public class BudgetController : ControllerBase
     }
 
     [HttpPost("CreateBudget")]
-    public IActionResult CreateBudget(CreateBudgetDTO input)
+    public async Task <IActionResult> CreateBudget(CreateBudgetDTO input)
     {
         try
         {
-            var result = _userService.CheckUserId(input.UserId);
-            if (!result)
+            var result = await _userService.CheckUserId(input.UserId);
+            if (result)
             {
                 return NotFound();
             }
@@ -39,11 +39,11 @@ public class BudgetController : ControllerBase
     }
 
     [HttpDelete("DeleteBudget")]
-    public IActionResult DeleteBudget([FromQuery] DeleteBudgetDTO input)
+    public async Task<IActionResult> DeleteBudget([FromQuery] DeleteBudgetDTO input)
     {
         try
         {
-            var result = _userService.CheckUserId(input.UserId);
+            var result = await _userService.CheckUserId(input.UserId);
             if (!result)
             {
                 return NotFound();
@@ -60,11 +60,11 @@ public class BudgetController : ControllerBase
     }
 
     [HttpPut("EditBudget")]
-    public IActionResult EditBudget(EditBudgetDTO input)
+    public async Task<IActionResult> EditBudget(EditBudgetDTO input)
     {
         try
         {
-            var result = _userService.CheckUserId(input.UserId);
+            var result = await _userService.CheckUserId(input.UserId);
             if (!result)
             {
                 return NotFound();
@@ -81,11 +81,11 @@ public class BudgetController : ControllerBase
     }
 
     [HttpGet("GetBudgetsForUser")]
-    public IActionResult GetBudgetsForUser([FromQuery] UserIdDTO input)
+    public async Task<IActionResult> GetBudgetsForUser([FromQuery] UserIdDTO input)
     {
         try
         {
-            var result = _userService.CheckUserId(input.UserId);
+            var result = await _userService.CheckUserId(input.UserId);
             if (!result)
             {
                 return NotFound("User not found");

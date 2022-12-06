@@ -6,6 +6,15 @@ using Service.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddLogging(options =>
+    {
+        options.AddSimpleConsole(c =>
+        {
+            c.TimestampFormat = "[yyyy-MM-dd HH:mm:ss] ";
+            // c.UseUtcTimestamp = true; // something to consider
+        });
+    });
+
 builder.Services.AddScoped<IBudgetService, BudgetService>();
 builder.Services.AddScoped<ISavingPlanService,SavingPlanService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
@@ -16,7 +25,6 @@ builder.Services.AddScoped<IBudgetRepo, BudgetRepo>();
 builder.Services.AddScoped<ICategoryRepo, CategoryRepo>();
 builder.Services.AddScoped<IDebitRepo, DebitRepo>();
 builder.Services.AddScoped<ISavingPlanRepo, SavingPlanRepo>();
-//builder.Services.AddScoped<IUserCategoryRepo, UserCategoryRepo>();
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 
 builder.Services.AddScoped<ProjectContext>();
