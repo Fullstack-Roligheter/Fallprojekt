@@ -1,4 +1,5 @@
 ﻿using DAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories;
 
@@ -111,6 +112,26 @@ public class UserRepo : IUserRepo
         try
         {
             var result = _projectContext.Users.FirstOrDefault(u => u.Email == email);
+            return Task.FromResult(result);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public Task<User?> GetWholeUser(Guid id, string email, string password)
+    {
+        try
+        {
+            var result =
+                _projectContext.Users
+                    .Include(b => b.Budgets)
+                    .Include(c => c.Categories)
+                    .Include(s => s.SavingPlans)
+                    .Include(c => c.Categories)
+                    .Include(d => d.Debits)
+                    .FirstOrDefault(u => u.Id == id && u.Email == email && u.Password == password);
             return Task.FromResult(result);
         }
         catch (Exception)

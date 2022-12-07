@@ -56,15 +56,15 @@ internal static class ModelBuilderExtensions
             new Category { Id = categoryGuidFour, Name = "Boende", IsDefault = true },
             new Category { Id = categoryGuidFive, Name = "Hushåll", IsDefault = true },
             new Category { Id = categoryGuidSix, Name = "Sparande", IsDefault = true },
-            new Category { Id = categoryGuidSeven, Name = "Övrigt", IsDefault = true },
-            new Category { Id = userCategoryOne, Name = "Leksaker", UserId = userGuidOne, IsDefault = false },          //bara adam
-            new Category { Id = userCategoryTwo, Name = "Bilar", UserId = userGuidTwo, IsDefault = false },             //bara berit
-            new Category { Id = userCategoryThree, Name = "Kryssningar", UserId = userGuidTwo, IsDefault = false },     //bara berit
-            new Category { Id = userCategoryFour, Name = "Flygresor", UserId = userGuidTwo, IsDefault = false },        //bara berit
-            new Category { Id = userCategoryFive, Name = "Husköp", UserId = userGuidTwo, IsDefault = false },           //bara berit
-            new Category { Id = userCategorySix, Name = "Papegojfoder", UserId = userGuidTwo, IsDefault = false },      //bara berit
-            new Category { Id = userCategorySeven, Name = "Hundleksaker", UserId = userGuidTwo, IsDefault = false },    //bara berit
-            new Category { Id = userCategoryEight, Name = "Hemsaker", UserId = userGuidOne, IsDefault = false }         //bara adam
+            new Category { Id = categoryGuidSeven, Name = "Övrigt", IsDefault = true }
+            //new Category { Id = userCategoryOne, Name = "Leksaker", UserId = userGuidOne, IsDefault = false },          //bara adam
+            //new Category { Id = userCategoryTwo, Name = "Bilar", UserId = userGuidTwo, IsDefault = false },             //bara berit
+            //new Category { Id = userCategoryThree, Name = "Kryssningar", UserId = userGuidTwo, IsDefault = false },     //bara berit
+            //new Category { Id = userCategoryFour, Name = "Flygresor", UserId = userGuidTwo, IsDefault = false },        //bara berit
+            //new Category { Id = userCategoryFive, Name = "Husköp", UserId = userGuidTwo, IsDefault = false },           //bara berit
+            //new Category { Id = userCategorySix, Name = "Papegojfoder", UserId = userGuidTwo, IsDefault = false },      //bara berit
+            //new Category { Id = userCategorySeven, Name = "Hundleksaker", UserId = userGuidTwo, IsDefault = false },    //bara berit
+            //new Category { Id = userCategoryEight, Name = "Hemsaker", UserId = userGuidOne, IsDefault = false }         //bara adam
 
         );
 
@@ -80,21 +80,39 @@ internal static class ModelBuilderExtensions
         //    new UserCategory { Id = userCategoryEight, Name = "Hemsaker", UserId = userGuidOne }    //bara adam
         //);
 
+        //builder.Entity<Debit>().HasData //Debit tabell
+        //(
+        //    //adam
+        //    new Debit { Id = Guid.NewGuid(), Comment = "Mjukisdjur", Amount = 150, Date = DateTime.ParseExact("2022-09-15", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidTwo, CategoryId = categoryGuidTwo },
+        //    new Debit { Id = Guid.NewGuid(), Comment = "Ny Soffa", Amount = 7000, Date = DateTime.ParseExact("2022-01-17", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidOne, CategoryId = categoryGuidFive },
+        //    new Debit { Id = Guid.NewGuid(), Comment = "Lego", Amount = 500, Date = DateTime.ParseExact("2022-03-02", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidTwo, CategoryId = categoryGuidTwo },
+        //    new Debit { Id = Guid.NewGuid(), Comment = "Ny Köksbord", Amount = 850, Date = DateTime.ParseExact("2022-03-04", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidOne, CategoryId = categoryGuidFive },
+        //    new Debit { Id = Guid.NewGuid(), Comment = "Storhandla BBQ", Amount = 1500, Date = DateTime.ParseExact("2022-03-05", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = null, CategoryId = categoryGuidOne },
+
+        //    //berit
+        //    new Debit { Id = Guid.NewGuid(), Comment = "Ny Moderkort", Amount = 2500, Date = DateTime.ParseExact("2022-03-06", "yyyy-MM-dd", null), UserId = userGuidTwo, BudgetId = budgetGuidThree, CategoryId = categoryGuidThree },
+        //    new Debit { Id = Guid.NewGuid(), Comment = "Ny Grafikkort", Amount = 8500, Date = DateTime.ParseExact("2022-03-07", "yyyy-MM-dd", null), UserId = userGuidTwo, BudgetId = budgetGuidThree, CategoryId = categoryGuidThree },
+        //    new Debit { Id = Guid.NewGuid(), Comment = "Spotify", Amount = 180, Date = DateTime.ParseExact("2022-03-08", "yyyy-MM-dd", null), UserId = userGuidTwo, BudgetId = null, CategoryId = categoryGuidFour },
+        //    new Debit { Id = Guid.NewGuid(), Comment = "Bredband", Amount = 400, Date = DateTime.ParseExact("2022-03-09", "yyyy-MM-dd", null), UserId = userGuidTwo, BudgetId = null, CategoryId = categoryGuidFour },
+        //    new Debit { Id = Guid.NewGuid(), Comment = "Film o Pizza kväll", Amount = 750, Date = DateTime.ParseExact("2022-03-10", "yyyy-MM-dd", null), UserId = userGuidTwo, BudgetId = budgetGuidFour, CategoryId = categoryGuidThree }
+        //);
+
+
         builder.Entity<Debit>().HasData //Debit tabell
         (
             //adam
-            new Debit { Id = Guid.NewGuid(), Comment = "Mjukisdjur", Amount = 150, Date = DateTime.ParseExact("2022-09-15", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidTwo, CategoryId = categoryGuidTwo },
-            new Debit { Id = Guid.NewGuid(), Comment = "Ny Soffa", Amount = 7000, Date = DateTime.ParseExact("2022-01-17", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidOne, CategoryId = categoryGuidFive },
-            new Debit { Id = Guid.NewGuid(), Comment = "Lego", Amount = 500, Date = DateTime.ParseExact("2022-03-02", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidTwo, CategoryId = categoryGuidTwo },
-            new Debit { Id = Guid.NewGuid(), Comment = "Ny Köksbord", Amount = 850, Date = DateTime.ParseExact("2022-03-04", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidOne, CategoryId = categoryGuidFive },
-            new Debit { Id = Guid.NewGuid(), Comment = "Storhandla BBQ", Amount = 1500, Date = DateTime.ParseExact("2022-03-05", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = null, CategoryId = categoryGuidOne },
+            new Debit { Id = Guid.NewGuid(), Comment = "Mjukisdjur", Amount = 150, Date = DateTime.ParseExact("2022-09-15", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidTwo },
+            new Debit { Id = Guid.NewGuid(), Comment = "Ny Soffa", Amount = 7000, Date = DateTime.ParseExact("2022-01-17", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidOne },
+            new Debit { Id = Guid.NewGuid(), Comment = "Lego", Amount = 500, Date = DateTime.ParseExact("2022-03-02", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidTwo },
+            new Debit { Id = Guid.NewGuid(), Comment = "Ny Köksbord", Amount = 850, Date = DateTime.ParseExact("2022-03-04", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = budgetGuidOne },
+            new Debit { Id = Guid.NewGuid(), Comment = "Storhandla BBQ", Amount = 1500, Date = DateTime.ParseExact("2022-03-05", "yyyy-MM-dd", null), UserId = userGuidOne, BudgetId = null },
 
             //berit
-            new Debit { Id = Guid.NewGuid(), Comment = "Ny Moderkort", Amount = 2500, Date = DateTime.ParseExact("2022-03-06", "yyyy-MM-dd", null), UserId = userGuidTwo, BudgetId = budgetGuidThree, CategoryId = categoryGuidThree },
-            new Debit { Id = Guid.NewGuid(), Comment = "Ny Grafikkort", Amount = 8500, Date = DateTime.ParseExact("2022-03-07", "yyyy-MM-dd", null), UserId = userGuidTwo, BudgetId = budgetGuidThree, CategoryId = categoryGuidThree },
-            new Debit { Id = Guid.NewGuid(), Comment = "Spotify", Amount = 180, Date = DateTime.ParseExact("2022-03-08", "yyyy-MM-dd", null), UserId = userGuidTwo, BudgetId = null, CategoryId = categoryGuidFour },
-            new Debit { Id = Guid.NewGuid(), Comment = "Bredband", Amount = 400, Date = DateTime.ParseExact("2022-03-09", "yyyy-MM-dd", null), UserId = userGuidTwo, BudgetId = null, CategoryId = categoryGuidFour },
-            new Debit { Id = Guid.NewGuid(), Comment = "Film o Pizza kväll", Amount = 750, Date = DateTime.ParseExact("2022-03-10", "yyyy-MM-dd", null), UserId = userGuidTwo, BudgetId = budgetGuidFour, CategoryId = categoryGuidThree }
+            new Debit { Id = Guid.NewGuid(), Comment = "Ny Moderkort", Amount = 2500, Date = DateTime.ParseExact("2022-03-06", "yyyy-MM-dd", null), UserId = userGuidTwo, BudgetId = budgetGuidThree },
+            new Debit { Id = Guid.NewGuid(), Comment = "Ny Grafikkort", Amount = 8500, Date = DateTime.ParseExact("2022-03-07", "yyyy-MM-dd", null), UserId = userGuidTwo, BudgetId = budgetGuidThree },
+            new Debit { Id = Guid.NewGuid(), Comment = "Spotify", Amount = 180, Date = DateTime.ParseExact("2022-03-08", "yyyy-MM-dd", null), UserId = userGuidTwo, BudgetId = null },
+            new Debit { Id = Guid.NewGuid(), Comment = "Bredband", Amount = 400, Date = DateTime.ParseExact("2022-03-09", "yyyy-MM-dd", null), UserId = userGuidTwo, BudgetId = null },
+            new Debit { Id = Guid.NewGuid(), Comment = "Film o Pizza kväll", Amount = 750, Date = DateTime.ParseExact("2022-03-10", "yyyy-MM-dd", null), UserId = userGuidTwo, BudgetId = budgetGuidFour }
         );
     }
 }

@@ -138,17 +138,17 @@ public class UserService : IUserService
                 throw new ArgumentException($"\nError Caught in UserService/DeleteUser: Null Argument\n");
             }
 
-            var debitsList = _debitRepo.GetAllWithUserId(user.Id);
-            if (debitsList is { Count: > 0 }) _debitRepo.DeleteMultiple(debitsList);
+            //var debitsList = _debitRepo.GetAllWithUserId(user.Id);
+            //if (debitsList is { Count: > 0 }) _debitRepo.DeleteMultiple(debitsList);
 
-            var categoryList = _categoryRepo.GetUserCategories(user.Id);
-            if (categoryList is { Count: > 0 }) _categoryRepo.DeleteMultiple(categoryList);
+            //var categoryList = _categoryRepo.GetUserCategories(user.Id);
+            //if (categoryList is { Count: > 0 }) _categoryRepo.DeleteMultiple(categoryList);
             
-            var budgetList = _budgetRepo.GetAllForUser(user.Id);
-            if (budgetList is { Count: > 0 }) _budgetRepo.DeleteMultiple(budgetList);
+            //var budgetList = _budgetRepo.GetAllForUser(user.Id);
+            //if (budgetList is { Count: > 0 }) _budgetRepo.DeleteMultiple(budgetList);
 
-            var savingPlanList = _savingPlanRepo.GetAllForUser(user.Id);
-            if (savingPlanList is { Count: > 0 }) _savingPlanRepo.DeleteMultiple(savingPlanList);
+            //var savingPlanList = _savingPlanRepo.GetAllForUser(user.Id);
+            //if (savingPlanList is { Count: > 0 }) _savingPlanRepo.DeleteMultiple(savingPlanList);
 
             await _userRepo.DeleteWithModel(user);
         }
@@ -193,8 +193,8 @@ public class UserService : IUserService
                 _logger.LogWarning("\nWARNING caught in UserService/GetUserWithIdAndEmailAndPassword: Null Arguments\n");
                 return null;
             }
-
-            var user = await _userRepo.GetWithIdAndEmailAndPassword(id, email, password);
+            var user = await _userRepo.GetWholeUser(id, email, password);
+            //var user = await _userRepo.GetWithIdAndEmailAndPassword(id, email, password);
             return user;
         }
         catch (Exception)

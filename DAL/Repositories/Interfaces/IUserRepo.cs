@@ -10,4 +10,5 @@ public interface IUserRepo
     Task<User?> GetWithEmailAndPassword(string email, string password);
     Task<User?> GetWithIdAndEmailAndPassword(Guid id, string email, string password);
     Task<User?> GetWithEmail(string email);
+    Task<User?> GetWholeUser(Guid id, string email, string password);
 }

@@ -48,12 +48,14 @@ public class ProjectContext : DbContext
         modelBuilder.Entity<Budget>()
             .HasOne(u => u.User)
             .WithMany(b => b.Budgets)
-            .HasForeignKey(b => b.UserId);
+            .HasForeignKey(b => b.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Category>()
             .HasOne(u => u.User)
             .WithMany(c => c.Categories)
-            .HasForeignKey(c => c.UserId);
+            .HasForeignKey(c => c.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Debit>()
             .HasOne(b => b.Budget)
@@ -63,7 +65,8 @@ public class ProjectContext : DbContext
         modelBuilder.Entity<Debit>()
             .HasOne(u => u.User)
             .WithMany(d => d.Debits)
-            .HasForeignKey(d => d.UserId);
+            .HasForeignKey(d => d.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Seed();
     }
