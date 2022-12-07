@@ -37,7 +37,7 @@ public class SavingPlanService : ISavingPlanService
     {
         FindUser(userId);
 
-        var savingPlans = _savingPlanRepo.GetAll(userId);
+        var savingPlans = _savingPlanRepo.GetAllForUser(userId);
         if (savingPlans == null)
         {
             throw new NullReferenceException("No Saving Plans Found");

@@ -76,4 +76,10 @@ public class CategoryRepo : ICategoryRepo
         _projectContext.Categories.Add(model);
         _projectContext.SaveChanges();
     }
+
+    public void DeleteMultiple(IList<Category> categories)
+    {
+        _projectContext.Categories.RemoveRange(categories);
+        _projectContext.SaveChanges();
+    }
 }

@@ -18,7 +18,7 @@ public class BudgetService : IBudgetService
 
     public IList<BudgetNameDTO>? GetBudgetsForUser(Guid userId)
     {
-        var userBudgets = _budgetRepo.GetAll(userId);
+        var userBudgets = _budgetRepo.GetAllForUser(userId);
         if (userBudgets == null) throw new NullReferenceException();
         var result = userBudgets
             .Select(budget => new BudgetNameDTO()

@@ -16,7 +16,7 @@ public class BudgetRepo : IBudgetRepo
         return _projectContext.Budgets.ToList();
     }
 
-    public IList<Budget>? GetAll(Guid userId)
+    public IList<Budget>? GetAllForUser(Guid userId)
     {
         return _projectContext.Budgets.Where(c => c.UserId == userId).ToList();
     }
@@ -38,6 +38,12 @@ public class BudgetRepo : IBudgetRepo
     public void Update(Budget model)
     {
         throw new NotImplementedException();
+    }
+
+    public void DeleteMultiple(IList<Budget> budgets)
+    {
+        _projectContext.Budgets.RemoveRange(budgets);
+        _projectContext.SaveChanges();
     }
 
     public void Create(Budget model)

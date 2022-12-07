@@ -3,17 +3,26 @@ using Service.DTOs;
 using Service.Interfaces;
 using DAL.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
+using DAL.Migrations;
 
 namespace Service;
 
 public class UserService : IUserService
 {
     private readonly IUserRepo _userRepo;
+    private readonly IDebitRepo _debitRepo;
+    private readonly IBudgetRepo _budgetRepo;
+    private readonly ICategoryRepo _categoryRepo;
+    private readonly ISavingPlanRepo _savingPlanRepo;
     private readonly ILogger<IUserService> _logger;
 
-    public UserService(IUserRepo userRepo, ILogger<IUserService> logger)
+    public UserService(IUserRepo userRepo, IDebitRepo debitRepo, IBudgetRepo budgetRepo, ICategoryRepo categoryRepo, ISavingPlanRepo savingPlanRepo, ILogger<IUserService> logger)
     {
         _userRepo = userRepo;
+        _debitRepo = debitRepo;
+        _budgetRepo = budgetRepo;
+        _categoryRepo = categoryRepo;
+        _savingPlanRepo = savingPlanRepo;
         _logger = logger;
     }
 
@@ -128,6 +137,18 @@ public class UserService : IUserService
             {
                 throw new ArgumentException($"\nError Caught in UserService/DeleteUser: Null Argument\n");
             }
+
+            var debitsList = _debitRepo.GetAllWithUserId(user.Id);
+            if (debitsList is { Count: > 0 }) _debitRepo.DeleteMultiple(debitsList);
+
+            var categoryList = _categoryRepo.GetUserCategories(user.Id);
+            if (categoryList is { Count: > 0 }) _categoryRepo.DeleteMultiple(categoryList);
+            
+            var budgetList = _budgetRepo.GetAllForUser(user.Id);
+            if (budgetList is { Count: > 0 }) _budgetRepo.DeleteMultiple(budgetList);
+
+            var savingPlanList = _savingPlanRepo.GetAllForUser(user.Id);
+            if (savingPlanList is { Count: > 0 }) _savingPlanRepo.DeleteMultiple(savingPlanList);
 
             await _userRepo.DeleteWithModel(user);
         }

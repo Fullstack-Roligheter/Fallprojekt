@@ -14,4 +14,5 @@ public interface ICategoryRepo
     void Delete(Guid modelId);
     void DeleteWithModel(Category model);
     void Update(Category model);
+    void DeleteMultiple(IList<Category> categories);
 }

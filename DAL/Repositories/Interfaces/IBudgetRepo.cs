@@ -3,9 +3,11 @@
 public interface IBudgetRepo
 {
     IList<Budget>? GetAll();
-    IList<Budget>? GetAll(Guid userId);
+    IList<Budget>? GetAllForUser(Guid userId);
     Budget? Get(Guid modelId);
     void Create(Budget model);
     void Delete(Guid modelId);
     void Update(Budget model);
+    void DeleteMultiple(IList<Budget> budgets);
+
 }

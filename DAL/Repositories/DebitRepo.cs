@@ -78,6 +78,11 @@ public class DebitRepo : IDebitRepo
         _projectContext.Debits.UpdateRange(debits);
         _projectContext.SaveChanges();
     }
+    public void DeleteMultiple(IList<Debit> debits)
+    {
+        _projectContext.Debits.RemoveRange(debits);
+        _projectContext.SaveChanges();
+    }
 
     public void Create(Debit model)
     {

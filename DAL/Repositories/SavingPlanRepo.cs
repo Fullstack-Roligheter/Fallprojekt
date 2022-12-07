@@ -17,7 +17,7 @@ public class SavingPlanRepo : ISavingPlanRepo
         return _projectContext.SavingPlans.ToList();
     }
 
-    public IList<SavingPlan>? GetAll(Guid userId)
+    public IList<SavingPlan>? GetAllForUser(Guid userId)
     {
         return _projectContext.SavingPlans.Where(c => c.UserId == userId).ToList();
     }
@@ -39,6 +39,12 @@ public class SavingPlanRepo : ISavingPlanRepo
     public void Update(SavingPlan model)
     {
         _projectContext.SavingPlans.Update(model);
+        _projectContext.SaveChanges();
+    }
+
+    public void DeleteMultiple(IList<SavingPlan> savingPlans)
+    {
+        _projectContext.SavingPlans.RemoveRange(savingPlans);
         _projectContext.SaveChanges();
     }
 

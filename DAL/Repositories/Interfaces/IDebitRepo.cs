@@ -13,4 +13,5 @@ public interface IDebitRepo
     void DeleteWithModel(Debit model);
     void UpdateWithModel(Debit model);
     void UpdateMultiple(IList<Debit> debits);
+    void DeleteMultiple(IList<Debit> debits);
 }
