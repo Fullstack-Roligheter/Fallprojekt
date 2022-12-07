@@ -165,7 +165,7 @@ public class UserService : IUserService
         {
             if (email == "" || password == "")
             {
-                _logger.LogWarning("Error caught in UserService/GetUserWithIdAndEmailAndPassword: Null return");
+                _logger.LogWarning("\nError caught in UserService/GetUserWithIdAndEmailAndPassword: No User Found");
                 return null;
             }
 
