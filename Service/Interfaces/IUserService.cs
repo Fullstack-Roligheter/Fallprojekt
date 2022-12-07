@@ -5,7 +5,7 @@ namespace Service.Interfaces;
 
 public interface IUserService
 {
-    Task<IList<UserDTO>> GetAllUsers();
+    Task<IList<UserDTO>?> GetAllUsers();
     Task<SuccessLoginDTO?> LogIn(LoginDTO login);
     Task UserRegister(RegisterDTO reg);
     Task UpdateUserInfo(User user, UserDTO userInfo);

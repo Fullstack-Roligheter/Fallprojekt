@@ -17,26 +17,29 @@ public class UserService : IUserService
         _logger = logger;
     }
 
-    public async Task<IList<UserDTO>> GetAllUsers()
+    public async Task<IList<UserDTO>?> GetAllUsers()
     {
         try
         {
             var userList = await _userRepo.GetAll();
-            if (userList == null)
+
+            if (userList.Count == 0)
             {
-                throw new NullReferenceException("No Users Found");
+                return null;
             }
+
             var result = userList.Select(user => new UserDTO()
-            {
-                UserId = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                Password = user.Password
-            })
-                   .ToList();
+                {
+                    UserId = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    Password = user.Password
+                })
+                .ToList();
 
             return result;
+
         }
         catch (Exception)
         {
@@ -54,18 +57,19 @@ public class UserService : IUserService
             }
 
             var user = await _userRepo.GetWithEmailAndPassword(login.Email, login.Password);
-            if (user == null)
+            if (user != null)
             {
-                throw new NullReferenceException("Username / Password Mismatch");
+                return new SuccessLoginDTO()
+                {
+                    UserId = user.Id,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName
+                };
             }
 
-            return new SuccessLoginDTO()
-            {
-                UserId = user.Id,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName
-            };
+            return null;
+
         }
         catch (Exception)
         {
@@ -85,9 +89,10 @@ public class UserService : IUserService
                 Email = reg.Email,
                 Password = reg.Password
             };
+
             await _userRepo.Create(newUser);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             throw;
         }
@@ -99,7 +104,7 @@ public class UserService : IUserService
         {
             if (userInfo.FirstName == "" || userInfo.LastName == "" || userInfo.Email == "" || userInfo.Password == "")
             {
-                throw new ArgumentException($"Invalid Arguments passed to UpdateUserInfo");
+                throw new ArgumentException($"\nError Caught in UserService/DeleteUser: Null Argument\n");
             }
 
             user.FirstName = userInfo.FirstName;
@@ -121,7 +126,7 @@ public class UserService : IUserService
         {
             if (user == null)
             {
-                throw new ArgumentException($"Invalid User Argument");
+                throw new ArgumentException($"\nError Caught in UserService/DeleteUser: Null Argument\n");
             }
 
             await _userRepo.DeleteWithModel(user);
@@ -164,7 +169,8 @@ public class UserService : IUserService
         {
             if (email == "" || password == "")
             {
-                throw new ArgumentException("Invalid Credentials passed as Argument");
+                _logger.LogWarning("\nWARNING caught in UserService/GetUserWithIdAndEmailAndPassword: Null Arguments\n");
+                return null;
             }
 
             var user = await _userRepo.GetWithIdAndEmailAndPassword(id, email, password);

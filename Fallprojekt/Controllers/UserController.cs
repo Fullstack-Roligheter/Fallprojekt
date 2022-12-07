@@ -27,6 +27,11 @@ public class UserController : ControllerBase
     {
         try
         {
+            if (login.Password == "" || login.Email == "")
+            {
+                return StatusCode(400);
+            }
+
             var result = await _userService.LogIn(login);
 
             if (result == null)
@@ -37,7 +42,7 @@ public class UserController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogWarning("Error Caught in Login:\n {exception}", ex);
+            _logger.LogError("\nError Caught in Login:\n {exception}\n", ex);
             return StatusCode(500);
         }
     }
@@ -47,16 +52,22 @@ public class UserController : ControllerBase
     {
         try
         {
-            if (!_pr.Match(reg.Password).Success) return BadRequest("Invalid Password");
+            if (!_pr.Match(reg.Password).Success)
+            {
+                return BadRequest("Invalid Password");
+            }
 
-            if (await _userService.CheckEmail(reg)) return StatusCode(409, "Account already exists");
+            if (await _userService.CheckEmail(reg))
+            {
+                return StatusCode(409, "Account already exists");
+            }
 
             await _userService.UserRegister(reg);
             return Ok();
         }
         catch (Exception ex)
         {
-            _logger.LogWarning("Error Caught in Register:\n {exception}", ex);
+            _logger.LogError("Error Caught in Register:\n {exception}", ex);
             return StatusCode(500);
         }
     }
@@ -66,7 +77,6 @@ public class UserController : ControllerBase
     {
         try
         {
-
             if (!_pr.Match(userInfo.Password).Success)
             {
                 return BadRequest("Invalid Password");
@@ -99,13 +109,13 @@ public class UserController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogWarning("Error Caught in User:\n {exception}", ex);
+            _logger.LogError("Error Caught in User:\n {exception}", ex);
             return StatusCode(500);
         }
     }
 
     [HttpDelete("UserDelete")]
-    public async Task<IActionResult> DeleteUser(LoginDTO userInfo)
+    public async Task<IActionResult> DeleteUser([FromQuery]LoginDTO userInfo)
     {
         try
         {
@@ -130,7 +140,7 @@ public class UserController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogWarning("Error Caught in UserDelete:\n {exception}", ex);
+            _logger.LogError("Error Caught in UserDelete:\n {exception}", ex);
             return StatusCode(401);
         }
     }
