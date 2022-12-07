@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Castle.Core.Internal;
 using Service.Interfaces;
-using Microsoft.Extensions.Logging;
 
 namespace Fallprojekt.Controllers;
 
@@ -27,11 +26,12 @@ public class DebugController : ControllerBase
     {
         try
         {
-            return Ok(await _userService.GetAllUsers());
+            var result = await _userService.GetAllUsers();
+            return Ok(result);
         }
         catch (Exception ex)
         {
-            _logger.LogWarning("Error Caught in GetAllUsers Controller:\n {exception}", ex);
+            _logger.LogWarning("\nError Caught in GetAllUsers Controller:\n {exception}", ex);
             return StatusCode(500, $"{ex.Message}");
         }
     }

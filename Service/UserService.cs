@@ -17,26 +17,29 @@ public class UserService : IUserService
         _logger = logger;
     }
 
-    public async Task<IList<UserDTO>> GetAllUsers()
+    public async Task<IList<UserDTO>?> GetAllUsers()
     {
         try
         {
             var userList = await _userRepo.GetAll();
-            if (userList == null)
+
+            if (userList.Count == 0)
             {
-                throw new NullReferenceException("No Users Found");
+                return null;
             }
+
             var result = userList.Select(user => new UserDTO()
-            {
-                UserId = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                Password = user.Password
-            })
-                   .ToList();
+                {
+                    UserId = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    Password = user.Password
+                })
+                .ToList();
 
             return result;
+
         }
         catch (Exception)
         {
@@ -64,7 +67,7 @@ public class UserService : IUserService
                     LastName = user.LastName
                 };
             }
-            _logger.LogWarning("Error Caught in UserService/LogIn: Null return ");
+
             return null;
 
         }
@@ -86,9 +89,10 @@ public class UserService : IUserService
                 Email = reg.Email,
                 Password = reg.Password
             };
+
             await _userRepo.Create(newUser);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             throw;
         }
@@ -100,7 +104,7 @@ public class UserService : IUserService
         {
             if (userInfo.FirstName == "" || userInfo.LastName == "" || userInfo.Email == "" || userInfo.Password == "")
             {
-                throw new ArgumentException($"Invalid Arguments passed to UpdateUserInfo");
+                throw new ArgumentException($"\nError Caught in UserService/DeleteUser: Null Argument\n");
             }
 
             user.FirstName = userInfo.FirstName;
@@ -122,7 +126,7 @@ public class UserService : IUserService
         {
             if (user == null)
             {
-                throw new ArgumentException($"Invalid User Argument");
+                throw new ArgumentException($"\nError Caught in UserService/DeleteUser: Null Argument\n");
             }
 
             await _userRepo.DeleteWithModel(user);
@@ -165,7 +169,7 @@ public class UserService : IUserService
         {
             if (email == "" || password == "")
             {
-                _logger.LogWarning("\nError caught in UserService/GetUserWithIdAndEmailAndPassword: No User Found");
+                _logger.LogWarning("\nWARNING caught in UserService/GetUserWithIdAndEmailAndPassword: Null Arguments\n");
                 return null;
             }
 
